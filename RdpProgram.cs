@@ -302,8 +302,8 @@ private static RdpTreeNodeData rdp_tree_last_child;
 			{
 				text_message(TEXT_FATAL, "multiple source files not allowed\n");
 			}
+			text_init(rdp_textsize[0], 50, 120, rdp_tabwidth[0]);
 #if false
-	text_init(rdp_textsize.value(), 50, 120, rdp_tabwidth.value());
 	scan_init(false, false, true, rdp_symbol_echo.value(), rdp_tokens);
 	if (rdp_lexicalise.value())
 		scan_lexicalise();

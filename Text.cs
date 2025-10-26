@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+
 using static Borium.RDP.Text.TextMessageType;
 
 namespace Borium.RDP
@@ -130,28 +131,37 @@ namespace Borium.RDP
 		/// </summary>
 		private static int first_char;
 
-#if false
-	/ast character of current source line */
-	private static int last_char;
-#endif
+		/// <summary>
+		/// Last character of current source line
+		/// </summary>
+		private static int last_char;
 
 		/// <summary>
 		/// Pointer to current source character
 		/// </summary>
 		static int text_current;
-#if false
-		/** text array for storing id's and strings */
+
+		/// <summary>
+		/// Text array for storing id's and strings
+		/// </summary>
 		static char[] text_bot = null;
 
-	/** top of text character */
-	static int text_top = 1;
+		/// <summary>
+		/// Top of text character
+		/// </summary>
+		static int text_top = 1;
 
-	/** size of text buffer */
-	private static int maxtext;
+		/// <summary>
+		/// Size of text buffer
+		/// </summary>
+		private static int maxtext;
 
-	/** tab expansion width */
-	private static int tabwidth;
+		/// <summary>
+		/// Tab expansion width
+		/// </summary>
+		private static int tabwidth;
 
+#if false
 	static ScanData text_scan_data; // pointer to the last thing read by the scanner
 
 	/** enable line echoing */
@@ -172,7 +182,7 @@ namespace Borium.RDP
 	}
 #endif
 
-		public static string text_default_filetype(string fname, string ftype)
+		internal static string text_default_filetype(string fname, string ftype)
 		{
 			if (ftype.Length == 0)
 			{
@@ -311,20 +321,22 @@ namespace Borium.RDP
 		}
 		return s;
 	}
+#endif
 
-	public static void text_init(int max_text, int max_errors, int max_warnings, int tab_width)
-	{
-		tabwidth = tab_width;
-		maxtext = max_text;
-		maxerrors = max_errors;
-		maxwarnings = max_warnings;
+		internal static void text_init(int max_text, int max_errors, int max_warnings, int tab_width)
+		{
+			tabwidth = tab_width;
+			maxtext = max_text;
+			maxerrors = max_errors;
+			maxwarnings = max_warnings;
 
-		text_bot = new char[maxtext];
-		text_top = 1;
-		text_current = last_char = first_char = maxtext;
-	}
+			text_bot = new char[maxtext];
+			text_top = 1;
+			text_current = last_char = first_char = maxtext;
+		}
 
-	public static int text_insert_char(char c)
+#if false
+		public static int text_insert_char(char c)
 	{
 		int start = text_top;
 		if (text_top >= last_char)
@@ -543,23 +555,27 @@ namespace Borium.RDP
 		// text_printf(__DATE__ + " " + __TIME__);
 		text_printf("Sep 19 2015 11:45:00");
 	}
+#endif
 
-	public static int text_printf(string str)
-	{
-		if (str != null)
+		internal static int text_printf(string str)
 		{
-			for (char ch : str.toCharArray())
+			if (str == null)
+			{
+				return 0;
+			}
+
+			foreach (char ch in str)
 			{
 				if (ch == '\n')
 				{
-					messages.print('\r');
+					messages.Write('\r');
 				}
-				messages.print("" + ch);
+				messages.Write("" + ch);
 			}
+			return str.Length;
 		}
-		return str == null ? 0 : str.length();
-	}
 
+#if false
 	public static void text_redirect(PrintStream file)
 	{
 		messages = file;
