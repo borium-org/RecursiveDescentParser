@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
 
 using static Borium.RDP.Arg;
+using static Borium.RDP.Text;
+using static Borium.RDP.Text.TextMessageType;
 
 namespace Borium.RDP
 {
@@ -121,9 +122,9 @@ private static const string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(n
 
 
 private const int RDP_PASSES = 2;
-
-static string rdp_sourcefilename; // current source file name
 #endif
+		private static string rdp_sourcefilename; // current source file name
+
 		private static string[] rdp_sourcefilenames; // array of source file names
 
 		static string[] rdp_outputfilename = { "rdparser" }; // output file name
@@ -140,9 +141,10 @@ static string rdp_sourcefilename; // current source file name
 		private static bool[] rdp_symbol_echo = { false }; // symbol echo flag
 
 		static bool[] rdp_verbose = { false }; // verbosity flag
-#if false
+
 		private static int rdp_sourcefilenumber;
 
+#if false
 private static string[] rdp_tokens = { "IGNORE", "ID", "INTEGER", "REAL", "CHAR", "CHAR_ESC", "string",
 			"string_ESC", "COMMENT", "COMMENT_VISIBLE", "COMMENT_NEST", "COMMENT_NEST_VISIBLE", "COMMENT_LINE",
 			"COMMENT_LINE_VISIBLE", "EOF", "EOLN", "'\"'", "'#'", "'\''", "'('", "'(*'", "')'", "'*'", "'.'", "':'",
@@ -156,63 +158,63 @@ private static string[] rdp_tokens = { "IGNORE", "ID", "INTEGER", "REAL", "CHAR"
 			"'SUPPRESS_BUILT_IN_ARGUMENTS'", "'SYMBOL_TABLE'", "'TAB_WIDTH'", "'TEXT_SIZE'", "'TITLE'", "'TREE'",
 			"'USES'", "'['", "'[*'", "']'", "'^'", "'^^'", "'^^^'", "'^_'", "'{'", "'|'", "'}'" };
 
-private static const Set string_stop = new Set();
-private static const Set code_stop = new Set();
-private static const Set comment_stop = new Set();
-private static const Set dir_first = new Set();
-private static const Set dir_stop = new Set();
-private static const Set item_com_first = new Set();
-private static const Set item_com_stop = new Set();
-private static const Set item_inl_first = new Set();
-private static const Set item_inl_stop = new Set();
-private static const Set item_ret_first = new Set();
-private static const Set item_ret_stop = new Set();
-private static const Set prod_first = new Set();
-private static const Set prod_stop = new Set();
-private static const Set rdp_dir_11_first = new Set();
-private static const Set rdp_dir_3_first = new Set();
-private static const Set rdp_dir_34_first = new Set();
-private static const Set rdp_dir_37_first = new Set();
-private static const Set rdp_dir_7_first = new Set();
-private static const Set rdp_item_inl_16_first = new Set();
-private static const Set rdp_item_inl_21_first = new Set();
-private static const Set rdp_item_inl_22_first = new Set();
-private static const Set rdp_item_inl_23_first = new Set();
-private static const Set rdp_item_inl_28_first = new Set();
-private static const Set rdp_item_inl_29_first = new Set();
-private static const Set rdp_item_inl_7_first = new Set();
-private static const Set rdp_item_inl_8_first = new Set();
-private static const Set rdp_item_inl_9_first = new Set();
-private static const Set rdp_item_ret_4_first = new Set();
-private static const Set rdp_item_ret_5_first = new Set();
-private static const Set rdp_item_ret_6_first = new Set();
-private static const Set rdp_prod_0_first = new Set();
-private static const Set rdp_prod_1_first = new Set();
-private static const Set rdp_prod_2_first = new Set();
-private static const Set rdp_rule_16_first = new Set();
-private static const Set rdp_seq_0_first = new Set();
-private static const Set rdp_seq_1_first = new Set();
-private static const Set rdp_seq_10_first = new Set();
-private static const Set rdp_seq_17_first = new Set();
-private static const Set rdp_seq_2_first = new Set();
-private static const Set rdp_seq_23_first = new Set();
-private static const Set rdp_seq_24_first = new Set();
-private static const Set rdp_seq_25_first = new Set();
-private static const Set rdp_seq_28_first = new Set();
-private static const Set rdp_seq_29_first = new Set();
-private static const Set rdp_seq_30_first = new Set();
-private static const Set rdp_seq_31_first = new Set();
-private static const Set rdp_seq_32_first = new Set();
-private static const Set rdp_seq_9_first = new Set();
-private static const Set rdp_unit_1_first = new Set();
-private static const Set rdp_unit_2_first = new Set();
-private static const Set rdp_unit_3_first = new Set();
-private static const Set rule_stop = new Set();
-private static const Set seq_first = new Set();
-private static const Set seq_stop = new Set();
-private static const Set token_stop = new Set();
-private static const Set unit_first = new Set();
-private static const Set unit_stop = new Set();
+private static Set string_stop = new Set();
+private static Set code_stop = new Set();
+private static Set comment_stop = new Set();
+private static Set dir_first = new Set();
+private static Set dir_stop = new Set();
+private static Set item_com_first = new Set();
+private static Set item_com_stop = new Set();
+private static Set item_inl_first = new Set();
+private static Set item_inl_stop = new Set();
+private static Set item_ret_first = new Set();
+private static Set item_ret_stop = new Set();
+private static Set prod_first = new Set();
+private static Set prod_stop = new Set();
+private static Set rdp_dir_11_first = new Set();
+private static Set rdp_dir_3_first = new Set();
+private static Set rdp_dir_34_first = new Set();
+private static Set rdp_dir_37_first = new Set();
+private static Set rdp_dir_7_first = new Set();
+private static Set rdp_item_inl_16_first = new Set();
+private static Set rdp_item_inl_21_first = new Set();
+private static Set rdp_item_inl_22_first = new Set();
+private static Set rdp_item_inl_23_first = new Set();
+private static Set rdp_item_inl_28_first = new Set();
+private static Set rdp_item_inl_29_first = new Set();
+private static Set rdp_item_inl_7_first = new Set();
+private static Set rdp_item_inl_8_first = new Set();
+private static Set rdp_item_inl_9_first = new Set();
+private static Set rdp_item_ret_4_first = new Set();
+private static Set rdp_item_ret_5_first = new Set();
+private static Set rdp_item_ret_6_first = new Set();
+private static Set rdp_prod_0_first = new Set();
+private static Set rdp_prod_1_first = new Set();
+private static Set rdp_prod_2_first = new Set();
+private static Set rdp_rule_16_first = new Set();
+private static Set rdp_seq_0_first = new Set();
+private static Set rdp_seq_1_first = new Set();
+private static Set rdp_seq_10_first = new Set();
+private static Set rdp_seq_17_first = new Set();
+private static Set rdp_seq_2_first = new Set();
+private static Set rdp_seq_23_first = new Set();
+private static Set rdp_seq_24_first = new Set();
+private static Set rdp_seq_25_first = new Set();
+private static Set rdp_seq_28_first = new Set();
+private static Set rdp_seq_29_first = new Set();
+private static Set rdp_seq_30_first = new Set();
+private static Set rdp_seq_31_first = new Set();
+private static Set rdp_seq_32_first = new Set();
+private static Set rdp_seq_9_first = new Set();
+private static Set rdp_unit_1_first = new Set();
+private static Set rdp_unit_2_first = new Set();
+private static Set rdp_unit_3_first = new Set();
+private static Set rule_stop = new Set();
+private static Set seq_first = new Set();
+private static Set seq_stop = new Set();
+private static Set token_stop = new Set();
+private static Set unit_first = new Set();
+private static Set unit_stop = new Set();
 
 static SymbolTable locals = null;
 static SymbolTable codes = null;
@@ -228,9 +230,7 @@ private static RdpTreeNodeData rdp_tree_last_child;
 #endif
 		public static void Main(string[] args)
 		{
-#if false
-			long rdp_start_time = System.currentTimeMillis();
-#endif
+			long rdp_start_time = CurrentTimeMillis();
 
 			bool[] rdp_symbol_statistics = { false }; // show symbol_ table statistics flag
 #if false
@@ -279,14 +279,11 @@ private static RdpTreeNodeData rdp_tree_last_child;
 
 			rdp_sourcefilenames = arg_process(args);
 
-#if false
-	// Fix up filetypes
-	for (rdp_sourcefilenumber = 0; rdp_sourcefilenumber < rdp_sourcefilenames.length; rdp_sourcefilenumber++)
-	{
-		rdp_sourcefilenames[rdp_sourcefilenumber] = text_default_filetype(rdp_sourcefilenames[rdp_sourcefilenumber],
-				"bnf");
-	}
-#endif
+			// Fix up filetypes
+			for (rdp_sourcefilenumber = 0; rdp_sourcefilenumber < rdp_sourcefilenames.Length; rdp_sourcefilenumber++)
+			{
+				rdp_sourcefilenames[rdp_sourcefilenumber] = text_default_filetype(rdp_sourcefilenames[rdp_sourcefilenumber], "bnf");
+			}
 
 			if (rdp_filter[0])
 			{
@@ -299,10 +296,13 @@ private static RdpTreeNodeData rdp_tree_last_child;
 				arg_help("no source files specified");
 			}
 
+			rdp_sourcefilename = rdp_sourcefilenames[0];
+
+			if (rdp_sourcefilenames.Length != 1)
+			{
+				text_message(TEXT_FATAL, "multiple source files not allowed\n");
+			}
 #if false
-	rdp_sourcefilename = rdp_sourcefilenames[0];
-	if (rdp_sourcefilenames.length != 1)
-		text_message(TEXT_FATAL, "multiple source files not allowed\n");
 	text_init(rdp_textsize.value(), 50, 120, rdp_tabwidth.value());
 	scan_init(false, false, true, rdp_symbol_echo.value(), rdp_tokens);
 	if (rdp_lexicalise.value())
@@ -381,6 +381,22 @@ private static RdpTreeNodeData rdp_tree_last_child;
 	// return rdp_error_return;
 	throw new RuntimeException();
 #endif
+		}
+
+		private static long CurrentTimeMillis()
+		{
+			DateTime nowUtc = DateTime.UtcNow;
+
+			// Define the Unix Epoch
+			DateTime unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+			// Calculate the TimeSpan between the DateTime and the Unix Epoch
+			TimeSpan timeSinceEpoch = nowUtc - unixEpoch;
+
+			// Get the total milliseconds
+			long milliseconds = (long)timeSinceEpoch.TotalMilliseconds;
+
+			return milliseconds;
 		}
 
 #if false
