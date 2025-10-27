@@ -122,9 +122,10 @@ namespace Borium.RDP
 		private static const string __DATE__ = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 private static const string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(new Date());
 
-
-private const int RDP_PASSES = 2;
 #endif
+
+		private const int RDP_PASSES = 2;
+
 		internal static string rdp_sourcefilename; // current source file name
 
 		private static string[] rdp_sourcefilenames; // array of source file names
@@ -224,10 +225,10 @@ private const int RDP_PASSES = 2;
 
 		private static int rdp_pass;
 
-#if false
-/** Tree update function flag for noterminal nodes */
-private static boolean rdp_tree_update;
+		/** Tree update function flag for noterminal nodes */
+		private static bool rdp_tree_update;
 
+#if false
 private static RdpTreeNodeData rdp_tree_last_child;
 #endif
 		public static void Main(string[] args)
@@ -235,9 +236,9 @@ private static RdpTreeNodeData rdp_tree_last_child;
 			long rdp_start_time = CurrentTimeMillis();
 
 			bool[] rdp_symbol_statistics = { false }; // show symbol_ table statistics flag
-#if false
-			boolean rdp_line_echo_all = false; // make a listing on all passes flag
-#endif
+
+			bool rdp_line_echo_all = false; // make a listing on all passes flag
+
 			bool[] rdp_filter = { false }; // filter flag
 			bool[] rdp_line_echo = { false }; // make listing flag
 
@@ -315,23 +316,27 @@ private static RdpTreeNodeData rdp_tree_last_child;
 			rdp_set_initialise();
 			rdp_load_keywords();
 			rdp_pre_parse();
+			if (rdp_verbose[0])
+			{
+				text_printf("\nRecursive descent parser generator V1.65 (c) Adrian Johnstone 2000\n" + RDP_STAMP + "\n\n");
+			}
+			for (rdp_pass = 1; rdp_pass <= RDP_PASSES; rdp_pass++)
+			{
+				rdp_tree_update = rdp_pass == RDP_PASSES;
+				text_echo(rdp_line_echo_all || rdp_line_echo[0] && rdp_pass == RDP_PASSES);
+
+				for (rdp_sourcefilenumber = 0; rdp_sourcefilenumber < rdp_sourcefilenames.Length; rdp_sourcefilenumber++)
+				{
+					rdp_sourcefilename = rdp_sourcefilenames[rdp_sourcefilenumber];
+					if (text_open(rdp_sourcefilename) == null)
+					{
+						arg_help("unable to open source file");
+					}
+
+					text_get_char();
+					scan_();
+
 #if false
-	if (rdp_verbose.value())
-		text_printf("\nRecursive descent parser generator V1.65 (c) Adrian Johnstone 2000\n" + RDP_STAMP + "\n\n");
-	for (rdp_pass = 1; rdp_pass <= RDP_PASSES; rdp_pass++)
-	{
-		rdp_tree_update = rdp_pass == RDP_PASSES;
-		text_echo(rdp_line_echo_all || rdp_line_echo.value() && rdp_pass == RDP_PASSES);
-
-		for (rdp_sourcefilenumber = 0; rdp_sourcefilenumber < rdp_sourcefilenames.length; rdp_sourcefilenumber++)
-		{
-			rdp_sourcefilename = rdp_sourcefilenames[rdp_sourcefilenumber];
-			if (text_open(rdp_sourcefilename) == null)
-				arg_help("unable to open source file");
-
-			text_get_char();
-			scan_();
-
 			// call parser at top level
 			unit(rdp_tree_root = rdp_add_node("unit", rdp_tree));
 			if (text_total_errors() != 0)
@@ -340,10 +345,12 @@ private static RdpTreeNodeData rdp_tree_last_child;
 						+ " detected in source file " + rdp_sourcefilename + "\n"); // crash quietly
 			}
 			graph_epsilon_prune_rdp_tree(rdp_tree_root);
-		}
-	}
+#endif
+				}
+			}
 
-	rdp_sourcefilename = rdp_sourcefilenames[0]; // Reset filename to first file in the list
+#if false
+			rdp_sourcefilename = rdp_sourcefilenames[0]; // Reset filename to first file in the list
 
 	rdp_tree.setRoot(rdp_tree_root);
 	if (rdp_vcg_filename.value() != null)

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-
+using static Borium.RDP.CRT;
 using static Borium.RDP.Scan;
 using static Borium.RDP.Text.TextMessageType;
 
@@ -14,48 +14,68 @@ namespace Borium.RDP
 			TEXT_FATAL_ECHO
 		}
 
-#if false
-	private static class SourceList
-	{
-		/** copy of filename */
-		string name;
+		private class SourceList
+		{
+			/// <summary>
+			/// Copy of filename
+			/// </summary>
+			internal string name;
 
-		/** copy of total errors for this file */
-		int errors;
+			/// <summary>
+			/// Copy of total errors for this file
+			/// </summary>
+			internal int errors;
 
-		/** copy of current file handle */
-		InputStream file;
+			/// <summary>
+			/// Copy of current file handle
+			/// </summary>
+			internal TextReader file;
 
-		/** copy of first character of current source line */
-		int first_char;
+			/// <summary>
+			/// Copy of first character of current source line
+			/// </summary>
+			internal int first_char;
 
-		/** copy of last character of current source line */
-		int last_char;
+			/// <summary>
+			/// Copy of last character of current source line
+			/// </summary>
+			internal int last_char;
 
-		/** copy of current line in this file */
-		int linenumber;
+			/// <summary>
+			/// Copy of current line in this file
+			/// </summary>
+			internal int linenumber;
 
-		/** copy of current text character */
-		int text_char;
+			/// <summary>
+			/// Copy of current text character
+			/// </summary>
+			internal int text_char;
 
-		/** copy of pointer to current source character */
-		int text_current;
+			/// <summary>
+			/// Copy of pointer to current source character
+			/// </summary>
+			internal int text_current;
 
-		/// <summary>
-		/// Copy of pointer to the last thing read by the scanner
-		/// </summary>
-		internal ScanData text_scan_data = new ScanData();
+			/// <summary>
+			/// Copy of pointer to the last thing read by the scanner
+			/// </summary>
+			internal ScanData text_scan_data = new ScanData();
 
-		/** copy of first character of this symbol */
-		int symbol_first_char;
+			/// <summary>
+			/// Copy of first character of this symbol
+			/// </summary>
+			internal int symbol_first_char;
 
-		/** copy of total warnings for this file */
-		int warnings;
+			/// <summary>
+			/// Copy of total warnings for this file
+			/// </summary>
+			internal int warnings;
 
-		/** previous file descriptor */
-		SourceList previous;
-	}
-#endif
+			/// <summary>
+			/// Previous file descriptor
+			/// </summary>
+			internal SourceList previous;
+		}
 
 		///
 		/// Maximum number of error markers per line
@@ -124,10 +144,10 @@ namespace Borium.RDP
 		/// </summary>
 		private static int echo_num = -1;
 
-#if false
-		/** current text character */
-		static int text_char = ' ';
-#endif
+		/// <summary>
+		/// Current text character
+		/// </summary>
+		internal static int text_char = ' ';
 
 		/// <summary>
 		/// First character of current source line
@@ -142,17 +162,17 @@ namespace Borium.RDP
 		/// <summary>
 		/// Pointer to current source character
 		/// </summary>
-		static int text_current;
+		internal static int text_current;
 
 		/// <summary>
 		/// Text array for storing id's and strings
 		/// </summary>
-		static char[] text_bot = null;
+		internal static char[] text_bot = null;
 
 		/// <summary>
 		/// Top of text character
 		/// </summary>
-		static int text_top = 1;
+		internal static int text_top = 1;
 
 		/// <summary>
 		/// Size of text buffer
@@ -168,25 +188,31 @@ namespace Borium.RDP
 		/// Pointer to the last thing read by the scanner
 		/// </summary>
 		internal static ScanData text_scan_data;
-#if false
 
-	/** enable line echoing */
-	private static boolean echo;
+		/// <summary>
+		/// Enable line echoing
+		/// </summary>
+		private static bool echo;
 
-	/** current file handle */
-	private static InputStream file;
+		/// <summary>
+		/// Current file handle
+		/// </summary>
+		private static TextReader file;
 
-	/** head of file descriptor list */
-	private static SourceList source_descriptor_list;
+		/// <summary>
+		/// Head of file descriptor list
+		/// </summary>
+		private static SourceList source_descriptor_list;
 
-	/** first character in this symbol */
-	private static int symbol_first_char;
+		/// <summary>
+		/// First character in this symbol
+		/// </summary>
+		private static int symbol_first_char;
 
-	public static int text_column_number()
-	{
-		return first_char - text_current;
-	}
-#endif
+		internal static int text_column_number()
+		{
+			return first_char - text_current;
+		}
 
 		internal static string text_default_filetype(string fname, string ftype)
 		{
@@ -202,13 +228,13 @@ namespace Borium.RDP
 			return fullname;
 		}
 
-#if false
-		public static void text_echo(boolean i)
-	{
-		echo = i;
-	}
+		internal static void text_echo(bool i)
+		{
+			echo = i;
+		}
 
-	public static string text_extract_filename(string fname)
+#if false
+	internal static string text_extract_filename(string fname)
 	{
 		string name = fname;
 		// search backwards for '.' and terminate the string there
@@ -264,62 +290,60 @@ namespace Borium.RDP
 			return fullname;
 		}
 
-#if false
 		/** advance text_current, reading another line if necessary */
-		public static void text_get_char()
-	{
-		if (text_current <= last_char)
+		internal static void text_get_char()
 		{
-			if (file != null)
+			if (text_current <= last_char)
 			{
-				if (feof(file))
+				if (file != null)
 				{
-					text_close();
-					// pre-increment ready for pre-decrement!
-					text_current++;
-				}
-			}
-			if (file == null)
-			{
-				text_char = EOF;
-				return;
-			}
-			while (text_current <= last_char)
-			{
-				if ((echo || echo_num >= 0) && linenumber > 0)
-				{
-					text_echo_line();
-				}
-				sequence_number++;
-				linenumber++;
-				// initialise pointers to empty line
-				last_char = text_current = first_char;
-				do
-				{
-					text_char = getc(file);
-					text_bot[--last_char] = (char) text_char;
-					if (text_char == EOF)
+					if (feof(file))
 					{
-						text_bot[last_char] = ' ';
+						text_close();
+						// pre-increment ready for pre-decrement!
+						text_current++;
 					}
-					else if (text_char == '\t' && tabwidth != 0)
+				}
+				if (file == null)
+				{
+					text_char = EOF;
+					return;
+				}
+				while (text_current <= last_char)
+				{
+					if ((echo || echo_num >= 0) && linenumber > 0)
 					{
-						// expand tabs to next tabstop
-						text_bot[last_char] = ' '; // make tab a space
-						while ((text_current - last_char) % tabwidth != 0)
+						text_echo_line();
+					}
+					sequence_number++;
+					linenumber++;
+					// initialise pointers to empty line
+					last_char = text_current = first_char;
+					do
+					{
+						text_char = getc(file);
+						text_bot[--last_char] = (char)text_char;
+						if (text_char == EOF)
 						{
-							text_bot[--last_char] = ' ';
+							text_bot[last_char] = ' ';
+						}
+						else if (text_char == '\t' && tabwidth != 0)
+						{
+							// expand tabs to next tabstop
+							text_bot[last_char] = ' '; // make tab a space
+							while ((text_current - last_char) % tabwidth != 0)
+							{
+								text_bot[--last_char] = ' ';
+							}
 						}
 					}
+					// kludge to ensure delayed echoing of lines
+					while (text_char != '\n' && text_char != EOF);
+					text_bot[--last_char] = ' ';
 				}
-				// kludge to ensure delayed echoing of lines
-				while (text_char != '\n' && text_char != EOF);
-				text_bot[--last_char] = ' ';
 			}
+			text_char = text_bot[--text_current];
 		}
-		text_char = text_bot[--text_current];
-	}
-#endif
 
 		internal static string text_get_string(int start)
 		{
@@ -358,7 +382,7 @@ namespace Borium.RDP
 		}
 
 #if false
-	public static int text_insert_characters(string str)
+	internal static int text_insert_characters(string str)
 	{
 		int start = text_top;
 		for (char ch : str.toCharArray())
@@ -368,7 +392,7 @@ namespace Borium.RDP
 		return start;
 	}
 
-	public static int text_insert_integer(int n)
+	internal static int text_insert_integer(int n)
 	{
 		int start = text_top;
 		if (n > 9)
@@ -394,7 +418,7 @@ namespace Borium.RDP
 
 #if false
 		/** put an id_number into text buffer */
-		public static int text_insert_substring(string prefix, string str, int n)
+		internal static int text_insert_substring(string prefix, string str, int n)
 	{
 		int start = text_top;
 
@@ -407,7 +431,7 @@ namespace Borium.RDP
 		return start;
 	}
 
-	public static boolean text_is_valid_C_id(string s)
+	internal static boolean text_is_valid_C_id(string s)
 	{
 		boolean temp = true;
 		for (char ch : s.toCharArray())
@@ -416,12 +440,13 @@ namespace Borium.RDP
 		}
 		return temp;
 	}
-
-	public static int text_line_number()
-	{
-		return linenumber;
-	}
 #endif
+
+		internal static int text_line_number()
+		{
+			return linenumber;
+		}
+
 		internal static int text_message(TextMessageType type, string message)
 		{
 			if (message == null)
@@ -491,57 +516,57 @@ namespace Borium.RDP
 			return message.Length + 1;
 		}
 
-#if false
-		public static InputStream text_open(string s)
-	{
-		InputStream handle = null;
-		try
+		internal static TextReader text_open(string s)
 		{
-			handle = s.equals("-") ? System.in : new FileInputStream(s);
-		}
-		catch (FileNotFoundException e)
-		{
-			handle = null;
-		}
-		InputStream old = file;
-		if (handle != null) // we found a file
-		{
-			if (old != null) // save current file context
+			TextReader handle = null;
+			try
 			{
-				SourceList temp = new SourceList();
-				// load descriptor block
-				temp.errors = errors;
-				temp.file = file;
-				temp.first_char = first_char;
-				temp.last_char = last_char;
-				temp.linenumber = linenumber;
-				temp.name = name;
-				temp.text_char = text_char;
-				temp.text_current = text_current;
-				memcpy(temp.text_scan_data, text_scan_data);
-				temp.symbol_first_char = symbol_first_char;
-				temp.warnings = warnings;
-				// link descriptor block into head of list
-				temp.previous = source_descriptor_list;
-				source_descriptor_list = temp;
+				handle = s == "-" ? Console.In : new StreamReader(s);
 			}
-			// re-initialise file context
-			errors = 0;
-			file = handle;
-			linenumber = 0;
-			name = s;
-			warnings = 0;
-			if (echo)
+			catch (FileNotFoundException e)
 			{
-				text_message(TEXT_INFO, "\n");
+				handle = null;
 			}
-			// make new buffer region below current line
-			text_current = last_char = first_char = last_char - 1;
+			TextReader old = file;
+			if (handle != null) // we found a file
+			{
+				if (old != null) // save current file context
+				{
+					SourceList temp = new SourceList();
+					// load descriptor block
+					temp.errors = errors;
+					temp.file = file;
+					temp.first_char = first_char;
+					temp.last_char = last_char;
+					temp.linenumber = linenumber;
+					temp.name = name;
+					temp.text_char = text_char;
+					temp.text_current = text_current;
+					memcpy(temp.text_scan_data, text_scan_data);
+					temp.symbol_first_char = symbol_first_char;
+					temp.warnings = warnings;
+					// link descriptor block into head of list
+					temp.previous = source_descriptor_list;
+					source_descriptor_list = temp;
+				}
+				// re-initialise file context
+				errors = 0;
+				file = handle;
+				linenumber = 0;
+				name = s;
+				warnings = 0;
+				if (echo)
+				{
+					text_message(TEXT_INFO, "\n");
+				}
+				// make new buffer region below current line
+				text_current = last_char = first_char = last_char - 1;
+			}
+			return handle;
 		}
-		return handle;
-	}
 
-	public static void text_print_statistics()
+#if false
+	internal static void text_print_statistics()
 	{
 		long symbolcount = text_top,
 
@@ -558,7 +583,7 @@ namespace Borium.RDP
 		}
 	}
 
-	public static void text_print_time()
+	internal static void text_print_time()
 	{
 		// string __DATE__ = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 		// string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(new Date());
@@ -586,25 +611,28 @@ namespace Borium.RDP
 		}
 
 #if false
-	public static void text_redirect(PrintStream file)
+	internal static void text_redirect(PrintStream file)
 	{
 		messages = file;
 	}
+#endif
 
-	public static int text_sequence_number()
-	{
-		return sequence_number;
-	}
+		internal static int text_sequence_number()
+		{
+			return sequence_number;
+		}
 
-	public static int text_total_errors()
+#if false
+		internal static int text_total_errors()
 	{
 		return totalerrors;
 	}
 
-	public static string text_uppercase_string(string str)
+	internal static string text_uppercase_string(string str)
 	{
 		return str.toUpperCase();
 	}
+#endif
 
 	private static void text_close()
 	{
@@ -638,37 +666,36 @@ namespace Borium.RDP
 		}
 	}
 
-	private static void text_echo_line()
-	{
-		text_echo_line_number();
-		// current input line is stored in reverse order at top of text buffer:
-		// print backwards from last character of text buffer
-		for (int temp = first_char - 1; temp > last_char; temp--)
+		private static void text_echo_line()
 		{
-			messages.print(text_bot[temp]);
-		}
-		// now print out the echo number line
-		if (echo_num >= 0)
-		{
-			int num_count = -1, char_count = 1;
-			// only the first MAX_ECHO errors have pointers
-			if (echo_num >= MAX_ECHO)
-				echo_num = MAX_ECHO - 1;
 			text_echo_line_number();
-			while (++num_count <= echo_num)
+			// current input line is stored in reverse order at top of text buffer:
+			// print backwards from last character of text buffer
+			for (int temp = first_char - 1; temp > last_char; temp--)
 			{
-				while (char_count++ < echo_pos[num_count] - 1)
-				{
-					messages.print('-');
-				}
-				messages.print((char) ('1' + num_count));
+				messages.Write(text_bot[temp]);
 			}
-			messages.println();
+			// now print out the echo number line
+			if (echo_num >= 0)
+			{
+				int num_count = -1, char_count = 1;
+				// only the first MAX_ECHO errors have pointers
+				if (echo_num >= MAX_ECHO)
+					echo_num = MAX_ECHO - 1;
+				text_echo_line_number();
+				while (++num_count <= echo_num)
+				{
+					while (char_count++ < echo_pos[num_count] - 1)
+					{
+						messages.Write('-');
+					}
+					messages.Write((char)('1' + num_count));
+				}
+				messages.WriteLine();
+			}
+			// reset echo numbering array pointer
+			echo_num = -1;
 		}
-		// reset echo numbering array pointer
-		echo_num = -1;
-	}
-#endif
 
 		private static void text_echo_line_number()
 		{

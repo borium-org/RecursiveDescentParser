@@ -93,27 +93,27 @@ namespace Borium.RDP
 		/// <summary>
 		/// Next symbol in hash list
 		/// </summary>
-		Symbol next_hash;
+		internal Symbol next_hash;
 
 		/// <summary>
 		/// Pointer to next pointer of last_symbol in hash list
 		/// </summary>
-		Symbol[] last_hash = { null };
+		internal Symbol[] last_hash = { null };
 
 		/// <summary>
 		/// Next symbol in scope list
 		/// </summary>
-		Symbol next_scope;
+		internal Symbol next_scope;
 
 		/// <summary>
 		/// Pointer to the scope symbol
 		/// </summary>
-		Symbol scope;
+		internal Symbol scope;
 
 		/// <summary>
 		/// Hash value for quick searching
 		/// </summary>
-		int hash;
+		internal int hash;
 
 		internal int id;
 
