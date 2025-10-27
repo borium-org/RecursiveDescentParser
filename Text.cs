@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 
+using static Borium.RDP.Scan;
 using static Borium.RDP.Text.TextMessageType;
 
 namespace Borium.RDP
@@ -40,8 +41,10 @@ namespace Borium.RDP
 		/** copy of pointer to current source character */
 		int text_current;
 
-		/** copy of pointer to the last thing read by the scanner */
-		ScanData text_scan_data = new ScanData();
+		/// <summary>
+		/// Copy of pointer to the last thing read by the scanner
+		/// </summary>
+		internal ScanData text_scan_data = new ScanData();
 
 		/** copy of first character of this symbol */
 		int symbol_first_char;
@@ -161,8 +164,11 @@ namespace Borium.RDP
 		/// </summary>
 		private static int tabwidth;
 
+		/// <summary>
+		/// Pointer to the last thing read by the scanner
+		/// </summary>
+		internal static ScanData text_scan_data;
 #if false
-	static ScanData text_scan_data; // pointer to the last thing read by the scanner
 
 	/** enable line echoing */
 	private static boolean echo;
@@ -311,17 +317,17 @@ namespace Borium.RDP
 		}
 		text_char = text_bot[--text_current];
 	}
-
-	public static string text_get_string(int start)
-	{
-		string s = "";
-		while (text_bot[start] != 0)
-		{
-			s += text_bot[start++];
-		}
-		return s;
-	}
 #endif
+
+		internal static string text_get_string(int start)
+		{
+			string s = "";
+			while (text_bot[start] != 0)
+			{
+				s += text_bot[start++];
+			}
+			return s;
+		}
 
 		internal static void text_init(int max_text, int max_errors, int max_warnings, int tab_width)
 		{
@@ -335,21 +341,21 @@ namespace Borium.RDP
 			text_current = last_char = first_char = maxtext;
 		}
 
-#if false
-		public static int text_insert_char(char c)
-	{
-		int start = text_top;
-		if (text_top >= last_char)
+		internal static int text_insert_char(char c)
 		{
-			text_message(TEXT_FATAL, "Ran out of text space\n");
+			int start = text_top;
+			if (text_top >= last_char)
+			{
+				text_message(TEXT_FATAL, "Ran out of text space\n");
+			}
+			else
+			{
+				text_bot[text_top++] = c;
+			}
+			return start;
 		}
-		else
-		{
-			text_bot[text_top++] = c;
-		}
-		return start;
-	}
 
+#if false
 	public static int text_insert_characters(string str)
 	{
 		int start = text_top;
@@ -371,20 +377,22 @@ namespace Borium.RDP
 		text_insert_char((char) (n % 10 + '0'));
 		return start;
 	}
+#endif
 
-	public static int text_insert_string(string str)
-	{
-		int start = text_top;
-		for (char ch : str.toCharArray())
+		internal static int text_insert_string(string str)
 		{
-			text_insert_char(ch);
+			int start = text_top;
+			foreach (char ch in str)
+			{
+				text_insert_char(ch);
+			}
+			text_insert_char((char)0);
+			return start;
 		}
-		text_insert_char((char) 0);
-		return start;
-	}
 
-	/** put an id_number into text buffer */
-	public static int text_insert_substring(string prefix, string str, int n)
+#if false
+		/** put an id_number into text buffer */
+		public static int text_insert_substring(string prefix, string str, int n)
 	{
 		int start = text_top;
 

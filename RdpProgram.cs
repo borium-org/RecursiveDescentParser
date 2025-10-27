@@ -3,6 +3,7 @@ using System.Reflection;
 
 using static Borium.RDP.Arg;
 using static Borium.RDP.Text;
+using static Borium.RDP.Scan;
 using static Borium.RDP.Text.TextMessageType;
 
 namespace Borium.RDP
@@ -144,8 +145,7 @@ private const int RDP_PASSES = 2;
 
 		private static int rdp_sourcefilenumber;
 
-#if false
-private static string[] rdp_tokens = { "IGNORE", "ID", "INTEGER", "REAL", "CHAR", "CHAR_ESC", "string",
+		private static string[] rdp_tokens = { "IGNORE", "ID", "INTEGER", "REAL", "CHAR", "CHAR_ESC", "string",
 			"string_ESC", "COMMENT", "COMMENT_VISIBLE", "COMMENT_NEST", "COMMENT_NEST_VISIBLE", "COMMENT_LINE",
 			"COMMENT_LINE_VISIBLE", "EOF", "EOLN", "'\"'", "'#'", "'\''", "'('", "'(*'", "')'", "'*'", "'.'", "':'",
 			"'::'", "'::='", "'<'", "'>'", "'@'", "'ALT_ID'", "'ANNOTATED_EPSILON_TREE'", "'ARG_BLANK'",
@@ -158,6 +158,7 @@ private static string[] rdp_tokens = { "IGNORE", "ID", "INTEGER", "REAL", "CHAR"
 			"'SUPPRESS_BUILT_IN_ARGUMENTS'", "'SYMBOL_TABLE'", "'TAB_WIDTH'", "'TEXT_SIZE'", "'TITLE'", "'TREE'",
 			"'USES'", "'['", "'[*'", "']'", "'^'", "'^^'", "'^^^'", "'^_'", "'{'", "'|'", "'}'" };
 
+#if false
 private static Set string_stop = new Set();
 private static Set code_stop = new Set();
 private static Set comment_stop = new Set();
@@ -303,8 +304,8 @@ private static RdpTreeNodeData rdp_tree_last_child;
 				text_message(TEXT_FATAL, "multiple source files not allowed\n");
 			}
 			text_init(rdp_textsize[0], 50, 120, rdp_tabwidth[0]);
+			scan_init(false, false, true, rdp_symbol_echo[0], rdp_tokens);
 #if false
-	scan_init(false, false, true, rdp_symbol_echo.value(), rdp_tokens);
 	if (rdp_lexicalise.value())
 		scan_lexicalise();
 	locals = symbol_new_table("locals", 101, 31, new CompareHashPrint());
