@@ -66,6 +66,9 @@
     <Compile Include="Arg.cs" />
     <Compile Include="BuildInfo.cs" />
     <Compile Include="CompareHashPrint.cs" />
+    <Compile Include="CRT.cs" />
+    <Compile Include="RdpAux.cs" />
+    <Compile Include="RdpGram.cs" />
     <Compile Include="RdpProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scan.cs" />

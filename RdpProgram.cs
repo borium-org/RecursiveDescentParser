@@ -3,6 +3,7 @@ using System.Reflection;
 using static Borium.RDP.Arg;
 using static Borium.RDP.Scan;
 using static Borium.RDP.Symbol;
+using static Borium.RDP.RdpAux;
 using static Borium.RDP.Text;
 using static Borium.RDP.Text.TextMessageType;
 
@@ -124,7 +125,7 @@ private static const string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(n
 
 private const int RDP_PASSES = 2;
 #endif
-		private static string rdp_sourcefilename; // current source file name
+		internal static string rdp_sourcefilename; // current source file name
 
 		private static string[] rdp_sourcefilenames; // array of source file names
 
@@ -216,10 +217,10 @@ private const int RDP_PASSES = 2;
 		private static Set unit_first = new Set();
 		private static Set unit_stop = new Set();
 
-		static SymbolTable locals = null;
-		static SymbolTable codes = null;
-		static SymbolTable tokens = null;
-		static SymbolTable rdp = null;
+		internal static SymbolTable locals = null;
+		internal static SymbolTable codes = null;
+		internal static SymbolTable tokens = null;
+		internal static SymbolTable rdp = null;
 
 		private static int rdp_pass;
 
@@ -267,13 +268,11 @@ private static RdpTreeNodeData rdp_tree_last_child;
 			arg_boolean('v', "Set verbose mode", rdp_verbose);
 			arg_string('V', "Write derivation tree to filename in VCG format", rdp_vcg_filename);
 			arg_message("");
-#if false
 			arg_boolean('e', "Write out expanded BNF along with first and follow sets", rdp_expanded);
 			arg_boolean('E', "Add rule name to error messages in generated parser", rdp_error_production_name);
 			arg_boolean('F', "Force creation of output files", rdp_force);
 			arg_boolean('p', "Make parser only (omit semantic actions from generated code)", rdp_parser_only);
 			arg_boolean('R', "Add rule entry and exit messages", rdp_trace);
-#endif
 			arg_string('C', "C parser path", rdp_c_path);
 			arg_string('J', "Java parser output file path", rdp_java_path);
 			arg_string('j', "Java parser fully qualified prefix", rdp_java_prefix);
@@ -315,8 +314,8 @@ private static RdpTreeNodeData rdp_tree_last_child;
 			rdp = symbol_new_table("rdp", 101, 31, new CompareHashPrint());
 			rdp_set_initialise();
 			rdp_load_keywords();
+			rdp_pre_parse();
 #if false
-	rdp_pre_parse();
 	if (rdp_verbose.value())
 		text_printf("\nRecursive descent parser generator V1.65 (c) Adrian Johnstone 2000\n" + RDP_STAMP + "\n\n");
 	for (rdp_pass = 1; rdp_pass <= RDP_PASSES; rdp_pass++)

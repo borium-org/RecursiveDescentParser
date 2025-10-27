@@ -35,34 +35,41 @@ namespace Borium.RDP
 			return symbol;
 		}
 
-#if false
-	/** lookup a symbol by id. Return null if it is not found */
-	public static Symbol symbol_lookup_key(SymbolTable table, String key, SymbolScopeData scope)
-	{
-		int hash = table.hash(table.hash_prime, key);
-		Symbol p = table.table[hash % table.hash_size];
-
-		// look for symbol with same hash and a true compare
-		while (!(p == null || table.compare(key, p) == 0 && !(p.scope != scope && scope != null)))
+		/// <summary>
+		/// Lookup a symbol by id. Return null if it is not found
+		/// </summary>
+		/// <param name="table"></param>
+		/// <param name="key"></param>
+		/// <param name="scope"></param>
+		/// <returns></returns>
+		internal static Symbol symbol_lookup_key(SymbolTable table, string key, SymbolScopeData scope)
 		{
-			p = p.next_hash;
+			int hash = table.hash(table.hash_prime, key);
+			Symbol p = table.table[hash % table.hash_size];
+
+			// look for symbol with same hash and a true compare
+			while (!(p == null || table.compare(key, p) == 0 && !(p.scope != scope && scope != null)))
+			{
+				p = p.next_hash;
+			}
+
+			return p;
 		}
 
-		return p;
-	}
+		internal static SymbolScopeData symbol_new_scope(SymbolTable table, string id)
+		{
+			SymbolScopeData p = new SymbolScopeData();
 
-	public static SymbolScopeData symbol_new_scope(SymbolTable table, String id)
-	{
-		SymbolScopeData p = new SymbolScopeData();
+			p.id = text_insert_string(id);
+			p.next_hash = table.scopes;
+			table.current = table.scopes = p;
+			if (p.next_hash != null)
+			{
+				p.next_hash.last_hash[0] = p.next_hash;
+			}
+			return p;
+		}
 
-		p.id = text_insert_string(id);
-		p.next_hash = table.scopes;
-		table.current = table.scopes = p;
-		if (p.next_hash != null)
-			p.next_hash.last_hash.set(p.next_hash);
-		return p;
-	}
-#endif
 		internal static SymbolTable symbol_new_table(string name, int symbol_hashsize, int symbol_hashprime,
 				CompareHashPrint compareHashPrint)
 		{

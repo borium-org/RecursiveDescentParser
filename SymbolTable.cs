@@ -39,7 +39,7 @@
 		/// </summary>
 		internal SymbolTable next;
 
-		int compare(string key, Symbol p)
+		internal int compare(string key, Symbol p)
 		{
 			return compareHashPrint.compare(key, p);
 		}

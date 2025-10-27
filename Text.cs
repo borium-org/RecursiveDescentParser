@@ -237,34 +237,36 @@ namespace Borium.RDP
 		}
 		return name;
 	}
+#endif
 
-	/** add a new filetype. If ftype is NULL, return just filename */
-	public static string text_force_filetype(string fname, string ftype)
-	{
-		// work backwards from end of filename looking for a dot, or a directory separator
-		int length = fname.length() - 1;
-		while (fname.charAt(length) != '.' && fname.charAt(length) != '/' && fname.charAt(length) != '\\' && length > 0)
+		/** add a new filetype. If ftype is NULL, return just filename */
+		internal static string text_force_filetype(string fname, string ftype)
 		{
-			length--;
+			// work backwards from end of filename looking for a dot, or a directory separator
+			int length = fname.Length - 1;
+			while (fname[length] != '.' && fname[length] != '/' && fname[length] != '\\' && length > 0)
+			{
+				length--;
+			}
+			if (fname[length] != '.')
+			{
+				length = fname.Length;
+			}
+			string fullname = null;
+			if (ftype == null)
+			{
+				fullname = fname;
+			}
+			else
+			{
+				fullname = fname.Substring(0, length) + "." + ftype;
+			}
+			return fullname;
 		}
-		if (fname.charAt(length) != '.')
-		{
-			length = fname.length();
-		}
-		string fullname = null;
-		if (ftype == null)
-		{
-			fullname = fname;
-		}
-		else
-		{
-			fullname = fname.substring(0, length) + "." + ftype;
-		}
-		return fullname;
-	}
 
-	/** advance text_current, reading another line if necessary */
-	public static void text_get_char()
+#if false
+		/** advance text_current, reading another line if necessary */
+		public static void text_get_char()
 	{
 		if (text_current <= last_char)
 		{
