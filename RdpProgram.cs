@@ -21,28 +21,27 @@ namespace Borium.RDP
 				return value;
 			}
 		}
-#if false
-		private static class RdpTreeEdgeData extends GraphEdge
-		{
-		int rdp_edge_kind;
 
-		RdpTreeEdgeData(int kind)
+		private class RdpTreeEdgeData : GraphEdge
 		{
-			rdp_edge_kind = kind;
+			int rdp_edge_kind;
+
+			RdpTreeEdgeData(int kind)
+			{
+				rdp_edge_kind = kind;
+			}
 		}
-	}
 
-	private static class RdpTreeNodeData extends GraphNode
-	{
-		ScanData data = new ScanData();
+		protected class RdpTreeNodeData : GraphNode
+		{
+			internal ScanData data = new ScanData();
 
-	@Override
-		int getId()
-	{
-		return data.id;
-	}
-}
-#endif
+			protected override int getId()
+			{
+				return data.id;
+			}
+		}
+
 		const int RDP_TT_BOTTOM = 16/* SCAN_P_TOP */;
 		const int RDP_T_34 /* " */ = 16/* SCAN_P_TOP */;
 		const int RDP_T_35 /* # */ = 17;
@@ -249,11 +248,12 @@ private static RdpTreeNodeData rdp_tree_last_child;
 			int[] rdp_tabwidth = { 8 }; // tab expansion width
 
 			string[] rdp_vcg_filename = { null }; // filename for -V option
-#if false
-			Graph<RdpTreeNodeData, RdpTreeEdgeData> rdp_tree = new Graph<>();
-	rdp_tree.insertGraph("RDP derivation tree");
-	RdpTreeNodeData rdp_tree_root = null;
-#endif
+
+			Graph<RdpTreeNodeData, RdpTreeEdgeData> rdp_tree = new Graph<RdpTreeNodeData, RdpTreeEdgeData>();
+			rdp_tree.insertGraph("RDP derivation tree");
+
+			RdpTreeNodeData rdp_tree_root = null;
+
 			arg_message("Recursive descent parser generator V1.65 (c) Adrian Johnstone 2000\n"
 			+ "Ported to C# by Borium\n" + RDP_STAMP + "\n\n" + "Usage: rdparser [options] source[.bnf]");
 
@@ -336,9 +336,9 @@ private static RdpTreeNodeData rdp_tree_last_child;
 					text_get_char();
 					scan_();
 
+					// call parser at top level
+					unit(rdp_tree_root = rdp_add_node("unit", rdp_tree));
 #if false
-			// call parser at top level
-			unit(rdp_tree_root = rdp_add_node("unit", rdp_tree));
 			if (text_total_errors() != 0)
 			{
 				text_message(TEXT_FATAL, "error" + (text_total_errors() == 1 ? "" : "s")
@@ -408,9 +408,9 @@ private static RdpTreeNodeData rdp_tree_last_child;
 			return milliseconds;
 		}
 
+		protected static void unit(RdpTreeNodeData rdp_tree)
+		{
 #if false
-protected static void unit(RdpTreeNodeData rdp_tree)
-{
 	if (scan_test_set(null, rdp_unit_2_first, null))
 	{
 		while (true)
@@ -444,8 +444,10 @@ protected static void unit(RdpTreeNodeData rdp_tree)
 		text_message(TEXT_FATAL, "no rule definitions found\n");
 	}
 	scan_test_set(null, unit_stop, unit_stop);
-}
+#endif
+		}
 
+#if false
 private static string code(RdpTreeNodeData rdp_tree)
 {
 	string result;
@@ -2538,26 +2540,26 @@ private static RdpTreeNodeData rdp_add_child(string id, RdpTreeNodeData rdp_tree
 	}
 	return null;
 }
-
-private static RdpTreeNodeData rdp_add_node(string id, Graph<RdpTreeNodeData, RdpTreeEdgeData> rdp_tree)
-{
-	if (rdp_tree_update)
-	{
-		RdpTreeNodeData node = new RdpTreeNodeData();
-		rdp_tree.insertNode(node);
-		if (id != null)
-		{
-			node.data.id = text_insert_string(id);
-		}
-		else
-		{
-			memcpy(node.data, text_scan_data);
-		}
-		return node;
-	}
-	return null;
-}
 #endif
+
+		private static RdpTreeNodeData rdp_add_node(string id, Graph<RdpTreeNodeData, RdpTreeEdgeData> rdp_tree)
+		{
+			if (rdp_tree_update)
+			{
+				RdpTreeNodeData node = new RdpTreeNodeData();
+				rdp_tree.insertNode(node);
+				if (id != null)
+				{
+					node.data.id = text_insert_string(id);
+				}
+				else
+				{
+					memcpy(node.data, text_scan_data);
+				}
+				return node;
+			}
+			return null;
+		}
 
 		private static void rdp_load_keywords()
 		{

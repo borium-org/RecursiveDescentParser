@@ -67,6 +67,10 @@
     <Compile Include="BuildInfo.cs" />
     <Compile Include="CompareHashPrint.cs" />
     <Compile Include="CRT.cs" />
+    <Compile Include="Graph.cs" />
+    <Compile Include="GraphBase.cs" />
+    <Compile Include="GraphEdge.cs" />
+    <Compile Include="GraphNode.cs" />
     <Compile Include="RdpAux.cs" />
     <Compile Include="RdpGram.cs" />
     <Compile Include="RdpProgram.cs" />
