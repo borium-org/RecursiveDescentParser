@@ -9,8 +9,8 @@ namespace Borium.RDP
 	{
 		internal class ScanData : Symbol
 		{
-			int token;
-			int extended;
+			internal int token;
+			internal int extended;
 			ScanCommentBlock comment_block;
 			string sourcefilename;
 			int line_number;
@@ -28,25 +28,25 @@ namespace Borium.RDP
 			internal ScanCommentBlock next;
 			internal ScanCommentBlock previous;
 		}
-#if false
-		static final int SCAN_P_IGNORE = 0;
-	static final int SCAN_P_ID = 1;
-	static final int SCAN_P_INTEGER = 2;
-	static final int SCAN_P_REAL = 3;
-	static final int SCAN_P_CHAR = 4;
-	static final int SCAN_P_CHAR_ESC = 5;
-	static final int SCAN_P_STRING = 6;
-	static final int SCAN_P_STRING_ESC = 7;
-	static final int SCAN_P_COMMENT = 8;
-	static final int SCAN_P_COMMENT_VISIBLE = 9;
-	static final int SCAN_P_COMMENT_NEST = 10;
-	static final int SCAN_P_COMMENT_NEST_VISIBLE = 11;
-	static final int SCAN_P_COMMENT_LINE = 12;
-	static final int SCAN_P_COMMENT_LINE_VISIBLE = 13;
-	static final int SCAN_P_EOF = 14;
-	static final int SCAN_P_EOLN = 15;
-	static final int SCAN_P_TOP = 16;
-#endif
+
+		internal const int SCAN_P_IGNORE = 0;
+		internal const int SCAN_P_ID = 1;
+		internal const int SCAN_P_INTEGER = 2;
+		internal const int SCAN_P_REAL = 3;
+		internal const int SCAN_P_CHAR = 4;
+		internal const int SCAN_P_CHAR_ESC = 5;
+		internal const int SCAN_P_STRING = 6;
+		internal const int SCAN_P_STRING_ESC = 7;
+		internal const int SCAN_P_COMMENT = 8;
+		internal const int SCAN_P_COMMENT_VISIBLE = 9;
+		internal const int SCAN_P_COMMENT_NEST = 10;
+		internal const int SCAN_P_COMMENT_NEST_VISIBLE = 11;
+		internal const int SCAN_P_COMMENT_LINE = 12;
+		internal const int SCAN_P_COMMENT_LINE_VISIBLE = 13;
+		internal const int SCAN_P_EOF = 14;
+		internal const int SCAN_P_EOLN = 15;
+		internal const int SCAN_P_TOP = 16;
+
 		private static bool scan_case_insensitive = false;
 		private static bool scan_show_skips = false;
 		private static bool scan_newline_visible = false;
@@ -56,8 +56,8 @@ namespace Borium.RDP
 		private static ScanCommentBlock scan_comment_list_end = null;
 		private static ScanCommentBlock last_comment_block;
 		private static SymbolTable scan_table;
-#if false
 		private static bool scan_lexicalise_flag = false;
+#if false
 	@SuppressWarnings("unused")
 	private static int last_line_number = 0;
 	private static int last_column = 0;
@@ -655,13 +655,12 @@ namespace Borium.RDP
 			scan_insert_comment_block("", 0, 0);
 		}
 
-#if false
-		public static void scan_lexicalise()
-	{
-		scan_lexicalise_flag = true;
-	}
+		internal static void scan_lexicalise()
+		{
+			scan_lexicalise_flag = true;
+		}
 
-	public static void scan_load_keyword(String id1, String id2, int token, int extended)
+	internal static void scan_load_keyword(string id1, string id2, int token, int extended)
 	{
 		ScanData d = new ScanData();
 		d.id = text_insert_string(id1);
@@ -674,7 +673,8 @@ namespace Borium.RDP
 		symbol_insert_symbol(scan_table, d);
 	}
 
-	public static bool scan_test(String production, int valid, Set stop)
+#if false
+public static bool scan_test(String production, int valid, Set stop)
 	{
 		if (valid != text_scan_data.token)
 		{
@@ -722,17 +722,17 @@ namespace Borium.RDP
 	}
 #endif
 
-	private static void scan_insert_comment_block(String pattern, int column, int sequence_number)
-	{
-		ScanCommentBlock temp = new ScanCommentBlock();
-		scan_comment_list_end.comment = pattern;
-		scan_comment_list_end.sequence_number = sequence_number;
-		scan_comment_list_end.column = column;
-		temp.previous = scan_comment_list_end;
-		scan_comment_list_end.next = temp;
-		scan_comment_list_end = temp;
-		last_comment_block = temp;
-	}
+		private static void scan_insert_comment_block(String pattern, int column, int sequence_number)
+		{
+			ScanCommentBlock temp = new ScanCommentBlock();
+			scan_comment_list_end.comment = pattern;
+			scan_comment_list_end.sequence_number = sequence_number;
+			scan_comment_list_end.column = column;
+			temp.previous = scan_comment_list_end;
+			scan_comment_list_end.next = temp;
+			scan_comment_list_end = temp;
+			last_comment_block = temp;
+		}
 
 #if false
 		private static void skip(Set stop)

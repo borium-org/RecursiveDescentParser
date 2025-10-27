@@ -6,36 +6,36 @@ namespace Borium.RDP
 	{
 		private static SymbolTable symbol_tables = null;
 
-#if false
-	public static Symbol symbol_insert_symbol(SymbolTable table, Symbol symbol)
-	{
-		Symbol s = symbol;
-
-		s.hash = table.hash(table.hash_prime, text_get_string(symbol.id));
-		int hash_index = s.hash % table.hash_size;
-
-		s.next_hash = table.table[hash_index];
-		table.table[hash_index] = s;
-
-		s.last_hash.set(table.table[hash_index]);
-
-		// if this wasn't the start of a new list ...
-		if (s.next_hash != null)
+		public static Symbol symbol_insert_symbol(SymbolTable table, Symbol symbol)
 		{
-			// ...point old list next back at s
-			s.next_hash.last_hash.set(s.next_hash);
+			Symbol s = symbol;
+
+			s.hash = table.hash(table.hash_prime, text_get_string(symbol.id));
+			int hash_index = s.hash % table.hash_size;
+
+			s.next_hash = table.table[hash_index];
+			table.table[hash_index] = s;
+
+			s.last_hash[0] = table.table[hash_index];
+
+			// if this wasn't the start of a new list ...
+			if (s.next_hash != null)
+			{
+				// ...point old list next back at s
+				s.next_hash.last_hash[0] = s.next_hash;
+			}
+
+			// now insert in scope list
+			s.next_scope = table.current.next_scope;
+			table.current.next_scope = s;
+
+			// set up pointer to scope block
+			s.scope = table.current;
+
+			return symbol;
 		}
 
-		// now insert in scope list
-		s.next_scope = table.current.next_scope;
-		table.current.next_scope = s;
-
-		// set up pointer to scope block
-		s.scope = table.current;
-
-		return symbol;
-	}
-
+#if false
 	/** lookup a symbol by id. Return null if it is not found */
 	public static Symbol symbol_lookup_key(SymbolTable table, String key, SymbolScopeData scope)
 	{

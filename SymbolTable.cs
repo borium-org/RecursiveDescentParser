@@ -50,7 +50,7 @@
 			return current;
 		}
 
-		int hash(int prime, string key)
+		internal int hash(int prime, string key)
 		{
 			return compareHashPrint.hash(prime, key);
 		}

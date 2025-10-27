@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reflection;
-
 using static Borium.RDP.Arg;
-using static Borium.RDP.Text;
 using static Borium.RDP.Scan;
+using static Borium.RDP.Symbol;
+using static Borium.RDP.Text;
 using static Borium.RDP.Text.TextMessageType;
 
 namespace Borium.RDP
@@ -158,72 +158,72 @@ private const int RDP_PASSES = 2;
 			"'SUPPRESS_BUILT_IN_ARGUMENTS'", "'SYMBOL_TABLE'", "'TAB_WIDTH'", "'TEXT_SIZE'", "'TITLE'", "'TREE'",
 			"'USES'", "'['", "'[*'", "']'", "'^'", "'^^'", "'^^^'", "'^_'", "'{'", "'|'", "'}'" };
 
+		private static Set string_stop = new Set();
+		private static Set code_stop = new Set();
+		private static Set comment_stop = new Set();
+		private static Set dir_first = new Set();
+		private static Set dir_stop = new Set();
+		private static Set item_com_first = new Set();
+		private static Set item_com_stop = new Set();
+		private static Set item_inl_first = new Set();
+		private static Set item_inl_stop = new Set();
+		private static Set item_ret_first = new Set();
+		private static Set item_ret_stop = new Set();
+		private static Set prod_first = new Set();
+		private static Set prod_stop = new Set();
+		private static Set rdp_dir_11_first = new Set();
+		private static Set rdp_dir_3_first = new Set();
+		private static Set rdp_dir_34_first = new Set();
+		private static Set rdp_dir_37_first = new Set();
+		private static Set rdp_dir_7_first = new Set();
+		private static Set rdp_item_inl_16_first = new Set();
+		private static Set rdp_item_inl_21_first = new Set();
+		private static Set rdp_item_inl_22_first = new Set();
+		private static Set rdp_item_inl_23_first = new Set();
+		private static Set rdp_item_inl_28_first = new Set();
+		private static Set rdp_item_inl_29_first = new Set();
+		private static Set rdp_item_inl_7_first = new Set();
+		private static Set rdp_item_inl_8_first = new Set();
+		private static Set rdp_item_inl_9_first = new Set();
+		private static Set rdp_item_ret_4_first = new Set();
+		private static Set rdp_item_ret_5_first = new Set();
+		private static Set rdp_item_ret_6_first = new Set();
+		private static Set rdp_prod_0_first = new Set();
+		private static Set rdp_prod_1_first = new Set();
+		private static Set rdp_prod_2_first = new Set();
+		private static Set rdp_rule_16_first = new Set();
+		private static Set rdp_seq_0_first = new Set();
+		private static Set rdp_seq_1_first = new Set();
+		private static Set rdp_seq_10_first = new Set();
+		private static Set rdp_seq_17_first = new Set();
+		private static Set rdp_seq_2_first = new Set();
+		private static Set rdp_seq_23_first = new Set();
+		private static Set rdp_seq_24_first = new Set();
+		private static Set rdp_seq_25_first = new Set();
+		private static Set rdp_seq_28_first = new Set();
+		private static Set rdp_seq_29_first = new Set();
+		private static Set rdp_seq_30_first = new Set();
+		private static Set rdp_seq_31_first = new Set();
+		private static Set rdp_seq_32_first = new Set();
+		private static Set rdp_seq_9_first = new Set();
+		private static Set rdp_unit_1_first = new Set();
+		private static Set rdp_unit_2_first = new Set();
+		private static Set rdp_unit_3_first = new Set();
+		private static Set rule_stop = new Set();
+		private static Set seq_first = new Set();
+		private static Set seq_stop = new Set();
+		private static Set token_stop = new Set();
+		private static Set unit_first = new Set();
+		private static Set unit_stop = new Set();
+
+		static SymbolTable locals = null;
+		static SymbolTable codes = null;
+		static SymbolTable tokens = null;
+		static SymbolTable rdp = null;
+
+		private static int rdp_pass;
+
 #if false
-private static Set string_stop = new Set();
-private static Set code_stop = new Set();
-private static Set comment_stop = new Set();
-private static Set dir_first = new Set();
-private static Set dir_stop = new Set();
-private static Set item_com_first = new Set();
-private static Set item_com_stop = new Set();
-private static Set item_inl_first = new Set();
-private static Set item_inl_stop = new Set();
-private static Set item_ret_first = new Set();
-private static Set item_ret_stop = new Set();
-private static Set prod_first = new Set();
-private static Set prod_stop = new Set();
-private static Set rdp_dir_11_first = new Set();
-private static Set rdp_dir_3_first = new Set();
-private static Set rdp_dir_34_first = new Set();
-private static Set rdp_dir_37_first = new Set();
-private static Set rdp_dir_7_first = new Set();
-private static Set rdp_item_inl_16_first = new Set();
-private static Set rdp_item_inl_21_first = new Set();
-private static Set rdp_item_inl_22_first = new Set();
-private static Set rdp_item_inl_23_first = new Set();
-private static Set rdp_item_inl_28_first = new Set();
-private static Set rdp_item_inl_29_first = new Set();
-private static Set rdp_item_inl_7_first = new Set();
-private static Set rdp_item_inl_8_first = new Set();
-private static Set rdp_item_inl_9_first = new Set();
-private static Set rdp_item_ret_4_first = new Set();
-private static Set rdp_item_ret_5_first = new Set();
-private static Set rdp_item_ret_6_first = new Set();
-private static Set rdp_prod_0_first = new Set();
-private static Set rdp_prod_1_first = new Set();
-private static Set rdp_prod_2_first = new Set();
-private static Set rdp_rule_16_first = new Set();
-private static Set rdp_seq_0_first = new Set();
-private static Set rdp_seq_1_first = new Set();
-private static Set rdp_seq_10_first = new Set();
-private static Set rdp_seq_17_first = new Set();
-private static Set rdp_seq_2_first = new Set();
-private static Set rdp_seq_23_first = new Set();
-private static Set rdp_seq_24_first = new Set();
-private static Set rdp_seq_25_first = new Set();
-private static Set rdp_seq_28_first = new Set();
-private static Set rdp_seq_29_first = new Set();
-private static Set rdp_seq_30_first = new Set();
-private static Set rdp_seq_31_first = new Set();
-private static Set rdp_seq_32_first = new Set();
-private static Set rdp_seq_9_first = new Set();
-private static Set rdp_unit_1_first = new Set();
-private static Set rdp_unit_2_first = new Set();
-private static Set rdp_unit_3_first = new Set();
-private static Set rule_stop = new Set();
-private static Set seq_first = new Set();
-private static Set seq_stop = new Set();
-private static Set token_stop = new Set();
-private static Set unit_first = new Set();
-private static Set unit_stop = new Set();
-
-static SymbolTable locals = null;
-static SymbolTable codes = null;
-static SymbolTable tokens = null;
-static SymbolTable rdp = null;
-
-private static int rdp_pass;
-
 /** Tree update function flag for noterminal nodes */
 private static boolean rdp_tree_update;
 
@@ -305,15 +305,17 @@ private static RdpTreeNodeData rdp_tree_last_child;
 			}
 			text_init(rdp_textsize[0], 50, 120, rdp_tabwidth[0]);
 			scan_init(false, false, true, rdp_symbol_echo[0], rdp_tokens);
+			if (rdp_lexicalise[0])
+			{
+				scan_lexicalise();
+			}
+			locals = symbol_new_table("locals", 101, 31, new CompareHashPrint());
+			codes = symbol_new_table("codes", 101, 31, new CompareHashPrint());
+			tokens = symbol_new_table("tokens", 101, 31, new CompareHashPrint());
+			rdp = symbol_new_table("rdp", 101, 31, new CompareHashPrint());
+			rdp_set_initialise();
+			rdp_load_keywords();
 #if false
-	if (rdp_lexicalise.value())
-		scan_lexicalise();
-	locals = symbol_new_table("locals", 101, 31, new CompareHashPrint());
-	codes = symbol_new_table("codes", 101, 31, new CompareHashPrint());
-	tokens = symbol_new_table("tokens", 101, 31, new CompareHashPrint());
-	rdp = symbol_new_table("rdp", 101, 31, new CompareHashPrint());
-	rdp_set_initialise();
-	rdp_load_keywords();
 	rdp_pre_parse();
 	if (rdp_verbose.value())
 		text_printf("\nRecursive descent parser generator V1.65 (c) Adrian Johnstone 2000\n" + RDP_STAMP + "\n\n");
@@ -2549,262 +2551,264 @@ private static RdpTreeNodeData rdp_add_node(string id, Graph<RdpTreeNodeData, Rd
 	}
 	return null;
 }
+#endif
 
-private static void rdp_load_keywords()
-{
-	scan_load_keyword("\"", "\\", RDP_T_34 /* " */, SCAN_P_string_ESC);
-	scan_load_keyword("#", null, RDP_T_35 /* # */, SCAN_P_IGNORE);
-	scan_load_keyword("\'", "\\", RDP_T_39 /* ' */, SCAN_P_string_ESC);
-	scan_load_keyword("(", null, RDP_T_40 /* ( */, SCAN_P_IGNORE);
-	scan_load_keyword("(*", "*)", RDP_T_4042 /* (* */, SCAN_P_COMMENT);
-	scan_load_keyword(")", null, RDP_T_41 /* ) */, SCAN_P_IGNORE);
-	scan_load_keyword("*", null, RDP_T_42 /* * */, SCAN_P_IGNORE);
-	scan_load_keyword(".", null, RDP_T_46 /* . */, SCAN_P_IGNORE);
-	scan_load_keyword(":", null, RDP_T_58 /* : */, SCAN_P_IGNORE);
-	scan_load_keyword("::", null, RDP_T_5858 /* :: */, SCAN_P_IGNORE);
-	scan_load_keyword("::=", null, RDP_T_585861 /* ::= */, SCAN_P_IGNORE);
-	scan_load_keyword("<", null, RDP_T_60 /* < */, SCAN_P_IGNORE);
-	scan_load_keyword(">", null, RDP_T_62 /* > */, SCAN_P_IGNORE);
-	scan_load_keyword("@", null, RDP_T_64 /* @ */, SCAN_P_IGNORE);
-	scan_load_keyword("ALT_ID", null, RDP_T_ALT_ID, SCAN_P_IGNORE);
-	scan_load_keyword("ANNOTATED_EPSILON_TREE", null, RDP_T_ANNOTATED_EPSILON_TREE, SCAN_P_IGNORE);
-	scan_load_keyword("ARG_BLANK", null, RDP_T_ARG_BLANK, SCAN_P_IGNORE);
-	scan_load_keyword("ARG_BOOLEAN", null, RDP_T_ARG_BOOLEAN, SCAN_P_IGNORE);
-	scan_load_keyword("ARG_NUMERIC", null, RDP_T_ARG_NUMERIC, SCAN_P_IGNORE);
-	scan_load_keyword("ARG_string", null, RDP_T_ARG_string, SCAN_P_IGNORE);
-	scan_load_keyword("CASE_INSENSITIVE", null, RDP_T_CASE_INSENSITIVE, SCAN_P_IGNORE);
-	scan_load_keyword("CHAR", null, RDP_T_CHAR, SCAN_P_IGNORE);
-	scan_load_keyword("CHAR_ESC", null, RDP_T_CHAR_ESC, SCAN_P_IGNORE);
-	scan_load_keyword("COMMENT", null, RDP_T_COMMENT, SCAN_P_IGNORE);
-	scan_load_keyword("COMMENT_LINE", null, RDP_T_COMMENT_LINE, SCAN_P_IGNORE);
-	scan_load_keyword("COMMENT_LINE_VISIBLE", null, RDP_T_COMMENT_LINE_VISIBLE, SCAN_P_IGNORE);
-	scan_load_keyword("COMMENT_NEST", null, RDP_T_COMMENT_NEST, SCAN_P_IGNORE);
-	scan_load_keyword("COMMENT_NEST_VISIBLE", null, RDP_T_COMMENT_NEST_VISIBLE, SCAN_P_IGNORE);
-	scan_load_keyword("COMMENT_VISIBLE", null, RDP_T_COMMENT_VISIBLE, SCAN_P_IGNORE);
-	scan_load_keyword("DERIVATION_TREE", null, RDP_T_DERIVATION_TREE, SCAN_P_IGNORE);
-	scan_load_keyword("EPSILON_TREE", null, RDP_T_EPSILON_TREE, SCAN_P_IGNORE);
-	scan_load_keyword("GLOBAL", null, RDP_T_GLOBAL, SCAN_P_IGNORE);
-	scan_load_keyword("HASH_PRIME", null, RDP_T_HASH_PRIME, SCAN_P_IGNORE);
-	scan_load_keyword("HASH_SIZE", null, RDP_T_HASH_SIZE, SCAN_P_IGNORE);
-	scan_load_keyword("INCLUDE", null, RDP_T_INCLUDE, SCAN_P_IGNORE);
-	scan_load_keyword("INTERPRETER", null, RDP_T_INTERPRETER, SCAN_P_IGNORE);
-	scan_load_keyword("MAX_ERRORS", null, RDP_T_MAX_ERRORS, SCAN_P_IGNORE);
-	scan_load_keyword("MAX_WARNINGS", null, RDP_T_MAX_WARNINGS, SCAN_P_IGNORE);
-	scan_load_keyword("MULTIPLE_SOURCE_FILES", null, RDP_T_MULTIPLE_SOURCE_FILES, SCAN_P_IGNORE);
-	scan_load_keyword("NEW_ID", null, RDP_T_NEW_ID, SCAN_P_IGNORE);
-	scan_load_keyword("NUMBER", null, RDP_T_NUMBER, SCAN_P_IGNORE);
-	scan_load_keyword("OPTION", null, RDP_T_OPTION, SCAN_P_IGNORE);
-	scan_load_keyword("OUTPUT_FILE", null, RDP_T_OUTPUT_FILE, SCAN_P_IGNORE);
-	scan_load_keyword("PARSER", null, RDP_T_PARSER, SCAN_P_IGNORE);
-	scan_load_keyword("PASSES", null, RDP_T_PASSES, SCAN_P_IGNORE);
-	scan_load_keyword("POST_PARSE", null, RDP_T_POST_PARSE, SCAN_P_IGNORE);
-	scan_load_keyword("POST_PROCESS", null, RDP_T_POST_PROCESS, SCAN_P_IGNORE);
-	scan_load_keyword("PRE_PARSE", null, RDP_T_PRE_PARSE, SCAN_P_IGNORE);
-	scan_load_keyword("PRE_PROCESS", null, RDP_T_PRE_PROCESS, SCAN_P_IGNORE);
-	scan_load_keyword("RETAIN_COMMENTS", null, RDP_T_RETAIN_COMMENTS, SCAN_P_IGNORE);
-	scan_load_keyword("SET_SIZE", null, RDP_T_SET_SIZE, SCAN_P_IGNORE);
-	scan_load_keyword("SHOW_SKIPS", null, RDP_T_SHOW_SKIPS, SCAN_P_IGNORE);
-	scan_load_keyword("string", null, RDP_T_string, SCAN_P_IGNORE);
-	scan_load_keyword("string_ESC", null, RDP_T_string_ESC, SCAN_P_IGNORE);
-	scan_load_keyword("SUFFIX", null, RDP_T_SUFFIX, SCAN_P_IGNORE);
-	scan_load_keyword("SUPPRESS_BUILT_IN_ARGUMENTS", null, RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, SCAN_P_IGNORE);
-	scan_load_keyword("SYMBOL_TABLE", null, RDP_T_SYMBOL_TABLE, SCAN_P_IGNORE);
-	scan_load_keyword("TAB_WIDTH", null, RDP_T_TAB_WIDTH, SCAN_P_IGNORE);
-	scan_load_keyword("TEXT_SIZE", null, RDP_T_TEXT_SIZE, SCAN_P_IGNORE);
-	scan_load_keyword("TITLE", null, RDP_T_TITLE, SCAN_P_IGNORE);
-	scan_load_keyword("TREE", null, RDP_T_TREE, SCAN_P_IGNORE);
-	scan_load_keyword("USES", null, RDP_T_USES, SCAN_P_IGNORE);
-	scan_load_keyword("[", null, RDP_T_91 /* [ */, SCAN_P_IGNORE);
-	scan_load_keyword("[*", "*]", RDP_T_9142 /* [* */, SCAN_P_COMMENT_VISIBLE);
-	scan_load_keyword("]", null, RDP_T_93 /* ] */, SCAN_P_IGNORE);
-	scan_load_keyword("^", null, RDP_T_94 /* ^ */, SCAN_P_IGNORE);
-	scan_load_keyword("^^", null, RDP_T_9494 /* ^^ */, SCAN_P_IGNORE);
-	scan_load_keyword("^^^", null, RDP_T_949494 /* ^^^ */, SCAN_P_IGNORE);
-	scan_load_keyword("^_", null, RDP_T_9495 /* ^_ */, SCAN_P_IGNORE);
-	scan_load_keyword("{", null, RDP_T_123 /* { */, SCAN_P_IGNORE);
-	scan_load_keyword("|", null, RDP_T_124 /* | */, SCAN_P_IGNORE);
-	scan_load_keyword("}", null, RDP_T_125 /* } */, SCAN_P_IGNORE);
-}
+		private static void rdp_load_keywords()
+		{
+			scan_load_keyword("\"", "\\", RDP_T_34 /* " */, SCAN_P_STRING_ESC);
+			scan_load_keyword("#", null, RDP_T_35 /* # */, SCAN_P_IGNORE);
+			scan_load_keyword("\'", "\\", RDP_T_39 /* ' */, SCAN_P_STRING_ESC);
+			scan_load_keyword("(", null, RDP_T_40 /* ( */, SCAN_P_IGNORE);
+			scan_load_keyword("(*", "*)", RDP_T_4042 /* (* */, SCAN_P_COMMENT);
+			scan_load_keyword(")", null, RDP_T_41 /* ) */, SCAN_P_IGNORE);
+			scan_load_keyword("*", null, RDP_T_42 /* * */, SCAN_P_IGNORE);
+			scan_load_keyword(".", null, RDP_T_46 /* . */, SCAN_P_IGNORE);
+			scan_load_keyword(":", null, RDP_T_58 /* : */, SCAN_P_IGNORE);
+			scan_load_keyword("::", null, RDP_T_5858 /* :: */, SCAN_P_IGNORE);
+			scan_load_keyword("::=", null, RDP_T_585861 /* ::= */, SCAN_P_IGNORE);
+			scan_load_keyword("<", null, RDP_T_60 /* < */, SCAN_P_IGNORE);
+			scan_load_keyword(">", null, RDP_T_62 /* > */, SCAN_P_IGNORE);
+			scan_load_keyword("@", null, RDP_T_64 /* @ */, SCAN_P_IGNORE);
+			scan_load_keyword("ALT_ID", null, RDP_T_ALT_ID, SCAN_P_IGNORE);
+			scan_load_keyword("ANNOTATED_EPSILON_TREE", null, RDP_T_ANNOTATED_EPSILON_TREE, SCAN_P_IGNORE);
+			scan_load_keyword("ARG_BLANK", null, RDP_T_ARG_BLANK, SCAN_P_IGNORE);
+			scan_load_keyword("ARG_BOOLEAN", null, RDP_T_ARG_BOOLEAN, SCAN_P_IGNORE);
+			scan_load_keyword("ARG_NUMERIC", null, RDP_T_ARG_NUMERIC, SCAN_P_IGNORE);
+			scan_load_keyword("ARG_string", null, RDP_T_ARG_string, SCAN_P_IGNORE);
+			scan_load_keyword("CASE_INSENSITIVE", null, RDP_T_CASE_INSENSITIVE, SCAN_P_IGNORE);
+			scan_load_keyword("CHAR", null, RDP_T_CHAR, SCAN_P_IGNORE);
+			scan_load_keyword("CHAR_ESC", null, RDP_T_CHAR_ESC, SCAN_P_IGNORE);
+			scan_load_keyword("COMMENT", null, RDP_T_COMMENT, SCAN_P_IGNORE);
+			scan_load_keyword("COMMENT_LINE", null, RDP_T_COMMENT_LINE, SCAN_P_IGNORE);
+			scan_load_keyword("COMMENT_LINE_VISIBLE", null, RDP_T_COMMENT_LINE_VISIBLE, SCAN_P_IGNORE);
+			scan_load_keyword("COMMENT_NEST", null, RDP_T_COMMENT_NEST, SCAN_P_IGNORE);
+			scan_load_keyword("COMMENT_NEST_VISIBLE", null, RDP_T_COMMENT_NEST_VISIBLE, SCAN_P_IGNORE);
+			scan_load_keyword("COMMENT_VISIBLE", null, RDP_T_COMMENT_VISIBLE, SCAN_P_IGNORE);
+			scan_load_keyword("DERIVATION_TREE", null, RDP_T_DERIVATION_TREE, SCAN_P_IGNORE);
+			scan_load_keyword("EPSILON_TREE", null, RDP_T_EPSILON_TREE, SCAN_P_IGNORE);
+			scan_load_keyword("GLOBAL", null, RDP_T_GLOBAL, SCAN_P_IGNORE);
+			scan_load_keyword("HASH_PRIME", null, RDP_T_HASH_PRIME, SCAN_P_IGNORE);
+			scan_load_keyword("HASH_SIZE", null, RDP_T_HASH_SIZE, SCAN_P_IGNORE);
+			scan_load_keyword("INCLUDE", null, RDP_T_INCLUDE, SCAN_P_IGNORE);
+			scan_load_keyword("INTERPRETER", null, RDP_T_INTERPRETER, SCAN_P_IGNORE);
+			scan_load_keyword("MAX_ERRORS", null, RDP_T_MAX_ERRORS, SCAN_P_IGNORE);
+			scan_load_keyword("MAX_WARNINGS", null, RDP_T_MAX_WARNINGS, SCAN_P_IGNORE);
+			scan_load_keyword("MULTIPLE_SOURCE_FILES", null, RDP_T_MULTIPLE_SOURCE_FILES, SCAN_P_IGNORE);
+			scan_load_keyword("NEW_ID", null, RDP_T_NEW_ID, SCAN_P_IGNORE);
+			scan_load_keyword("NUMBER", null, RDP_T_NUMBER, SCAN_P_IGNORE);
+			scan_load_keyword("OPTION", null, RDP_T_OPTION, SCAN_P_IGNORE);
+			scan_load_keyword("OUTPUT_FILE", null, RDP_T_OUTPUT_FILE, SCAN_P_IGNORE);
+			scan_load_keyword("PARSER", null, RDP_T_PARSER, SCAN_P_IGNORE);
+			scan_load_keyword("PASSES", null, RDP_T_PASSES, SCAN_P_IGNORE);
+			scan_load_keyword("POST_PARSE", null, RDP_T_POST_PARSE, SCAN_P_IGNORE);
+			scan_load_keyword("POST_PROCESS", null, RDP_T_POST_PROCESS, SCAN_P_IGNORE);
+			scan_load_keyword("PRE_PARSE", null, RDP_T_PRE_PARSE, SCAN_P_IGNORE);
+			scan_load_keyword("PRE_PROCESS", null, RDP_T_PRE_PROCESS, SCAN_P_IGNORE);
+			scan_load_keyword("RETAIN_COMMENTS", null, RDP_T_RETAIN_COMMENTS, SCAN_P_IGNORE);
+			scan_load_keyword("SET_SIZE", null, RDP_T_SET_SIZE, SCAN_P_IGNORE);
+			scan_load_keyword("SHOW_SKIPS", null, RDP_T_SHOW_SKIPS, SCAN_P_IGNORE);
+			scan_load_keyword("string", null, RDP_T_string, SCAN_P_IGNORE);
+			scan_load_keyword("string_ESC", null, RDP_T_string_ESC, SCAN_P_IGNORE);
+			scan_load_keyword("SUFFIX", null, RDP_T_SUFFIX, SCAN_P_IGNORE);
+			scan_load_keyword("SUPPRESS_BUILT_IN_ARGUMENTS", null, RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, SCAN_P_IGNORE);
+			scan_load_keyword("SYMBOL_TABLE", null, RDP_T_SYMBOL_TABLE, SCAN_P_IGNORE);
+			scan_load_keyword("TAB_WIDTH", null, RDP_T_TAB_WIDTH, SCAN_P_IGNORE);
+			scan_load_keyword("TEXT_SIZE", null, RDP_T_TEXT_SIZE, SCAN_P_IGNORE);
+			scan_load_keyword("TITLE", null, RDP_T_TITLE, SCAN_P_IGNORE);
+			scan_load_keyword("TREE", null, RDP_T_TREE, SCAN_P_IGNORE);
+			scan_load_keyword("USES", null, RDP_T_USES, SCAN_P_IGNORE);
+			scan_load_keyword("[", null, RDP_T_91 /* [ */, SCAN_P_IGNORE);
+			scan_load_keyword("[*", "*]", RDP_T_9142 /* [* */, SCAN_P_COMMENT_VISIBLE);
+			scan_load_keyword("]", null, RDP_T_93 /* ] */, SCAN_P_IGNORE);
+			scan_load_keyword("^", null, RDP_T_94 /* ^ */, SCAN_P_IGNORE);
+			scan_load_keyword("^^", null, RDP_T_9494 /* ^^ */, SCAN_P_IGNORE);
+			scan_load_keyword("^^^", null, RDP_T_949494 /* ^^^ */, SCAN_P_IGNORE);
+			scan_load_keyword("^_", null, RDP_T_9495 /* ^_ */, SCAN_P_IGNORE);
+			scan_load_keyword("{", null, RDP_T_123 /* { */, SCAN_P_IGNORE);
+			scan_load_keyword("|", null, RDP_T_124 /* | */, SCAN_P_IGNORE);
+			scan_load_keyword("}", null, RDP_T_125 /* } */, SCAN_P_IGNORE);
+		}
 
-private static void rdp_set_initialise()
-{
-	string_stop.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, SCAN_P_EOF, RDP_T_34, RDP_T_39, RDP_T_40,
-			RDP_T_41, RDP_T_46, RDP_T_58, RDP_T_60, RDP_T_62, RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC,
-			RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST,
-			RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string,
-			RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495,
-			RDP_T_123, RDP_T_124, RDP_T_125);
-	code_stop.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, SCAN_P_EOF, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_41,
-			RDP_T_46, RDP_T_58, RDP_T_60, RDP_T_62, RDP_T_64 /* @ */, RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC,
-			RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST,
-			RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string,
-			RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495,
-			RDP_T_123, RDP_T_124, RDP_T_125);
-	comment_stop.assignList(SCAN_P_EOF);
-	dir_first.assignList(RDP_T_ANNOTATED_EPSILON_TREE, RDP_T_ARG_BLANK, RDP_T_ARG_BOOLEAN, RDP_T_ARG_NUMERIC,
-			RDP_T_ARG_string, RDP_T_CASE_INSENSITIVE, RDP_T_DERIVATION_TREE, RDP_T_EPSILON_TREE, RDP_T_GLOBAL,
-			RDP_T_HASH_PRIME, RDP_T_HASH_SIZE, RDP_T_INCLUDE, RDP_T_INTERPRETER, RDP_T_MAX_ERRORS,
-			RDP_T_MAX_WARNINGS, RDP_T_MULTIPLE_SOURCE_FILES, RDP_T_OPTION, RDP_T_OUTPUT_FILE, RDP_T_PARSER,
-			RDP_T_PASSES, RDP_T_POST_PARSE, RDP_T_POST_PROCESS, RDP_T_PRE_PARSE, RDP_T_PRE_PROCESS,
-			RDP_T_RETAIN_COMMENTS, RDP_T_SET_SIZE, RDP_T_SHOW_SKIPS, RDP_T_SUFFIX,
-			RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, RDP_T_SYMBOL_TABLE, RDP_T_TAB_WIDTH, RDP_T_TEXT_SIZE, RDP_T_TITLE,
-			RDP_T_TREE, RDP_T_USES);
-	dir_stop.assignList(SCAN_P_ID, SCAN_P_EOF, RDP_T_ANNOTATED_EPSILON_TREE, RDP_T_ARG_BLANK, RDP_T_ARG_BOOLEAN,
-			RDP_T_ARG_NUMERIC, RDP_T_ARG_string, RDP_T_CASE_INSENSITIVE, RDP_T_DERIVATION_TREE, RDP_T_EPSILON_TREE,
-			RDP_T_GLOBAL, RDP_T_HASH_PRIME, RDP_T_HASH_SIZE, RDP_T_INCLUDE, RDP_T_INTERPRETER, RDP_T_MAX_ERRORS,
-			RDP_T_MAX_WARNINGS, RDP_T_MULTIPLE_SOURCE_FILES, RDP_T_OPTION, RDP_T_OUTPUT_FILE, RDP_T_PARSER,
-			RDP_T_PASSES, RDP_T_POST_PARSE, RDP_T_POST_PROCESS, RDP_T_PRE_PARSE, RDP_T_PRE_PROCESS,
-			RDP_T_RETAIN_COMMENTS, RDP_T_SET_SIZE, RDP_T_SHOW_SKIPS, RDP_T_SUFFIX,
-			RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, RDP_T_SYMBOL_TABLE, RDP_T_TAB_WIDTH, RDP_T_TEXT_SIZE, RDP_T_TITLE,
-			RDP_T_TREE, RDP_T_USES);
-	item_com_first.assignList(RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_NEST);
-	item_com_stop.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, SCAN_P_EOF, RDP_T_34, RDP_T_39, RDP_T_40,
-			RDP_T_41, RDP_T_46, RDP_T_58, RDP_T_60, RDP_T_62, RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC,
-			RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST,
-			RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string,
-			RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495,
-			RDP_T_123, RDP_T_124, RDP_T_125);
-	item_inl_first.assignList(RDP_T_40, RDP_T_60, RDP_T_91, RDP_T_9142, RDP_T_123);
-	item_inl_stop.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, SCAN_P_EOF, RDP_T_34, RDP_T_39, RDP_T_40,
-			RDP_T_41, RDP_T_46, RDP_T_58, RDP_T_60, RDP_T_62, RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC,
-			RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST,
-			RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string,
-			RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_123, RDP_T_124, RDP_T_125);
-	item_ret_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_ALT_ID, RDP_T_CHAR,
-			RDP_T_CHAR_ESC, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE,
-			RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string, RDP_T_string_ESC);
-	item_ret_stop.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, SCAN_P_EOF, RDP_T_34, RDP_T_39, RDP_T_40,
-			RDP_T_41, RDP_T_46, RDP_T_58, RDP_T_60, RDP_T_62, RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC,
-			RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST,
-			RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string,
-			RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495,
-			RDP_T_123, RDP_T_124, RDP_T_125);
-	prod_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
-			RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
-			RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
-			RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
-	prod_stop.assignList(SCAN_P_EOF, RDP_T_41, RDP_T_46, RDP_T_62, RDP_T_93, RDP_T_125);
-	rdp_dir_11_first.assignList(SCAN_P_ID, RDP_T_9142);
-	rdp_dir_3_first.assignList(SCAN_P_ID, RDP_T_9142);
-	rdp_dir_34_first.assignList(RDP_T_ANNOTATED_EPSILON_TREE, RDP_T_DERIVATION_TREE, RDP_T_EPSILON_TREE,
-			RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, RDP_T_TREE);
-	rdp_dir_37_first.assignList(RDP_T_ANNOTATED_EPSILON_TREE, RDP_T_DERIVATION_TREE, RDP_T_EPSILON_TREE,
-			RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, RDP_T_TREE);
-	rdp_dir_7_first.assignList(SCAN_P_ID, RDP_T_9142);
-	rdp_item_inl_16_first.assignList(RDP_T_35, RDP_T_39);
-	rdp_item_inl_21_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
-	rdp_item_inl_22_first.assignList(SCAN_P_INTEGER, RDP_T_64);
-	rdp_item_inl_23_first.assignList(SCAN_P_INTEGER, RDP_T_64);
-	rdp_item_inl_28_first.assignList(RDP_T_40, RDP_T_60, RDP_T_91, RDP_T_9142, RDP_T_123);
-	rdp_item_inl_29_first.assignList(RDP_T_40, RDP_T_60, RDP_T_91, RDP_T_9142, RDP_T_123);
-	rdp_item_inl_7_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
-	rdp_item_inl_8_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
-	rdp_item_inl_9_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
-	rdp_item_ret_4_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34);
-	rdp_item_ret_5_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34);
-	rdp_item_ret_6_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34);
-	rdp_prod_0_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
-			RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
-			RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
-			RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
-	rdp_prod_1_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
-			RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
-			RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
-			RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
-	rdp_prod_2_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
-			RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
-			RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
-			RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
-	rdp_rule_16_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
-	rdp_seq_0_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_ALT_ID, RDP_T_CHAR,
-			RDP_T_CHAR_ESC, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE,
-			RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string, RDP_T_string_ESC);
-	rdp_seq_1_first.assignList(RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_NEST);
-	rdp_seq_10_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_ALT_ID,
-			RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
-			RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
-			RDP_T_string, RDP_T_string_ESC);
-	rdp_seq_17_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
-	rdp_seq_2_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_ALT_ID, RDP_T_CHAR,
-			RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST,
-			RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string,
-			RDP_T_string_ESC);
-	rdp_seq_23_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
-	rdp_seq_24_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
-	rdp_seq_25_first.assignList(RDP_T_9142, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
-	rdp_seq_28_first.assignList(RDP_T_40, RDP_T_60, RDP_T_91, RDP_T_9142, RDP_T_123);
-	rdp_seq_29_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
-			RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
-			RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
-			RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
-	rdp_seq_30_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
-			RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
-			RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
-			RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
-	rdp_seq_31_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
-			RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
-			RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
-			RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
-	rdp_seq_32_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
-			RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
-			RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
-			RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
-	rdp_seq_9_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
-	rdp_unit_1_first.assignList(RDP_T_ANNOTATED_EPSILON_TREE, RDP_T_ARG_BLANK, RDP_T_ARG_BOOLEAN, RDP_T_ARG_NUMERIC,
-			RDP_T_ARG_string, RDP_T_CASE_INSENSITIVE, RDP_T_DERIVATION_TREE, RDP_T_EPSILON_TREE, RDP_T_GLOBAL,
-			RDP_T_HASH_PRIME, RDP_T_HASH_SIZE, RDP_T_INCLUDE, RDP_T_INTERPRETER, RDP_T_MAX_ERRORS,
-			RDP_T_MAX_WARNINGS, RDP_T_MULTIPLE_SOURCE_FILES, RDP_T_OPTION, RDP_T_OUTPUT_FILE, RDP_T_PARSER,
-			RDP_T_PASSES, RDP_T_POST_PARSE, RDP_T_POST_PROCESS, RDP_T_PRE_PARSE, RDP_T_PRE_PROCESS,
-			RDP_T_RETAIN_COMMENTS, RDP_T_SET_SIZE, RDP_T_SHOW_SKIPS, RDP_T_SUFFIX,
-			RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, RDP_T_SYMBOL_TABLE, RDP_T_TAB_WIDTH, RDP_T_TEXT_SIZE, RDP_T_TITLE,
-			RDP_T_TREE, RDP_T_USES);
-	rdp_unit_2_first.assignList(SCAN_P_ID, RDP_T_ANNOTATED_EPSILON_TREE, RDP_T_ARG_BLANK, RDP_T_ARG_BOOLEAN,
-			RDP_T_ARG_NUMERIC, RDP_T_ARG_string, RDP_T_CASE_INSENSITIVE, RDP_T_DERIVATION_TREE, RDP_T_EPSILON_TREE,
-			RDP_T_GLOBAL, RDP_T_HASH_PRIME, RDP_T_HASH_SIZE, RDP_T_INCLUDE, RDP_T_INTERPRETER, RDP_T_MAX_ERRORS,
-			RDP_T_MAX_WARNINGS, RDP_T_MULTIPLE_SOURCE_FILES, RDP_T_OPTION, RDP_T_OUTPUT_FILE, RDP_T_PARSER,
-			RDP_T_PASSES, RDP_T_POST_PARSE, RDP_T_POST_PROCESS, RDP_T_PRE_PARSE, RDP_T_PRE_PROCESS,
-			RDP_T_RETAIN_COMMENTS, RDP_T_SET_SIZE, RDP_T_SHOW_SKIPS, RDP_T_SUFFIX,
-			RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, RDP_T_SYMBOL_TABLE, RDP_T_TAB_WIDTH, RDP_T_TEXT_SIZE, RDP_T_TITLE,
-			RDP_T_TREE, RDP_T_USES);
-	rdp_unit_3_first.assignList(SCAN_P_ID, RDP_T_ANNOTATED_EPSILON_TREE, RDP_T_ARG_BLANK, RDP_T_ARG_BOOLEAN,
-			RDP_T_ARG_NUMERIC, RDP_T_ARG_string, RDP_T_CASE_INSENSITIVE, RDP_T_DERIVATION_TREE, RDP_T_EPSILON_TREE,
-			RDP_T_GLOBAL, RDP_T_HASH_PRIME, RDP_T_HASH_SIZE, RDP_T_INCLUDE, RDP_T_INTERPRETER, RDP_T_MAX_ERRORS,
-			RDP_T_MAX_WARNINGS, RDP_T_MULTIPLE_SOURCE_FILES, RDP_T_OPTION, RDP_T_OUTPUT_FILE, RDP_T_PARSER,
-			RDP_T_PASSES, RDP_T_POST_PARSE, RDP_T_POST_PROCESS, RDP_T_PRE_PARSE, RDP_T_PRE_PROCESS,
-			RDP_T_RETAIN_COMMENTS, RDP_T_SET_SIZE, RDP_T_SHOW_SKIPS, RDP_T_SUFFIX,
-			RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, RDP_T_SYMBOL_TABLE, RDP_T_TAB_WIDTH, RDP_T_TEXT_SIZE, RDP_T_TITLE,
-			RDP_T_TREE, RDP_T_USES);
-	rule_stop.assignList(SCAN_P_ID, SCAN_P_EOF, RDP_T_ANNOTATED_EPSILON_TREE, RDP_T_ARG_BLANK, RDP_T_ARG_BOOLEAN,
-			RDP_T_ARG_NUMERIC, RDP_T_ARG_string, RDP_T_CASE_INSENSITIVE, RDP_T_DERIVATION_TREE, RDP_T_EPSILON_TREE,
-			RDP_T_GLOBAL, RDP_T_HASH_PRIME, RDP_T_HASH_SIZE, RDP_T_INCLUDE, RDP_T_INTERPRETER, RDP_T_MAX_ERRORS,
-			RDP_T_MAX_WARNINGS, RDP_T_MULTIPLE_SOURCE_FILES, RDP_T_OPTION, RDP_T_OUTPUT_FILE, RDP_T_PARSER,
-			RDP_T_PASSES, RDP_T_POST_PARSE, RDP_T_POST_PROCESS, RDP_T_PRE_PARSE, RDP_T_PRE_PROCESS,
-			RDP_T_RETAIN_COMMENTS, RDP_T_SET_SIZE, RDP_T_SHOW_SKIPS, RDP_T_SUFFIX,
-			RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, RDP_T_SYMBOL_TABLE, RDP_T_TAB_WIDTH, RDP_T_TEXT_SIZE, RDP_T_TITLE,
-			RDP_T_TREE, RDP_T_USES);
-	seq_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
-			RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
-			RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
-			RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
-	seq_stop.assignList(SCAN_P_EOF, RDP_T_41, RDP_T_46, RDP_T_62, RDP_T_93, RDP_T_124, RDP_T_125);
-	token_stop.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, SCAN_P_EOF, RDP_T_34, RDP_T_39, RDP_T_40,
-			RDP_T_41, RDP_T_46, RDP_T_58, RDP_T_60, RDP_T_62, RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC,
-			RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST,
-			RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string,
-			RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495,
-			RDP_T_123, RDP_T_124, RDP_T_125);
-	unit_first.assignList(SCAN_P_ID, RDP_T_ANNOTATED_EPSILON_TREE, RDP_T_ARG_BLANK, RDP_T_ARG_BOOLEAN,
-			RDP_T_ARG_NUMERIC, RDP_T_ARG_string, RDP_T_CASE_INSENSITIVE, RDP_T_DERIVATION_TREE, RDP_T_EPSILON_TREE,
-			RDP_T_GLOBAL, RDP_T_HASH_PRIME, RDP_T_HASH_SIZE, RDP_T_INCLUDE, RDP_T_INTERPRETER, RDP_T_MAX_ERRORS,
-			RDP_T_MAX_WARNINGS, RDP_T_MULTIPLE_SOURCE_FILES, RDP_T_OPTION, RDP_T_OUTPUT_FILE, RDP_T_PARSER,
-			RDP_T_PASSES, RDP_T_POST_PARSE, RDP_T_POST_PROCESS, RDP_T_PRE_PARSE, RDP_T_PRE_PROCESS,
-			RDP_T_RETAIN_COMMENTS, RDP_T_SET_SIZE, RDP_T_SHOW_SKIPS, RDP_T_SUFFIX,
-			RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, RDP_T_SYMBOL_TABLE, RDP_T_TAB_WIDTH, RDP_T_TEXT_SIZE, RDP_T_TITLE,
-			RDP_T_TREE, RDP_T_USES);
-	unit_stop.assignList(SCAN_P_EOF);
-}
+		private static void rdp_set_initialise()
+		{
+			string_stop.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, SCAN_P_EOF, RDP_T_34, RDP_T_39, RDP_T_40,
+					RDP_T_41, RDP_T_46, RDP_T_58, RDP_T_60, RDP_T_62, RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC,
+					RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST,
+					RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string,
+					RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495,
+					RDP_T_123, RDP_T_124, RDP_T_125);
+			code_stop.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, SCAN_P_EOF, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_41,
+					RDP_T_46, RDP_T_58, RDP_T_60, RDP_T_62, RDP_T_64 /* @ */, RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC,
+					RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST,
+					RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string,
+					RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495,
+					RDP_T_123, RDP_T_124, RDP_T_125);
+			comment_stop.assignList(SCAN_P_EOF);
+			dir_first.assignList(RDP_T_ANNOTATED_EPSILON_TREE, RDP_T_ARG_BLANK, RDP_T_ARG_BOOLEAN, RDP_T_ARG_NUMERIC,
+					RDP_T_ARG_string, RDP_T_CASE_INSENSITIVE, RDP_T_DERIVATION_TREE, RDP_T_EPSILON_TREE, RDP_T_GLOBAL,
+					RDP_T_HASH_PRIME, RDP_T_HASH_SIZE, RDP_T_INCLUDE, RDP_T_INTERPRETER, RDP_T_MAX_ERRORS,
+					RDP_T_MAX_WARNINGS, RDP_T_MULTIPLE_SOURCE_FILES, RDP_T_OPTION, RDP_T_OUTPUT_FILE, RDP_T_PARSER,
+					RDP_T_PASSES, RDP_T_POST_PARSE, RDP_T_POST_PROCESS, RDP_T_PRE_PARSE, RDP_T_PRE_PROCESS,
+					RDP_T_RETAIN_COMMENTS, RDP_T_SET_SIZE, RDP_T_SHOW_SKIPS, RDP_T_SUFFIX,
+					RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, RDP_T_SYMBOL_TABLE, RDP_T_TAB_WIDTH, RDP_T_TEXT_SIZE, RDP_T_TITLE,
+					RDP_T_TREE, RDP_T_USES);
+			dir_stop.assignList(SCAN_P_ID, SCAN_P_EOF, RDP_T_ANNOTATED_EPSILON_TREE, RDP_T_ARG_BLANK, RDP_T_ARG_BOOLEAN,
+					RDP_T_ARG_NUMERIC, RDP_T_ARG_string, RDP_T_CASE_INSENSITIVE, RDP_T_DERIVATION_TREE, RDP_T_EPSILON_TREE,
+					RDP_T_GLOBAL, RDP_T_HASH_PRIME, RDP_T_HASH_SIZE, RDP_T_INCLUDE, RDP_T_INTERPRETER, RDP_T_MAX_ERRORS,
+					RDP_T_MAX_WARNINGS, RDP_T_MULTIPLE_SOURCE_FILES, RDP_T_OPTION, RDP_T_OUTPUT_FILE, RDP_T_PARSER,
+					RDP_T_PASSES, RDP_T_POST_PARSE, RDP_T_POST_PROCESS, RDP_T_PRE_PARSE, RDP_T_PRE_PROCESS,
+					RDP_T_RETAIN_COMMENTS, RDP_T_SET_SIZE, RDP_T_SHOW_SKIPS, RDP_T_SUFFIX,
+					RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, RDP_T_SYMBOL_TABLE, RDP_T_TAB_WIDTH, RDP_T_TEXT_SIZE, RDP_T_TITLE,
+					RDP_T_TREE, RDP_T_USES);
+			item_com_first.assignList(RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_NEST);
+			item_com_stop.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, SCAN_P_EOF, RDP_T_34, RDP_T_39, RDP_T_40,
+					RDP_T_41, RDP_T_46, RDP_T_58, RDP_T_60, RDP_T_62, RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC,
+					RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST,
+					RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string,
+					RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495,
+					RDP_T_123, RDP_T_124, RDP_T_125);
+			item_inl_first.assignList(RDP_T_40, RDP_T_60, RDP_T_91, RDP_T_9142, RDP_T_123);
+			item_inl_stop.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, SCAN_P_EOF, RDP_T_34, RDP_T_39, RDP_T_40,
+					RDP_T_41, RDP_T_46, RDP_T_58, RDP_T_60, RDP_T_62, RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC,
+					RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST,
+					RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string,
+					RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_123, RDP_T_124, RDP_T_125);
+			item_ret_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_ALT_ID, RDP_T_CHAR,
+					RDP_T_CHAR_ESC, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE,
+					RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string, RDP_T_string_ESC);
+			item_ret_stop.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, SCAN_P_EOF, RDP_T_34, RDP_T_39, RDP_T_40,
+					RDP_T_41, RDP_T_46, RDP_T_58, RDP_T_60, RDP_T_62, RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC,
+					RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST,
+					RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string,
+					RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495,
+					RDP_T_123, RDP_T_124, RDP_T_125);
+			prod_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
+					RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
+					RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
+					RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
+			prod_stop.assignList(SCAN_P_EOF, RDP_T_41, RDP_T_46, RDP_T_62, RDP_T_93, RDP_T_125);
+			rdp_dir_11_first.assignList(SCAN_P_ID, RDP_T_9142);
+			rdp_dir_3_first.assignList(SCAN_P_ID, RDP_T_9142);
+			rdp_dir_34_first.assignList(RDP_T_ANNOTATED_EPSILON_TREE, RDP_T_DERIVATION_TREE, RDP_T_EPSILON_TREE,
+					RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, RDP_T_TREE);
+			rdp_dir_37_first.assignList(RDP_T_ANNOTATED_EPSILON_TREE, RDP_T_DERIVATION_TREE, RDP_T_EPSILON_TREE,
+					RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, RDP_T_TREE);
+			rdp_dir_7_first.assignList(SCAN_P_ID, RDP_T_9142);
+			rdp_item_inl_16_first.assignList(RDP_T_35, RDP_T_39);
+			rdp_item_inl_21_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
+			rdp_item_inl_22_first.assignList(SCAN_P_INTEGER, RDP_T_64);
+			rdp_item_inl_23_first.assignList(SCAN_P_INTEGER, RDP_T_64);
+			rdp_item_inl_28_first.assignList(RDP_T_40, RDP_T_60, RDP_T_91, RDP_T_9142, RDP_T_123);
+			rdp_item_inl_29_first.assignList(RDP_T_40, RDP_T_60, RDP_T_91, RDP_T_9142, RDP_T_123);
+			rdp_item_inl_7_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
+			rdp_item_inl_8_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
+			rdp_item_inl_9_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
+			rdp_item_ret_4_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34);
+			rdp_item_ret_5_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34);
+			rdp_item_ret_6_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34);
+			rdp_prod_0_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
+					RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
+					RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
+					RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
+			rdp_prod_1_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
+					RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
+					RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
+					RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
+			rdp_prod_2_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
+					RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
+					RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
+					RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
+			rdp_rule_16_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
+			rdp_seq_0_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_ALT_ID, RDP_T_CHAR,
+					RDP_T_CHAR_ESC, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE,
+					RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string, RDP_T_string_ESC);
+			rdp_seq_1_first.assignList(RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_NEST);
+			rdp_seq_10_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_ALT_ID,
+					RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
+					RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
+					RDP_T_string, RDP_T_string_ESC);
+			rdp_seq_17_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
+			rdp_seq_2_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_ALT_ID, RDP_T_CHAR,
+					RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST,
+					RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string,
+					RDP_T_string_ESC);
+			rdp_seq_23_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
+			rdp_seq_24_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
+			rdp_seq_25_first.assignList(RDP_T_9142, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
+			rdp_seq_28_first.assignList(RDP_T_40, RDP_T_60, RDP_T_91, RDP_T_9142, RDP_T_123);
+			rdp_seq_29_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
+					RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
+					RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
+					RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
+			rdp_seq_30_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
+					RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
+					RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
+					RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
+			rdp_seq_31_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
+					RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
+					RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
+					RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
+			rdp_seq_32_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
+					RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
+					RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
+					RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
+			rdp_seq_9_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
+			rdp_unit_1_first.assignList(RDP_T_ANNOTATED_EPSILON_TREE, RDP_T_ARG_BLANK, RDP_T_ARG_BOOLEAN, RDP_T_ARG_NUMERIC,
+					RDP_T_ARG_string, RDP_T_CASE_INSENSITIVE, RDP_T_DERIVATION_TREE, RDP_T_EPSILON_TREE, RDP_T_GLOBAL,
+					RDP_T_HASH_PRIME, RDP_T_HASH_SIZE, RDP_T_INCLUDE, RDP_T_INTERPRETER, RDP_T_MAX_ERRORS,
+					RDP_T_MAX_WARNINGS, RDP_T_MULTIPLE_SOURCE_FILES, RDP_T_OPTION, RDP_T_OUTPUT_FILE, RDP_T_PARSER,
+					RDP_T_PASSES, RDP_T_POST_PARSE, RDP_T_POST_PROCESS, RDP_T_PRE_PARSE, RDP_T_PRE_PROCESS,
+					RDP_T_RETAIN_COMMENTS, RDP_T_SET_SIZE, RDP_T_SHOW_SKIPS, RDP_T_SUFFIX,
+					RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, RDP_T_SYMBOL_TABLE, RDP_T_TAB_WIDTH, RDP_T_TEXT_SIZE, RDP_T_TITLE,
+					RDP_T_TREE, RDP_T_USES);
+			rdp_unit_2_first.assignList(SCAN_P_ID, RDP_T_ANNOTATED_EPSILON_TREE, RDP_T_ARG_BLANK, RDP_T_ARG_BOOLEAN,
+					RDP_T_ARG_NUMERIC, RDP_T_ARG_string, RDP_T_CASE_INSENSITIVE, RDP_T_DERIVATION_TREE, RDP_T_EPSILON_TREE,
+					RDP_T_GLOBAL, RDP_T_HASH_PRIME, RDP_T_HASH_SIZE, RDP_T_INCLUDE, RDP_T_INTERPRETER, RDP_T_MAX_ERRORS,
+					RDP_T_MAX_WARNINGS, RDP_T_MULTIPLE_SOURCE_FILES, RDP_T_OPTION, RDP_T_OUTPUT_FILE, RDP_T_PARSER,
+					RDP_T_PASSES, RDP_T_POST_PARSE, RDP_T_POST_PROCESS, RDP_T_PRE_PARSE, RDP_T_PRE_PROCESS,
+					RDP_T_RETAIN_COMMENTS, RDP_T_SET_SIZE, RDP_T_SHOW_SKIPS, RDP_T_SUFFIX,
+					RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, RDP_T_SYMBOL_TABLE, RDP_T_TAB_WIDTH, RDP_T_TEXT_SIZE, RDP_T_TITLE,
+					RDP_T_TREE, RDP_T_USES);
+			rdp_unit_3_first.assignList(SCAN_P_ID, RDP_T_ANNOTATED_EPSILON_TREE, RDP_T_ARG_BLANK, RDP_T_ARG_BOOLEAN,
+					RDP_T_ARG_NUMERIC, RDP_T_ARG_string, RDP_T_CASE_INSENSITIVE, RDP_T_DERIVATION_TREE, RDP_T_EPSILON_TREE,
+					RDP_T_GLOBAL, RDP_T_HASH_PRIME, RDP_T_HASH_SIZE, RDP_T_INCLUDE, RDP_T_INTERPRETER, RDP_T_MAX_ERRORS,
+					RDP_T_MAX_WARNINGS, RDP_T_MULTIPLE_SOURCE_FILES, RDP_T_OPTION, RDP_T_OUTPUT_FILE, RDP_T_PARSER,
+					RDP_T_PASSES, RDP_T_POST_PARSE, RDP_T_POST_PROCESS, RDP_T_PRE_PARSE, RDP_T_PRE_PROCESS,
+					RDP_T_RETAIN_COMMENTS, RDP_T_SET_SIZE, RDP_T_SHOW_SKIPS, RDP_T_SUFFIX,
+					RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, RDP_T_SYMBOL_TABLE, RDP_T_TAB_WIDTH, RDP_T_TEXT_SIZE, RDP_T_TITLE,
+					RDP_T_TREE, RDP_T_USES);
+			rule_stop.assignList(SCAN_P_ID, SCAN_P_EOF, RDP_T_ANNOTATED_EPSILON_TREE, RDP_T_ARG_BLANK, RDP_T_ARG_BOOLEAN,
+					RDP_T_ARG_NUMERIC, RDP_T_ARG_string, RDP_T_CASE_INSENSITIVE, RDP_T_DERIVATION_TREE, RDP_T_EPSILON_TREE,
+					RDP_T_GLOBAL, RDP_T_HASH_PRIME, RDP_T_HASH_SIZE, RDP_T_INCLUDE, RDP_T_INTERPRETER, RDP_T_MAX_ERRORS,
+					RDP_T_MAX_WARNINGS, RDP_T_MULTIPLE_SOURCE_FILES, RDP_T_OPTION, RDP_T_OUTPUT_FILE, RDP_T_PARSER,
+					RDP_T_PASSES, RDP_T_POST_PARSE, RDP_T_POST_PROCESS, RDP_T_PRE_PARSE, RDP_T_PRE_PROCESS,
+					RDP_T_RETAIN_COMMENTS, RDP_T_SET_SIZE, RDP_T_SHOW_SKIPS, RDP_T_SUFFIX,
+					RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, RDP_T_SYMBOL_TABLE, RDP_T_TAB_WIDTH, RDP_T_TEXT_SIZE, RDP_T_TITLE,
+					RDP_T_TREE, RDP_T_USES);
+			seq_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
+					RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
+					RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
+					RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
+			seq_stop.assignList(SCAN_P_EOF, RDP_T_41, RDP_T_46, RDP_T_62, RDP_T_93, RDP_T_124, RDP_T_125);
+			token_stop.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, SCAN_P_EOF, RDP_T_34, RDP_T_39, RDP_T_40,
+					RDP_T_41, RDP_T_46, RDP_T_58, RDP_T_60, RDP_T_62, RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC,
+					RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST,
+					RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string,
+					RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495,
+					RDP_T_123, RDP_T_124, RDP_T_125);
+			unit_first.assignList(SCAN_P_ID, RDP_T_ANNOTATED_EPSILON_TREE, RDP_T_ARG_BLANK, RDP_T_ARG_BOOLEAN,
+					RDP_T_ARG_NUMERIC, RDP_T_ARG_string, RDP_T_CASE_INSENSITIVE, RDP_T_DERIVATION_TREE, RDP_T_EPSILON_TREE,
+					RDP_T_GLOBAL, RDP_T_HASH_PRIME, RDP_T_HASH_SIZE, RDP_T_INCLUDE, RDP_T_INTERPRETER, RDP_T_MAX_ERRORS,
+					RDP_T_MAX_WARNINGS, RDP_T_MULTIPLE_SOURCE_FILES, RDP_T_OPTION, RDP_T_OUTPUT_FILE, RDP_T_PARSER,
+					RDP_T_PASSES, RDP_T_POST_PARSE, RDP_T_POST_PROCESS, RDP_T_PRE_PARSE, RDP_T_PRE_PROCESS,
+					RDP_T_RETAIN_COMMENTS, RDP_T_SET_SIZE, RDP_T_SHOW_SKIPS, RDP_T_SUFFIX,
+					RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, RDP_T_SYMBOL_TABLE, RDP_T_TAB_WIDTH, RDP_T_TEXT_SIZE, RDP_T_TITLE,
+					RDP_T_TREE, RDP_T_USES);
+			unit_stop.assignList(SCAN_P_EOF);
+		}
 
-private static RdpData rule(RdpTreeNodeData rdp_tree)
+#if false
+		private static RdpData rule(RdpTreeNodeData rdp_tree)
 {
 	RdpData result;
 	int name;
