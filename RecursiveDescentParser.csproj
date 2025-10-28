@@ -73,6 +73,7 @@
     <Compile Include="GraphNode.cs" />
     <Compile Include="RdpAux.cs" />
     <Compile Include="RdpGram.cs" />
+    <Compile Include="RdpPrint.cs" />
     <Compile Include="RdpProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scan.cs" />

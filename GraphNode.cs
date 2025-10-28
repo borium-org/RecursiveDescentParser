@@ -9,8 +9,7 @@
 
 		internal GraphNode previous_node;
 
-#if false
-		void deleteNode()
+		internal void deleteNode()
 		{
 			// delete out edges
 			while (next_out_edge != null)
@@ -30,9 +29,8 @@
 			// point in node at our out
 			previous_node.next_node = next_node;
 		}
-#endif
 
-		protected abstract int getId();
+		internal abstract int getId();
 
 		internal void insertNode(GraphNode node)
 		{

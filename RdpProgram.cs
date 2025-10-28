@@ -2,11 +2,12 @@
 using System.Reflection;
 using static Borium.RDP.Arg;
 using static Borium.RDP.Arg.ArgKind;
-using static Borium.RDP.Scan;
-using static Borium.RDP.Symbol;
+using static Borium.RDP.GraphBase;
 using static Borium.RDP.RdpAux;
 using static Borium.RDP.RdpAux.RdpParamType;
 using static Borium.RDP.RdpGram;
+using static Borium.RDP.Scan;
+using static Borium.RDP.Symbol;
 using static Borium.RDP.Text;
 using static Borium.RDP.Text.TextMessageType;
 
@@ -39,7 +40,7 @@ namespace Borium.RDP
 		{
 			internal ScanData data = new ScanData();
 
-			protected override int getId()
+			internal override int getId()
 			{
 				return data.id;
 			}
@@ -135,17 +136,17 @@ private static const string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(n
 		static string[] rdp_outputfilename = { "rdparser" }; // output file name
 
 		// set if we want original C parser
-		static string[] rdp_c_path = { null };
+		internal static string[] rdp_c_path = { null };
 
 		// set if we want new Java parser
-		static string[] rdp_java_path = { null };
+		internal static string[] rdp_java_path = { null };
 
 		// prefix for the new Java parser
-		static string[] rdp_java_prefix = { null };
+		internal static string[] rdp_java_prefix = { null };
 
 		private static bool[] rdp_symbol_echo = { false }; // symbol echo flag
 
-		static bool[] rdp_verbose = { false }; // verbosity flag
+		internal static bool[] rdp_verbose = { false }; // verbosity flag
 
 		private static int rdp_sourcefilenumber;
 
@@ -340,51 +341,50 @@ private static const string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(n
 
 					// call parser at top level
 					unit(rdp_tree_root = rdp_add_node("unit", rdp_tree));
-#if false
-			if (text_total_errors() != 0)
-			{
-				text_message(TEXT_FATAL, "error" + (text_total_errors() == 1 ? "" : "s")
-						+ " detected in source file " + rdp_sourcefilename + "\n"); // crash quietly
-			}
-			graph_epsilon_prune_rdp_tree(rdp_tree_root);
-#endif
+
+					if (text_total_errors() != 0)
+					{
+						text_message(TEXT_FATAL, "error" + (text_total_errors() == 1 ? "" : "s")
+								+ " detected in source file " + rdp_sourcefilename + "\n"); // crash quietly
+					}
+					graph_epsilon_prune_rdp_tree(rdp_tree_root);
 				}
 			}
 
-#if false
 			rdp_sourcefilename = rdp_sourcefilenames[0]; // Reset filename to first file in the list
 
-	rdp_tree.setRoot(rdp_tree_root);
-	if (rdp_vcg_filename.value() != null)
-	{
-		// FILE *rdp_vcg_file;
-		//
-		// if (*rdp_vcg_filename == '\0') /* No filename supplied */
-		// rdp_vcg_filename = "rdparser";
-		// rdp_vcg_file = fopen((rdp_vcg_filename = text_default_filetype(rdp_vcg_filename, "vcg")), "w");
-		//
-		// if (rdp_vcg_file == NULL)
-		// text_message(TEXT_FATAL, "unable to open VCG file '%s' for write\n", rdp_vcg_filename);
-		//
-		// if (rdp_verbose)
-		// text_message(TEXT_INFO, "Dumping derivation tree to VCG file '%s'\n", rdp_vcg_filename);
-		//
-		// text_redirect(rdp_vcg_file);
-		// graph_vcg(rdp_tree, NULL, scan_vcg_print_node, scan_vcg_print_edge);
-		// text_redirect(stdout);
-		// fclose(rdp_vcg_file);
-		throw new RuntimeException();
-	}
+			rdp_tree.setRoot(rdp_tree_root);
+			if (rdp_vcg_filename[0] != null)
+			{
+				// FILE *rdp_vcg_file;
+				//
+				// if (*rdp_vcg_filename == '\0') /* No filename supplied */
+				// rdp_vcg_filename = "rdparser";
+				// rdp_vcg_file = fopen((rdp_vcg_filename = text_default_filetype(rdp_vcg_filename, "vcg")), "w");
+				//
+				// if (rdp_vcg_file == NULL)
+				// text_message(TEXT_FATAL, "unable to open VCG file '%s' for write\n", rdp_vcg_filename);
+				//
+				// if (rdp_verbose)
+				// text_message(TEXT_INFO, "Dumping derivation tree to VCG file '%s'\n", rdp_vcg_filename);
+				//
+				// text_redirect(rdp_vcg_file);
+				// graph_vcg(rdp_tree, NULL, scan_vcg_print_node, scan_vcg_print_edge);
+				// text_redirect(stdout);
+				// fclose(rdp_vcg_file);
+				throw new NotImplementedException();
+			}
 
-	rdp_post_parse(rdp_outputfilename.value(), rdp_force.value());
-	// if (rdp_symbol_statistics)
-	// {
-	// symbol_print_all_table_statistics(11);
-	// symbol_print_all_table();
-	// }
+			rdp_post_parse(rdp_outputfilename[0], rdp_force[0]);
+			// if (rdp_symbol_statistics)
+			// {
+			// symbol_print_all_table_statistics(11);
+			// symbol_print_all_table();
+			// }
 
+#if false
 	// text_print_total_errors();
-	if (rdp_verbose.value() || true)
+	if (rdp_verbose[0] || true)
 	{
 		long rdp_finish_time = System.currentTimeMillis();
 		System.out.println("Time: " + (double)(rdp_finish_time - rdp_start_time) / 1000);

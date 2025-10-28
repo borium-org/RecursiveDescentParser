@@ -1,23 +1,22 @@
-﻿namespace Borium.RDP
+﻿using System.Collections.Generic;
+
+namespace Borium.RDP
 {
 	internal class GraphBase
 	{
-#if false
-		public static void graph_epsilon_prune_rdp_tree(GraphBase parent_node)
+		internal static void graph_epsilon_prune_rdp_tree(GraphBase parent_node)
 		{
 			if (parent_node != null)
 				parent_node.epsilonPruneRdpTree();
 		}
-#endif
 
 		internal int atom_number;
 		internal GraphEdge next_in_edge;
 		internal GraphEdge next_out_edge;
 
-#if false
 		void epsilonPruneRdpTree()
 		{
-			ArrayList<GraphNode> deletable = new ArrayList<>();
+			List<GraphNode> deletable = new List<GraphNode>();
 			for (GraphEdge this_parent_out_edge = nextOutEdge(); this_parent_out_edge != null; this_parent_out_edge = this_parent_out_edge
 					.nextOutEdge())
 			{
@@ -55,10 +54,10 @@
 						/* Set the child's out list to empty */
 						child_node_base.next_out_edge = null;
 					}
-					deletable.add(child_node);
+					deletable.Add(child_node);
 				}
 			}
-			for (GraphNode node : deletable)
+			foreach (GraphNode node in deletable)
 			{
 				node.deleteNode();
 			}
@@ -73,6 +72,5 @@
 		{
 			return edge == null ? null : edge.destination;
 		}
-#endif
 	}
 }

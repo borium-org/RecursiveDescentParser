@@ -434,17 +434,15 @@ namespace Borium.RDP
 			return start;
 		}
 
-#if false
-		internal static boolean text_is_valid_C_id(string s)
-	{
-		boolean temp = true;
-		for (char ch : s.toCharArray())
+		internal static bool text_is_valid_C_id(string s)
 		{
-			temp = temp && (isalnum(ch) || ch == '_');
+			bool temp = true;
+			foreach (char ch in s)
+			{
+				temp = temp && (isalnum(ch) || ch == '_');
+			}
+			return temp;
 		}
-		return temp;
-	}
-#endif
 
 		internal static int text_line_number()
 		{
@@ -569,25 +567,24 @@ namespace Borium.RDP
 			return handle;
 		}
 
+		internal static void text_print_statistics()
+		{
+			long symbolcount = text_top;
+			long linecount = -last_char + maxtext;
+
+			if (text_bot == null)
+			{
+				text_message(TEXT_INFO, "Text buffer uninitialised\n");
+			}
+			else
+			{
+				text_message(TEXT_INFO, "Text buffer size " + maxtext + " bytes with " + (maxtext - symbolcount - linecount)
+						+ " bytes free\n");
+			}
+		}
+
 #if false
-	internal static void text_print_statistics()
-	{
-		long symbolcount = text_top,
-
-				linecount = -last_char + maxtext;
-
-		if (text_bot == null)
-		{
-			text_message(TEXT_INFO, "Text buffer uninitialised\n");
-		}
-		else
-		{
-			text_message(TEXT_INFO, "Text buffer size " + maxtext + " bytes with " + (maxtext - symbolcount - linecount)
-					+ " bytes free\n");
-		}
-	}
-
-	internal static void text_print_time()
+		internal static void text_print_time()
 	{
 		// string __DATE__ = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 		// string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(new Date());
@@ -626,12 +623,12 @@ namespace Borium.RDP
 			return sequence_number;
 		}
 
-#if false
 		internal static int text_total_errors()
-	{
-		return totalerrors;
-	}
+		{
+			return totalerrors;
+		}
 
+#if false
 	internal static string text_uppercase_string(string str)
 	{
 		return str.toUpperCase();

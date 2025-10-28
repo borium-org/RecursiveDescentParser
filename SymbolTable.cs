@@ -45,7 +45,7 @@
 		}
 
 		/** return current scope */
-		SymbolScopeData getScope()
+		internal SymbolScopeData getScope()
 		{
 			return current;
 		}

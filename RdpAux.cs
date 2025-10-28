@@ -2,8 +2,10 @@
 using static Borium.RDP.Arg;
 using static Borium.RDP.Arg.ArgKind;
 using static Borium.RDP.RdpGram;
+using static Borium.RDP.RdpPrint;
 using static Borium.RDP.RdpProgram;
 using static Borium.RDP.Scan;
+using static Borium.RDP.Set;
 using static Borium.RDP.Symbol;
 using static Borium.RDP.Text;
 using static Borium.RDP.Text.TextMessageType;
@@ -12,11 +14,9 @@ namespace Borium.RDP
 {
 	internal class RdpAux
 	{
-#if false
-		static class LocalsData extends Symbol
+		internal class LocalsData : Symbol
 		{
 		}
-#endif
 
 		internal class RdpArgList
 		{
@@ -38,7 +38,7 @@ namespace Borium.RDP
 			/// <summary>
 			/// Extended value for tokens
 			/// </summary>
-			int extended_value;
+			internal int extended_value;
 
 			internal int kind;
 
@@ -55,17 +55,17 @@ namespace Borium.RDP
 			/// <summary>
 			/// Pointer to token value as a string
 			/// </summary>
-			int token_string;
+			internal int token_string;
 
 			/// <summary>
 			/// Pointer to token value as enum element
 			/// </summary>
-			int token_enum;
+			internal int token_enum;
 
 			/// <summary>
 			/// Pointer to extended value as enum element
 			/// </summary>
-			string extended_enum;
+			internal string extended_enum;
 
 			/// <summary>
 			/// Default promotion operator
@@ -100,17 +100,17 @@ namespace Borium.RDP
 			/// <summary>
 			/// Mark items that follow a code item
 			/// </summary>
-			int code_successor;
+			internal int code_successor;
 
 			/// <summary>
 			/// Mark last code item in sequence
 			/// </summary>
-			int code_terminator;
+			internal int code_terminator;
 
 			/// <summary>
 			/// Primary production with code only
 			/// </summary>
-			int code_only;
+			internal int code_only;
 
 			/// <summary>
 			/// Has appeared on LHS of ::=
@@ -120,17 +120,17 @@ namespace Borium.RDP
 			/// <summary>
 			/// Production being checked flag
 			/// </summary>
-			int in_use;
+			internal int in_use;
 
 			/// <summary>
 			/// LL(1) violation detected
 			/// </summary>
-			int ll1_violation;
+			internal int ll1_violation;
 
 			/// <summary>
 			/// First() completed on this production
 			/// </summary>
-			int first_done;
+			internal int first_done;
 
 			/// <summary>
 			/// Follow() completed on this production
@@ -140,7 +140,7 @@ namespace Borium.RDP
 			/// <summary>
 			/// Set of first symbols
 			/// </summary>
-			Set first = new Set();
+			internal Set first = new Set();
 
 			/// <summary>
 			/// How many times production is called
@@ -204,109 +204,108 @@ namespace Borium.RDP
 
 			List<string> locals = new List<string>();
 
-#if false
-			void rdp_print_sub_item(boolean expand)
-		{
-			switch (kind)
+			internal void rdp_print_sub_item(bool expand)
 			{
-				case K_INTEGER:
-				case K_STRING:
-				case K_REAL:
-				case K_EXTENDED:
-					text_printf(text_get_string(id) + " ");
-					break;
-				case K_TOKEN:
-					text_printf("\'" + text_get_string(id) + "\' ");
-					break;
-				case K_CODE:
-					/* Don't print anything */
-					break;
-				case K_PRIMARY:
-					text_printf(text_get_string(id) + " ");
-					break;
-				case K_SEQUENCE:
-					rdp_print_sub_sequence(expand);
-					break;
-				case K_LIST:
-					if (expand)
-					{
-						/* first find special cases */
-						/* All EBNF forms have no delimiter */
-						if (supplementary_token == null)
+				switch (kind)
+				{
+					case K_INTEGER:
+					case K_STRING:
+					case K_REAL:
+					case K_EXTENDED:
+						text_printf(text_get_string(id) + " ");
+						break;
+					case K_TOKEN:
+						text_printf("\'" + text_get_string(id) + "\' ");
+						break;
+					case K_CODE:
+						/* Don't print anything */
+						break;
+					case K_PRIMARY:
+						text_printf(text_get_string(id) + " ");
+						break;
+					case K_SEQUENCE:
+						rdp_print_sub_sequence(expand);
+						break;
+					case K_LIST:
+						if (expand)
 						{
-							if (lo == 0 && hi == 0)
+							/* first find special cases */
+							/* All EBNF forms have no delimiter */
+							if (supplementary_token == null)
 							{
-								text_printf("{ ");
-								rdp_print_sub_alternate(expand);
-								text_printf("} ");
+								if (lo == 0 && hi == 0)
+								{
+									text_printf("{ ");
+									rdp_print_sub_alternate(expand);
+									text_printf("} ");
+								}
+								else if (lo == 0 && hi == 1)
+								{
+									text_printf("[ ");
+									rdp_print_sub_alternate(expand);
+									text_printf("] ");
+								}
+								else if (lo == 1 && hi == 0)
+								{
+									text_printf("< ");
+									rdp_print_sub_alternate(expand);
+									text_printf("> ");
+								}
+								else if (lo == 1 && hi == 1)
+								{
+									text_printf("( ");
+									rdp_print_sub_alternate(expand);
+									text_printf(") ");
+								}
 							}
-							else if (lo == 0 && hi == 1)
-							{
-								text_printf("[ ");
-								rdp_print_sub_alternate(expand);
-								text_printf("] ");
-							}
-							else if (lo == 1 && hi == 0)
-							{
-								text_printf("< ");
-								rdp_print_sub_alternate(expand);
-								text_printf("> ");
-							}
-							else if (lo == 1 && hi == 1)
-							{
+							else
+							{ /* Now do general case */
 								text_printf("( ");
 								rdp_print_sub_alternate(expand);
-								text_printf(") ");
+								text_printf(")" + lo + "@" + hi);
+								if (supplementary_token != null)
+								{
+									text_printf(" \'" + text_get_string(supplementary_token.id) + "\'");
+								}
+								else
+								{
+									text_printf(" #");
+								}
 							}
 						}
 						else
-						{ /* Now do general case */
-							text_printf("( ");
-							rdp_print_sub_alternate(expand);
-							text_printf(")" + lo + "@" + hi);
-							if (supplementary_token != null)
-							{
-								text_printf(" \'" + text_get_string(supplementary_token.id) + "\'");
-							}
-							else
-							{
-								text_printf(" #");
-							}
+						{
+							text_printf(text_get_string(id) + " ");
 						}
-					}
-					else
-					{
-						text_printf(text_get_string(id) + " ");
-					}
-					break;
-				default:
-					text_message(TEXT_FATAL, "internal error - unexpected kind found\n");
-			}
-		}
-
-		private void rdp_print_sub_alternate(boolean expand)
-		{
-			RdpList list = this.list;
-			while (list != null)
-			{
-				list.production.rdp_print_sub_item(expand);
-				if ((list = list.next) != null)
-				{
-					text_printf("| ");
+						break;
+					default:
+						text_message(TEXT_FATAL, "internal error - unexpected kind found\n");
+						break;
 				}
 			}
-		}
 
-		private void rdp_print_sub_sequence(boolean expand)
-		{
-			RdpList list = this.list;
-			while (list != null)
+			private void rdp_print_sub_alternate(bool expand)
 			{
-				list.production.rdp_print_sub_item(expand);
-				list = list.next;
+				RdpList list = this.list;
+				while (list != null)
+				{
+					list.production.rdp_print_sub_item(expand);
+					if ((list = list.next) != null)
+					{
+						text_printf("| ");
+					}
+				}
 			}
-		}
-#endif
+
+			private void rdp_print_sub_sequence(bool expand)
+			{
+				RdpList list = this.list;
+				while (list != null)
+				{
+					list.production.rdp_print_sub_item(expand);
+					list = list.next;
+				}
+			}
 		}
 
 		internal class RdpList
@@ -359,7 +358,7 @@ namespace Borium.RDP
 			internal RdpTableList next;
 		}
 
-		const int K_EXTENDED = 0;
+		internal const int K_EXTENDED = 0;
 		const int K_INTEGER = 1;
 		const int K_REAL = 2;
 		const int K_STRING = 3;
@@ -410,7 +409,7 @@ namespace Borium.RDP
 		/// </summary>
 		internal static string rdp_dir_output_file = null;
 
-		static Set rdp_production_set = new Set();
+		internal static Set rdp_production_set = new Set();
 
 		/// <summary>
 		/// Data from ARG_* directives
@@ -562,10 +561,10 @@ namespace Borium.RDP
 		/// </summary>
 		internal static int rdp_dir_newline_visible = 0;
 
-#if false
-	/** number of tokens + extendeds */
-	static int rdp_token_count = SCAN_P_TOP;
-#endif
+		/// <summary>
+		/// Number of tokens + extendeds
+		/// </summary>
+		internal static int rdp_token_count = SCAN_P_TOP;
 
 		internal static void rdp_add_arg(ArgKind kind, string key, string var, string desc)
 		{
@@ -664,68 +663,72 @@ namespace Borium.RDP
 			return result;
 		}
 
-#if false
-		static void rdp_post_parse(String outputfilename, boolean force)
-	{
-		LocalsData local = new LocalsData();
-		local.id = text_insert_string("result");
-		symbol_insert_symbol(locals, local);
-		// sort productions into alphabetical order
-		SymbolScopeData tokens_base = tokens.getScope();
-		tokens_base.sort();
-		// scan through tokens and add any necessary continuations
-		rdp_add_continuations(tokens_base);
-		// re-sort productions into alphabetical order
-		tokens_base.sort();
-		// apply token numbers to token productions
-		rdp_order_tokens(tokens_base);
-
-		rdp_base.assign(rdp.getScope());
-		// apply token numbers to token productions
-		rdp_order_tokens(rdp_base);
-		// make a string with all token names in it
-		rdp_make_token_string(tokens_base);
-		// sort productions into alphabetical order
-		rdp_base.sort();
-		// find the non-LL(1)-isms
-		rdp_bad_grammar(rdp_base);
-		if (rdp_expanded.value())
+		internal static void rdp_post_parse(string outputfilename, bool force)
 		{
-			if (rdp_c_path.value() != null)
+			LocalsData local = new LocalsData();
+			local.id = text_insert_string("result");
+			symbol_insert_symbol(locals, local);
+			// sort productions into alphabetical order
+			SymbolScopeData tokens_base = tokens.getScope();
+			tokens_base.sort();
+			// scan through tokens and add any necessary continuations
+			rdp_add_continuations(tokens_base);
+			// re-sort productions into alphabetical order
+			tokens_base.sort();
+			// apply token numbers to token productions
+			rdp_order_tokens(tokens_base);
+
+			rdp_base.assign(rdp.getScope());
+			// apply token numbers to token productions
+			rdp_order_tokens(rdp_base);
+			// make a string with all token names in it
+			rdp_make_token_string(tokens_base);
+			// sort productions into alphabetical order
+			rdp_base.sort();
+			// find the non-LL(1)-isms
+			rdp_bad_grammar(rdp_base);
+			if (rdp_expanded[0])
 			{
+				if (rdp_c_path[0] != null)
+				{
+#if false
+					RdpPrintC print = new RdpPrintC();
+					print.rdp_dump_extended(rdp_base);
+#endif
+				}
+			}
+			if (text_total_errors() > 0)
+			{
+				if (force)
+					text_message(TEXT_WARNING, "Grammar is not LL(1) but -F set: writing files\n");
+				else
+					text_message(TEXT_FATAL, "Run aborted without creating output files - rerun with -F to override\n");
+			}
+			if (rdp_c_path[0] != null)
+			{
+#if false
 				RdpPrintC print = new RdpPrintC();
-				print.rdp_dump_extended(rdp_base);
+				print.printHeader(text_force_filetype(outputfilename, "h"));
+				print.printParser(text_force_filetype(outputfilename, "c"), rdp_base);
+#endif
+			}
+			// if (rdp_cpp_path[0] != null)
+			// {
+			// // TODO C++
+			// }
+			if (rdp_java_path[0] != null && rdp_java_prefix[0] != null)
+			{
+#if false
+				RdpPrintJava print = new RdpPrintJava(rdp_java_path[0], rdp_java_prefix[0]);
+				print.print(rdp_base, rdp_parser_only[0]);
+#endif
+			}
+
+			if (rdp_verbose[0] || true)
+			{
+				text_print_statistics();
 			}
 		}
-		if (text_total_errors() > 0)
-		{
-			if (force)
-				text_message(TEXT_WARNING, "Grammar is not LL(1) but -F set: writing files\n");
-			else
-				text_message(TEXT_FATAL, "Run aborted without creating output files - rerun with -F to override\n");
-		}
-		if (rdp_c_path.value() != null)
-		{
-			RdpPrintC print = new RdpPrintC();
-			print.printHeader(text_force_filetype(outputfilename, "h"));
-			print.printParser(text_force_filetype(outputfilename, "c"), rdp_base);
-		}
-		// if (rdp_cpp_path.value() != null)
-		// {
-		// // TODO C++
-		// }
-		if (rdp_java_path.value() != null && rdp_java_prefix.value() != null)
-		{
-			RdpPrintJava print = new RdpPrintJava(rdp_java_path.value(), rdp_java_prefix.value());
-			print.print(rdp_base, rdp_parser_only.value());
-		}
-
-		if (rdp_verbose.value() || true)
-		{
-			text_print_statistics();
-		}
-	}
-#endif
 
 		internal static void rdp_pre_parse()
 		{
@@ -761,83 +764,82 @@ namespace Borium.RDP
 			return result;
 		}
 
-#if false
-	private static void rdp_add_continuations(SymbolScopeData base)
-	{
-		RdpData temp = (RdpData)base.nextSymbolInScope();
-		String last_token = " "; /* remember most recent token name */
-		boolean tokens_added = false;
-		if (rdp_verbose.value())
+		private static void rdp_add_continuations(SymbolScopeData scopeData)
 		{
-			text_message(TEXT_INFO, "Checking for continuation tokens\n");
-		}
-		while (temp != null) /* scan over all productions */
-		{
-			if (temp.kind == K_TOKEN || temp.kind == K_EXTENDED)
+			RdpData temp = (RdpData)scopeData.nextSymbolInScope();
+			string last_token = " "; /* remember most recent token name */
+			bool tokens_added = false;
+			if (rdp_verbose[0])
 			{
-				String lo = last_token;
-				String hi = text_get_string(temp.id);
-				if (!text_is_valid_C_id(hi)) /* ignore identifiers */
+				text_message(TEXT_INFO, "Checking for continuation tokens\n");
+			}
+			while (temp != null) /* scan over all productions */
+			{
+				if (temp.kind == K_TOKEN || temp.kind == K_EXTENDED)
 				{
-					if (hi.startsWith(lo))
+					string lo = last_token;
+					string hi = text_get_string(temp.id);
+					if (!text_is_valid_C_id(hi)) /* ignore identifiers */
 					{
-						for (int length = lo.length() + 1; length < hi.length(); length++)
+						if (hi.startsWith(lo))
 						{
-							String continuation_name = hi.substring(0, length);
-							text_insert_string(continuation_name);
-							if (rdp_verbose.value())
+							for (int length = lo.Length + 1; length < hi.Length; length++)
 							{
-								text_message(TEXT_INFO, "Adding continuation token \'" + continuation_name + "\'\n");
+								string continuation_name = hi.Substring(0, length);
+								text_insert_string(continuation_name);
+								if (rdp_verbose[0])
+								{
+									text_message(TEXT_INFO, "Adding continuation token \'" + continuation_name + "\'\n");
+								}
+								tokens_added = true;
+								rdp_find(continuation_name, K_TOKEN, RDP_ANY);
 							}
-							tokens_added = true;
-							rdp_find(continuation_name, K_TOKEN, RDP_ANY);
 						}
 					}
+					last_token = text_get_string(temp.id);
 				}
-				last_token = text_get_string(temp.id);
+				temp = (RdpData)temp.nextSymbolInScope();
 			}
-			temp = (RdpData)temp.nextSymbolInScope();
-		}
-		if (rdp_verbose.value() && !tokens_added)
-		{
-			text_message(TEXT_INFO, "No continuation tokens needed\n");
-		}
-	}
-
-	private static void rdp_order_tokens(SymbolScopeData base)
-	{
-		RdpData temp = (RdpData)base.nextSymbolInScope();
-
-		while (temp != null)
-		{
-			if (temp.kind == K_TOKEN || temp.kind == K_EXTENDED)
+			if (rdp_verbose[0] && !tokens_added)
 			{
-				temp.extended_value = temp.token_value;
-				temp.token_value = rdp_token_count++;
+				text_message(TEXT_INFO, "No continuation tokens needed\n");
 			}
-			temp = (RdpData)temp.nextSymbolInScope();
 		}
 
-		/* now set up start sets for tokens, code and primitives */
-		temp = (RdpData)base.nextSymbolInScope();
-		while (temp != null)
+		private static void rdp_order_tokens(SymbolScopeData scopeData)
 		{
-			if (temp.kind == K_TOKEN || temp.kind == K_INTEGER || temp.kind == K_REAL || temp.kind == K_STRING
-					|| temp.kind == K_EXTENDED)
+			RdpData temp = (RdpData)scopeData.nextSymbolInScope();
+
+			while (temp != null)
 			{
-				temp.first.set(temp.token_value);
-				temp.first_cardinality = set_cardinality(temp.first);
-				temp.follow.set(SCAN_P_EOF);
-				temp.follow_cardinality = set_cardinality(temp.follow);
-				temp.first_done = 1;
+				if (temp.kind == K_TOKEN || temp.kind == K_EXTENDED)
+				{
+					temp.extended_value = temp.token_value;
+					temp.token_value = rdp_token_count++;
+				}
+				temp = (RdpData)temp.nextSymbolInScope();
 			}
-			else if (temp.kind == K_LIST && temp.supplementary_token != null)
+
+			/* now set up start sets for tokens, code and primitives */
+			temp = (RdpData)scopeData.nextSymbolInScope();
+			while (temp != null)
 			{
-				temp.follow.set(temp.supplementary_token.token_value);
-				temp.follow_cardinality = set_cardinality(temp.follow);
+				if (temp.kind == K_TOKEN || temp.kind == K_INTEGER || temp.kind == K_REAL || temp.kind == K_STRING
+						|| temp.kind == K_EXTENDED)
+				{
+					temp.first.set(temp.token_value);
+					temp.first_cardinality = set_cardinality(temp.first);
+					temp.follow.set(SCAN_P_EOF);
+					temp.follow_cardinality = set_cardinality(temp.follow);
+					temp.first_done = 1;
+				}
+				else if (temp.kind == K_LIST && temp.supplementary_token != null)
+				{
+					temp.follow.set(temp.supplementary_token.token_value);
+					temp.follow_cardinality = set_cardinality(temp.follow);
+				}
+				temp = (RdpData)temp.nextSymbolInScope();
 			}
-			temp = (RdpData)temp.nextSymbolInScope();
 		}
-#endif
 	}
 }

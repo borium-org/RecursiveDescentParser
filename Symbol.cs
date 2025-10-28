@@ -6,7 +6,7 @@ namespace Borium.RDP
 	{
 		private static SymbolTable symbol_tables = null;
 
-		public static Symbol symbol_insert_symbol(SymbolTable table, Symbol symbol)
+		internal static Symbol symbol_insert_symbol(SymbolTable table, Symbol symbol)
 		{
 			Symbol s = symbol;
 
@@ -119,17 +119,17 @@ namespace Borium.RDP
 
 #if false
 		@Override
-	public int compareTo(Symbol other)
+	internal int compareTo(Symbol other)
 	{
 		return text_get_string(id).compareTo(text_get_string(other.id));
 	}
-
-	/** Return next symbol in scope chain. Return NULL if at end */
-	public Symbol nextSymbolInScope()
-	{
-		return next_scope;
-	}
 #endif
+
+		/** Return next symbol in scope chain. Return NULL if at end */
+		internal Symbol nextSymbolInScope()
+		{
+			return next_scope;
+		}
 
 		internal void print()
 		{
