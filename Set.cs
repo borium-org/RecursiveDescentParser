@@ -1,4 +1,7 @@
-﻿namespace Borium.RDP
+﻿using System.Collections.Generic;
+using static Borium.RDP.Text;
+
+namespace Borium.RDP
 {
 	internal class Set
 	{
@@ -7,27 +10,29 @@
 	{
 		int indent();
 	}
-
-	internal static int set_cardinality(Set src)
-	{
-		return src == null ? 0 : src.cardinality();
-	}
-
-	internal static int set_print_element(int element, String[] element_names, boolean comments)
-	{
-		if (element_names == null)
-		{
-			return text_printf(Integer.toString(element));
-		}
-		else
-		{
-			String elementString = element_names[element];
-			if (!comments)
-				elementString = elementString.split(" ")[0];
-			return text_printf(elementString);
-		}
-	}
 #endif
+
+		internal static int set_cardinality(Set src)
+		{
+			return src == null ? 0 : src.cardinality();
+		}
+
+		internal static int set_print_element(int element, string[] element_names, bool comments)
+		{
+			if (element_names == null)
+			{
+				return text_printf($"{element}");
+			}
+			else
+			{
+				string elementString = element_names[element];
+				if (!comments)
+				{
+					elementString = elementString.Split(' ')[0];
+				}
+				return text_printf(elementString);
+			}
+		}
 
 		private uint[] data = new uint[10];
 
@@ -68,15 +73,15 @@
 			}
 		}
 
-#if false
-		internal boolean includes(int element)
-	{
-		grow(element);
-		int index = element / 32;
-		element &= 0x1F;
-		return (data[index] & 1 << element) != 0;
-	}
+		internal bool includes(int element)
+		{
+			grow(element);
+			int index = element / 32;
+			element &= 0x1F;
+			return (data[index] & (1 << element)) != 0;
+		}
 
+#if false
 	internal void intersect(Set src)
 	{
 		/* only iterate over shortest set */
@@ -91,33 +96,35 @@
 			data[length++] = 0;
 		}
 	}
+#endif
 
-	internal void print(String[] element_names, int line_length)
-	{
-		int column = 0;
-		boolean not_first = false;
-		Integer[] elements = array();
-		for (int element : elements)
+		internal void print(string[] element_names, int line_length)
 		{
-			if (not_first)
+			int column = 0;
+			bool not_first = false;
+			int[] elements = array();
+			foreach (int element in elements)
 			{
-				column += text_printf(", ");
-			}
-			else
-			{
-				not_first = true;
-			}
+				if (not_first)
+				{
+					column += text_printf(", ");
+				}
+				else
+				{
+					not_first = true;
+				}
 
-			if (line_length != 0 && column >= line_length)
-			{
-				text_printf("\n");
-				column = 0;
+				if (line_length != 0 && column >= line_length)
+				{
+					text_printf("\n");
+					column = 0;
+				}
+				column += set_print_element(element, element_names, true);
 			}
-			column += set_print_element(element, element_names, true);
 		}
-	}
 
-	internal void print(String[] element_names, int initialOffset, Indent indent, int line_length, boolean comments)
+#if false
+		internal void print(String[] element_names, int initialOffset, Indent indent, int line_length, boolean comments)
 	{
 		int column = initialOffset;
 		boolean not_first = false;
@@ -160,39 +167,40 @@
 			data[i] |= src.data[i];
 		}
 	}
+#endif
 
-	private Integer[] array()
-	{
-		ArrayList<Integer> elements = new ArrayList<>();
-		for (int word = 0; word < data.length; word++)
+		private int[] array()
 		{
-			for (int bit = 0; bit < 32; bit++)
+			List<int> elements = new List<int>();
+			for (int word = 0; word < data.Length; word++)
 			{
-				if ((data[word] & 1 << bit) != 0)
+				for (int bit = 0; bit < 32; bit++)
 				{
-					elements.add(word * 32 + bit);
+					if ((data[word] & 1 << bit) != 0)
+					{
+						elements.Add(word * 32 + bit);
+					}
 				}
 			}
+			return elements.ToArray();
 		}
-		return elements.toArray(new Integer[0]);
-	}
 
-	private int cardinality()
-	{
-		int[] bitCounts = new int[] { 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4 };
-
-		int cardinality = 0;
-		for (long bits : data)
+		private int cardinality()
 		{
-			for (int i = 0; i < 8; i++)
+			int[] bitCounts = new int[] { 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4 };
+
+			int cardinality = 0;
+			foreach (uint bits in data)
 			{
-				cardinality += bitCounts[(int) (bits & 0xF)];
-				bits >>= 4;
+				uint bits1 = bits;
+				for (int i = 0; i < 8; i++)
+				{
+					cardinality += bitCounts[(int)(bits1 & 0xF)];
+					bits1 >>= 4;
+				}
 			}
+			return cardinality;
 		}
-		return cardinality;
-	}
-#endif
 
 		private void grow(int bits)
 		{

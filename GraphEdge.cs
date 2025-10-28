@@ -7,12 +7,12 @@
 		/// </summary>
 		internal static int graph_next_edge_count = 1;
 
-#if false
 		GraphNode destination;
 		GraphNode source;
 		GraphBase previous_in_edge;
 		GraphBase previous_out_edge;
 
+#if false
 		void deleteEdge()
 		{
 			/* unlink this edge from the out list */
@@ -35,8 +35,9 @@
 				previous_in_edge.next_in_edge = next_in_edge;
 			}
 		}
+#endif
 
-		GraphEdge insertEdgeAfterFinal(GraphNode destination_node, GraphNode source_node)
+		internal GraphEdge insertEdgeAfterFinal(GraphNode destination_node, GraphNode source_node)
 		{
 			GraphNode source_node_base = source_node;
 			GraphNode destination_node_base = destination_node;
@@ -77,6 +78,5 @@
 			destination = destination_node_base;
 			return this;
 		}
-#endif
 	}
 }

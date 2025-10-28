@@ -34,8 +34,7 @@
 
 		protected abstract int getId();
 
-#if false
-		void insertNode(GraphNode node)
+		internal void insertNode(GraphNode node)
 		{
 			node.atom_number = graph_next_node_count++;
 			node.next_out_edge = null;
@@ -52,6 +51,5 @@
 				node.next_node.previous_node = node;
 			}
 		}
-#endif
 	}
 }

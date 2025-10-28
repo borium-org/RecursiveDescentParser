@@ -1,4 +1,5 @@
 ﻿using static Borium.RDP.CRT;
+using static Borium.RDP.RdpAux;
 using static Borium.RDP.Text;
 using static Borium.RDP.Text.TextMessageType;
 
@@ -92,15 +93,15 @@ namespace Borium.RDP
 
 			return bad;
 		}
+#endif
 
-		public static void rdp_check_eoln(String id)
+		internal static void rdp_check_eoln(string id)
 		{
-			if (id.equals("EOLN"))
+			if (id.Equals("EOLN"))
 			{
 				rdp_dir_newline_visible = 1; /* Grammar contains an explicit EOLN */
 			}
 		}
-#endif
 
 		internal static void rdp_check_token_valid(string id)
 		{

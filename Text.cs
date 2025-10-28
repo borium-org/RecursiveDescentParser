@@ -381,29 +381,27 @@ namespace Borium.RDP
 			return start;
 		}
 
-#if false
-	internal static int text_insert_characters(string str)
-	{
-		int start = text_top;
-		for (char ch : str.toCharArray())
+		internal static int text_insert_characters(string str)
 		{
-			text_insert_char(ch);
+			int start = text_top;
+			foreach (char ch in str)
+			{
+				text_insert_char(ch);
+			}
+			return start;
 		}
-		return start;
-	}
 
-	internal static int text_insert_integer(int n)
-	{
-		int start = text_top;
-		if (n > 9)
+		internal static int text_insert_integer(int n)
 		{
-			// recursively handle multi-digit numbers
-			text_insert_integer(n / 10);
+			int start = text_top;
+			if (n > 9)
+			{
+				// recursively handle multi-digit numbers
+				text_insert_integer(n / 10);
+			}
+			text_insert_char((char)(n % 10 + '0'));
+			return start;
 		}
-		text_insert_char((char) (n % 10 + '0'));
-		return start;
-	}
-#endif
 
 		internal static int text_insert_string(string str)
 		{
@@ -416,22 +414,28 @@ namespace Borium.RDP
 			return start;
 		}
 
-#if false
-		/** put an id_number into text buffer */
+		/// <summary>
+		/// Put an id_number into text buffer
+		/// </summary>
+		/// <param name="prefix"></param>
+		/// <param name="str"></param>
+		/// <param name="n"></param>
+		/// <returns></returns>
 		internal static int text_insert_substring(string prefix, string str, int n)
-	{
-		int start = text_top;
+		{
+			int start = text_top;
 
-		text_insert_characters(prefix);
-		text_insert_char('_');
-		text_insert_characters(str);
-		text_insert_char('_');
-		text_insert_integer(n);
-		text_insert_char('\0');
-		return start;
-	}
+			text_insert_characters(prefix);
+			text_insert_char('_');
+			text_insert_characters(str);
+			text_insert_char('_');
+			text_insert_integer(n);
+			text_insert_char('\0');
+			return start;
+		}
 
-	internal static boolean text_is_valid_C_id(string s)
+#if false
+		internal static boolean text_is_valid_C_id(string s)
 	{
 		boolean temp = true;
 		for (char ch : s.toCharArray())
@@ -634,37 +638,37 @@ namespace Borium.RDP
 	}
 #endif
 
-	private static void text_close()
-	{
-		if (file == null)
-			return;
-
-		linenumber = 0;
-		fclose(file);
-		file = null;
-		// unload next file if there is one
-		if (source_descriptor_list != null)
+		private static void text_close()
 		{
-			SourceList temp = source_descriptor_list;
-			source_descriptor_list = source_descriptor_list.previous;
-			errors = temp.errors;
-			file = temp.file;
-			first_char = temp.first_char;
-			last_char = temp.last_char;
-			linenumber = temp.linenumber;
-			name = temp.name;
-			text_char = temp.text_char;
-			text_current = temp.text_current;
-			memcpy(text_scan_data, temp.text_scan_data);
-			symbol_first_char = temp.symbol_first_char;
-			warnings = temp.warnings;
-			if (echo)
+			if (file == null)
+				return;
+
+			linenumber = 0;
+			fclose(file);
+			file = null;
+			// unload next file if there is one
+			if (source_descriptor_list != null)
 			{
-				text_message(TEXT_INFO, "\n");
-				text_echo_line();
+				SourceList temp = source_descriptor_list;
+				source_descriptor_list = source_descriptor_list.previous;
+				errors = temp.errors;
+				file = temp.file;
+				first_char = temp.first_char;
+				last_char = temp.last_char;
+				linenumber = temp.linenumber;
+				name = temp.name;
+				text_char = temp.text_char;
+				text_current = temp.text_current;
+				memcpy(text_scan_data, temp.text_scan_data);
+				symbol_first_char = temp.symbol_first_char;
+				warnings = temp.warnings;
+				if (echo)
+				{
+					text_message(TEXT_INFO, "\n");
+					text_echo_line();
+				}
 			}
 		}
-	}
 
 		private static void text_echo_line()
 		{
