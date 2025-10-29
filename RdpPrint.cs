@@ -9,7 +9,7 @@ namespace Borium.RDP
 {
 	internal class RdpPrint
 	{
-		static string[] rdp_enum_string;
+		protected static string[] rdp_enum_string;
 
 		internal static string[] rdp_token_string;
 
@@ -174,8 +174,6 @@ namespace Borium.RDP
 			rdp_enum_string = enums.ToArray();
 		}
 
-#if false
-
 		protected int rdp_indentation;
 
 		protected int indent()
@@ -241,9 +239,9 @@ namespace Borium.RDP
 			rdp_print_parser_production_name(n, false);
 		}
 
-		protected void rdp_print_parser_string(String string)
+		protected void rdp_print_parser_string(string str)
 		{
-			for (char ch : string.toCharArray())
+			foreach (char ch in str)
 			{
 				if (ch == '\"' || ch == '\\' || ch == '\'')
 				{
@@ -253,7 +251,7 @@ namespace Borium.RDP
 			}
 		}
 
-		private void rdp_print_parser_production_name(RdpData n, boolean printComment)
+		private void rdp_print_parser_production_name(RdpData n, bool printComment)
 		{
 			switch (n.kind)
 			{
@@ -266,9 +264,9 @@ namespace Borium.RDP
 						String tokenName = text_get_string(n.token_enum);
 						if (!printComment)
 						{
-							int pos = tokenName.indexOf(' ');
+							int pos = tokenName.IndexOf(' ');
 							if (pos != -1)
-								tokenName = tokenName.substring(0, pos);
+								tokenName = tokenName.Substring(0, pos);
 						}
 						text_printf(tokenName);
 					}
@@ -280,9 +278,9 @@ namespace Borium.RDP
 					break;
 				default:
 					text_printf(text_get_string(n.id));
-					if (text_get_string(n.id).length() == 0)
+					if (text_get_string(n.id).Length == 0)
 					{
-						System.err.println("Empty string");
+						Console.WriteLine("Empty string");
 					}
 					break;
 			}
@@ -293,7 +291,7 @@ namespace Borium.RDP
 			int i = 0;
 			// In some cases we just iprintf("\n") and it does not need to be
 			// indented
-			if (!fmt.equals("\n"))
+			if (!fmt.Equals("\n"))
 			{
 				i = indent(extraIndent);
 			}
@@ -306,13 +304,12 @@ namespace Borium.RDP
 			int i = 0;
 			// In some cases we just iprintf("\n") and it does not need to be
 			// indented
-			if (!fmt.equals("\n"))
+			if (!fmt.Equals("\n"))
 			{
 				i = indent();
 			}
 			i += text_printf(fmt);
 			return i; /* return number of characters printed */
 		}
-#endif
 	}
 }

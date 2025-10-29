@@ -24,6 +24,7 @@ namespace Borium.RDP
 			internal string var;
 			internal string key;
 			internal string desc;
+			internal RdpArgList next;
 		}
 
 		internal class RdpData : Symbol
@@ -202,7 +203,7 @@ namespace Borium.RDP
 			/// </summary>
 			internal string close;
 
-			List<string> locals = new List<string>();
+			internal List<string> locals = new List<string>();
 
 			internal void rdp_print_sub_item(bool expand)
 			{
@@ -359,9 +360,9 @@ namespace Borium.RDP
 		}
 
 		internal const int K_EXTENDED = 0;
-		const int K_INTEGER = 1;
-		const int K_REAL = 2;
-		const int K_STRING = 3;
+		internal const int K_INTEGER = 1;
+		internal const int K_REAL = 2;
+		internal const int K_STRING = 3;
 		internal const int K_CODE = 4;
 		internal const int K_TOKEN = 5;
 		internal const int K_PRIMARY = 6;
@@ -414,7 +415,7 @@ namespace Borium.RDP
 		/// <summary>
 		/// Data from ARG_* directives
 		/// </summary>
-		internal static List<RdpArgList> rdp_dir_args = new List<RdpArgList>();
+		internal static RdpArgList rdp_dir_args;
 
 		/// <summary>
 		/// Convert symbols flag
@@ -573,10 +574,11 @@ namespace Borium.RDP
 				kind = kind,
 				key = key,
 				var = var,
-				desc = desc
+				desc = desc,
+				next = rdp_dir_args
 			};
 
-			rdp_dir_args.Add(temp);
+			rdp_dir_args = temp;
 		}
 
 		internal static RdpData rdp_find(int id, int kind, int symbol)
@@ -691,10 +693,8 @@ namespace Borium.RDP
 			{
 				if (rdp_c_path[0] != null)
 				{
-#if false
 					RdpPrintC print = new RdpPrintC();
 					print.rdp_dump_extended(rdp_base);
-#endif
 				}
 			}
 			if (text_total_errors() > 0)
@@ -706,11 +706,9 @@ namespace Borium.RDP
 			}
 			if (rdp_c_path[0] != null)
 			{
-#if false
 				RdpPrintC print = new RdpPrintC();
 				print.printHeader(text_force_filetype(outputfilename, "h"));
 				print.printParser(text_force_filetype(outputfilename, "c"), rdp_base);
-#endif
 			}
 			// if (rdp_cpp_path[0] != null)
 			// {
@@ -781,7 +779,7 @@ namespace Borium.RDP
 					string hi = text_get_string(temp.id);
 					if (!text_is_valid_C_id(hi)) /* ignore identifiers */
 					{
-						if (hi.startsWith(lo))
+						if (hi.StartsWith(lo))
 						{
 							for (int length = lo.Length + 1; length < hi.Length; length++)
 							{

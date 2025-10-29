@@ -1,8 +1,9 @@
-﻿using static Borium.RDP.Text;
+﻿using System;
+using static Borium.RDP.Text;
 
 namespace Borium.RDP
 {
-	internal class Symbol
+	internal class Symbol : IComparable<Symbol>
 	{
 		private static SymbolTable symbol_tables = null;
 
@@ -117,13 +118,10 @@ namespace Borium.RDP
 
 		internal int id;
 
-#if false
-		@Override
-	internal int compareTo(Symbol other)
-	{
-		return text_get_string(id).compareTo(text_get_string(other.id));
-	}
-#endif
+		int CompareTo(Symbol other)
+		{
+			return text_get_string(id).CompareTo(text_get_string(other.id));
+		}
 
 		/** Return next symbol in scope chain. Return NULL if at end */
 		internal Symbol nextSymbolInScope()
@@ -136,17 +134,20 @@ namespace Borium.RDP
 			text_printf(id == 0 ? "Null symbol" : text_get_string(id));
 		}
 
-#if false
-		protected void unlinkSymbol()
-	{
-		Symbol s = this;
-
-		s.last_hash.set(s.next_hash); /* point previous pointer to next symbol */
-		if (s.next_hash != null)
+		internal void unlinkSymbol()
 		{
-			s.next_hash.last_hash.set(s.last_hash.value());
+			Symbol s = this;
+
+			s.last_hash[0] = s.next_hash; /* point previous pointer to next symbol */
+			if (s.next_hash != null)
+			{
+				s.next_hash.last_hash[0] = s.last_hash[0];
+			}
 		}
-	}
-#endif
+
+		int IComparable<Symbol>.CompareTo(Symbol other)
+		{
+			return CompareTo(other);
+		}
 	}
 }

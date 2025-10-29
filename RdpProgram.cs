@@ -99,8 +99,8 @@ namespace Borium.RDP
 		const int RDP_T_RETAIN_COMMENTS = 65;
 		const int RDP_T_SET_SIZE = 66;
 		const int RDP_T_SHOW_SKIPS = 67;
-		const int RDP_T_string = 68;
-		const int RDP_T_string_ESC = 69;
+		const int RDP_T_STRING = 68;
+		const int RDP_T_STRING_ESC = 69;
 		const int RDP_T_SUFFIX = 70;
 		const int RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS = 71;
 		const int RDP_T_SYMBOL_TABLE = 72;
@@ -150,8 +150,8 @@ private static const string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(n
 
 		private static int rdp_sourcefilenumber;
 
-		private static string[] rdp_tokens = { "IGNORE", "ID", "INTEGER", "REAL", "CHAR", "CHAR_ESC", "string",
-			"string_ESC", "COMMENT", "COMMENT_VISIBLE", "COMMENT_NEST", "COMMENT_NEST_VISIBLE", "COMMENT_LINE",
+		private static string[] rdp_tokens = { "IGNORE", "ID", "INTEGER", "REAL", "CHAR", "CHAR_ESC", "STRING",
+			"STRING_ESC", "COMMENT", "COMMENT_VISIBLE", "COMMENT_NEST", "COMMENT_NEST_VISIBLE", "COMMENT_LINE",
 			"COMMENT_LINE_VISIBLE", "EOF", "EOLN", "'\"'", "'#'", "'\''", "'('", "'(*'", "')'", "'*'", "'.'", "':'",
 			"'::'", "'::='", "'<'", "'>'", "'@'", "'ALT_ID'", "'ANNOTATED_EPSILON_TREE'", "'ARG_BLANK'",
 			"'ARG_BOOLEAN'", "'ARG_NUMERIC'", "'ARG_string'", "'CASE_INSENSITIVE'", "'CHAR'", "'CHAR_ESC'", "'COMMENT'",
@@ -159,7 +159,7 @@ private static const string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(n
 			"'DERIVATION_TREE'", "'EPSILON_TREE'", "'GLOBAL'", "'HASH_PRIME'", "'HASH_SIZE'", "'INCLUDE'",
 			"'INTERPRETER'", "'MAX_ERRORS'", "'MAX_WARNINGS'", "'MULTIPLE_SOURCE_FILES'", "'NEW_ID'", "'NUMBER'",
 			"'OPTION'", "'OUTPUT_FILE'", "'PARSER'", "'PASSES'", "'POST_PARSE'", "'POST_PROCESS'", "'PRE_PARSE'",
-			"'PRE_PROCESS'", "'RETAIN_COMMENTS'", "'SET_SIZE'", "'SHOW_SKIPS'", "'string'", "'string_ESC'", "'SUFFIX'",
+			"'PRE_PROCESS'", "'RETAIN_COMMENTS'", "'SET_SIZE'", "'SHOW_SKIPS'", "'STRING'", "'STRING_ESC'", "'SUFFIX'",
 			"'SUPPRESS_BUILT_IN_ARGUMENTS'", "'SYMBOL_TABLE'", "'TAB_WIDTH'", "'TEXT_SIZE'", "'TITLE'", "'TREE'",
 			"'USES'", "'['", "'[*'", "']'", "'^'", "'^^'", "'^^^'", "'^_'", "'{'", "'|'", "'}'" };
 
@@ -235,6 +235,11 @@ private static const string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(n
 
 		public static void Main(string[] args)
 		{
+			if (args.Length == 0)
+			{
+				args = new string[] { "-E", "-R", "-C.", "rdp.bnf" };
+			}
+
 			long rdp_start_time = CurrentTimeMillis();
 
 			bool[] rdp_symbol_statistics = { false }; // show symbol_ table statistics flag
@@ -382,16 +387,12 @@ private static const string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(n
 			// symbol_print_all_table();
 			// }
 
-#if false
-	// text_print_total_errors();
-	if (rdp_verbose[0] || true)
-	{
-		long rdp_finish_time = System.currentTimeMillis();
-		System.out.println("Time: " + (double)(rdp_finish_time - rdp_start_time) / 1000);
-	}
-	// return rdp_error_return;
-	throw new RuntimeException();
-#endif
+			// text_print_total_errors();
+			if (rdp_verbose[0] || true)
+			{
+				long rdp_finish_time = CurrentTimeMillis();
+				Console.WriteLine("Time: " + (double)(rdp_finish_time - rdp_start_time) / 1000);
+			}
 		}
 
 		private static long CurrentTimeMillis()
@@ -2271,13 +2272,13 @@ private static const string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(n
 					result = rdp_find_extended(name, quote, SCAN_P_CHAR_ESC);
 				}
 			}
-			else if (scan_test(null, RDP_T_string, null))
+			else if (scan_test(null, RDP_T_STRING, null))
 			{
 				if (rdp_tree_update)
 				{
 					rdp_add_child(null, rdp_tree);
 				}
-				scan_test(null, RDP_T_string, item_ret_stop);
+				scan_test(null, RDP_T_STRING, item_ret_stop);
 				scan_();
 				if (rdp_tree_update)
 				{
@@ -2297,13 +2298,13 @@ private static const string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(n
 					result = rdp_find_extended(name, null, SCAN_P_STRING);
 				}
 			}
-			else if (scan_test(null, RDP_T_string_ESC, null))
+			else if (scan_test(null, RDP_T_STRING_ESC, null))
 			{
 				if (rdp_tree_update)
 				{
 					rdp_add_child(null, rdp_tree);
 				}
-				scan_test(null, RDP_T_string_ESC, item_ret_stop);
+				scan_test(null, RDP_T_STRING_ESC, item_ret_stop);
 				scan_();
 				if (rdp_tree_update)
 				{
@@ -2613,8 +2614,8 @@ private static const string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(n
 			scan_load_keyword("RETAIN_COMMENTS", null, RDP_T_RETAIN_COMMENTS, SCAN_P_IGNORE);
 			scan_load_keyword("SET_SIZE", null, RDP_T_SET_SIZE, SCAN_P_IGNORE);
 			scan_load_keyword("SHOW_SKIPS", null, RDP_T_SHOW_SKIPS, SCAN_P_IGNORE);
-			scan_load_keyword("string", null, RDP_T_string, SCAN_P_IGNORE);
-			scan_load_keyword("string_ESC", null, RDP_T_string_ESC, SCAN_P_IGNORE);
+			scan_load_keyword("STRING", null, RDP_T_STRING, SCAN_P_IGNORE);
+			scan_load_keyword("STRING_ESC", null, RDP_T_STRING_ESC, SCAN_P_IGNORE);
 			scan_load_keyword("SUFFIX", null, RDP_T_SUFFIX, SCAN_P_IGNORE);
 			scan_load_keyword("SUPPRESS_BUILT_IN_ARGUMENTS", null, RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, SCAN_P_IGNORE);
 			scan_load_keyword("SYMBOL_TABLE", null, RDP_T_SYMBOL_TABLE, SCAN_P_IGNORE);
@@ -2640,14 +2641,14 @@ private static const string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(n
 			string_stop.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, SCAN_P_EOF, RDP_T_34, RDP_T_39, RDP_T_40,
 					RDP_T_41, RDP_T_46, RDP_T_58, RDP_T_60, RDP_T_62, RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC,
 					RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST,
-					RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string,
-					RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495,
+					RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_STRING,
+					RDP_T_STRING_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495,
 					RDP_T_123, RDP_T_124, RDP_T_125);
 			code_stop.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, SCAN_P_EOF, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_41,
 					RDP_T_46, RDP_T_58, RDP_T_60, RDP_T_62, RDP_T_64 /* @ */, RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC,
 					RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST,
-					RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string,
-					RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495,
+					RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_STRING,
+					RDP_T_STRING_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495,
 					RDP_T_123, RDP_T_124, RDP_T_125);
 			comment_stop.assignList(SCAN_P_EOF);
 			dir_first.assignList(RDP_T_ANNOTATED_EPSILON_TREE, RDP_T_ARG_BLANK, RDP_T_ARG_BOOLEAN, RDP_T_ARG_NUMERIC,
@@ -2670,28 +2671,28 @@ private static const string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(n
 			item_com_stop.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, SCAN_P_EOF, RDP_T_34, RDP_T_39, RDP_T_40,
 					RDP_T_41, RDP_T_46, RDP_T_58, RDP_T_60, RDP_T_62, RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC,
 					RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST,
-					RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string,
-					RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495,
+					RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_STRING,
+					RDP_T_STRING_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495,
 					RDP_T_123, RDP_T_124, RDP_T_125);
 			item_inl_first.assignList(RDP_T_40, RDP_T_60, RDP_T_91, RDP_T_9142, RDP_T_123);
 			item_inl_stop.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, SCAN_P_EOF, RDP_T_34, RDP_T_39, RDP_T_40,
 					RDP_T_41, RDP_T_46, RDP_T_58, RDP_T_60, RDP_T_62, RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC,
 					RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST,
-					RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string,
-					RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_123, RDP_T_124, RDP_T_125);
+					RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_STRING,
+					RDP_T_STRING_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_123, RDP_T_124, RDP_T_125);
 			item_ret_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_ALT_ID, RDP_T_CHAR,
 					RDP_T_CHAR_ESC, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE,
-					RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string, RDP_T_string_ESC);
+					RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_STRING, RDP_T_STRING_ESC);
 			item_ret_stop.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, SCAN_P_EOF, RDP_T_34, RDP_T_39, RDP_T_40,
 					RDP_T_41, RDP_T_46, RDP_T_58, RDP_T_60, RDP_T_62, RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC,
 					RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST,
-					RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string,
-					RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495,
+					RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_STRING,
+					RDP_T_STRING_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495,
 					RDP_T_123, RDP_T_124, RDP_T_125);
 			prod_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
 					RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
 					RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
-					RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
+					RDP_T_STRING, RDP_T_STRING_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
 			prod_stop.assignList(SCAN_P_EOF, RDP_T_41, RDP_T_46, RDP_T_62, RDP_T_93, RDP_T_125);
 			rdp_dir_11_first.assignList(SCAN_P_ID, RDP_T_9142);
 			rdp_dir_3_first.assignList(SCAN_P_ID, RDP_T_9142);
@@ -2715,29 +2716,29 @@ private static const string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(n
 			rdp_prod_0_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
 					RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
 					RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
-					RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
+					RDP_T_STRING, RDP_T_STRING_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
 			rdp_prod_1_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
 					RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
 					RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
-					RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
+					RDP_T_STRING, RDP_T_STRING_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
 			rdp_prod_2_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
 					RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
 					RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
-					RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
+					RDP_T_STRING, RDP_T_STRING_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
 			rdp_rule_16_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
 			rdp_seq_0_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_ALT_ID, RDP_T_CHAR,
 					RDP_T_CHAR_ESC, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE,
-					RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string, RDP_T_string_ESC);
+					RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_STRING, RDP_T_STRING_ESC);
 			rdp_seq_1_first.assignList(RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_NEST);
 			rdp_seq_10_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_ALT_ID,
 					RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
 					RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
-					RDP_T_string, RDP_T_string_ESC);
+					RDP_T_STRING, RDP_T_STRING_ESC);
 			rdp_seq_17_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
 			rdp_seq_2_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_ALT_ID, RDP_T_CHAR,
 					RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST,
-					RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string,
-					RDP_T_string_ESC);
+					RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_STRING,
+					RDP_T_STRING_ESC);
 			rdp_seq_23_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
 			rdp_seq_24_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
 			rdp_seq_25_first.assignList(RDP_T_9142, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
@@ -2745,19 +2746,19 @@ private static const string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(n
 			rdp_seq_29_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
 					RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
 					RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
-					RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
+					RDP_T_STRING, RDP_T_STRING_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
 			rdp_seq_30_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
 					RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
 					RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
-					RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
+					RDP_T_STRING, RDP_T_STRING_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
 			rdp_seq_31_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
 					RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
 					RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
-					RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
+					RDP_T_STRING, RDP_T_STRING_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
 			rdp_seq_32_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
 					RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
 					RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
-					RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
+					RDP_T_STRING, RDP_T_STRING_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
 			rdp_seq_9_first.assignList(RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495);
 			rdp_unit_1_first.assignList(RDP_T_ANNOTATED_EPSILON_TREE, RDP_T_ARG_BLANK, RDP_T_ARG_BOOLEAN, RDP_T_ARG_NUMERIC,
 					RDP_T_ARG_string, RDP_T_CASE_INSENSITIVE, RDP_T_DERIVATION_TREE, RDP_T_EPSILON_TREE, RDP_T_GLOBAL,
@@ -2794,13 +2795,13 @@ private static const string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(n
 			seq_first.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, RDP_T_34, RDP_T_39, RDP_T_40, RDP_T_60,
 					RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC, RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE,
 					RDP_T_COMMENT_NEST, RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER,
-					RDP_T_string, RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
+					RDP_T_STRING, RDP_T_STRING_ESC, RDP_T_91, RDP_T_9142, RDP_T_123);
 			seq_stop.assignList(SCAN_P_EOF, RDP_T_41, RDP_T_46, RDP_T_62, RDP_T_93, RDP_T_124, RDP_T_125);
 			token_stop.assignList(SCAN_P_ID, SCAN_P_INTEGER, SCAN_P_REAL, SCAN_P_EOF, RDP_T_34, RDP_T_39, RDP_T_40,
 					RDP_T_41, RDP_T_46, RDP_T_58, RDP_T_60, RDP_T_62, RDP_T_ALT_ID, RDP_T_CHAR, RDP_T_CHAR_ESC,
 					RDP_T_COMMENT, RDP_T_COMMENT_LINE, RDP_T_COMMENT_LINE_VISIBLE, RDP_T_COMMENT_NEST,
-					RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_string,
-					RDP_T_string_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495,
+					RDP_T_COMMENT_NEST_VISIBLE, RDP_T_COMMENT_VISIBLE, RDP_T_NEW_ID, RDP_T_NUMBER, RDP_T_STRING,
+					RDP_T_STRING_ESC, RDP_T_91, RDP_T_9142, RDP_T_93, RDP_T_94, RDP_T_9494, RDP_T_949494, RDP_T_9495,
 					RDP_T_123, RDP_T_124, RDP_T_125);
 			unit_first.assignList(SCAN_P_ID, RDP_T_ANNOTATED_EPSILON_TREE, RDP_T_ARG_BLANK, RDP_T_ARG_BOOLEAN,
 					RDP_T_ARG_NUMERIC, RDP_T_ARG_string, RDP_T_CASE_INSENSITIVE, RDP_T_DERIVATION_TREE, RDP_T_EPSILON_TREE,

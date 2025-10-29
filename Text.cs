@@ -132,7 +132,7 @@ namespace Borium.RDP
 		/// <summary>
 		/// TEXT_MESSAGES;
 		/// </summary>
-		private static TextWriter messages = System.Console.Out;
+		private static TextWriter messages = Console.Out;
 
 		/// <summary>
 		/// Array of error positions
@@ -233,37 +233,35 @@ namespace Borium.RDP
 			echo = i;
 		}
 
-#if false
-	internal static string text_extract_filename(string fname)
-	{
-		string name = fname;
-		// search backwards for '.' and terminate the string there
-		int temp = name.length();
-		while (--temp > 0)
+		internal static string text_extract_filename(string fname)
 		{
-			if (name.charAt(temp) == '.')
+			string name = fname;
+			// search backwards for '.' and terminate the string there
+			int temp = name.Length;
+			while (--temp > 0)
 			{
-				name = name.substring(0, temp);
-				break;
+				if (name[temp] == '.')
+				{
+					name = name.Substring(0, temp);
+					break;
+				}
 			}
-		}
-		// we didn't find a dot, so start again at the end
-		if (temp != name.length())
-		{
-			temp = fname.length();
-		}
-		// search backwards for '/' or '\' and start the string there
-		while (--temp > 0)
-		{
-			if (name.charAt(temp) == '/' || name.charAt(temp) == '\\')
+			// we didn't find a dot, so start again at the end
+			if (temp != name.Length)
 			{
-				name = name.substring(temp + 1);
-				break;
+				temp = fname.Length;
 			}
+			// search backwards for '/' or '\' and start the string there
+			while (--temp > 0)
+			{
+				if (name[temp] == '/' || name[temp] == '\\')
+				{
+					name = name.Substring(temp + 1);
+					break;
+				}
+			}
+			return name;
 		}
-		return name;
-	}
-#endif
 
 		/** add a new filetype. If ftype is NULL, return just filename */
 		internal static string text_force_filetype(string fname, string ftype)
@@ -525,7 +523,7 @@ namespace Borium.RDP
 			{
 				handle = s == "-" ? Console.In : new StreamReader(s);
 			}
-			catch (FileNotFoundException e)
+			catch (FileNotFoundException)
 			{
 				handle = null;
 			}
@@ -583,15 +581,13 @@ namespace Borium.RDP
 			}
 		}
 
-#if false
 		internal static void text_print_time()
-	{
-		// string __DATE__ = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
-		// string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(new Date());
-		// text_printf(__DATE__ + " " + __TIME__);
-		text_printf("Sep 19 2015 11:45:00");
-	}
-#endif
+		{
+			// string __DATE__ = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+			// string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(new Date());
+			// text_printf(__DATE__ + " " + __TIME__);
+			text_printf("Sep 19 2015 11:45:00");
+		}
 
 		internal static int text_printf(string str)
 		{
@@ -611,12 +607,10 @@ namespace Borium.RDP
 			return str.Length;
 		}
 
-#if false
-	internal static void text_redirect(PrintStream file)
-	{
-		messages = file;
-	}
-#endif
+		internal static void text_redirect(TextWriter file)
+		{
+			messages = file;
+		}
 
 		internal static int text_sequence_number()
 		{
@@ -628,12 +622,10 @@ namespace Borium.RDP
 			return totalerrors;
 		}
 
-#if false
-	internal static string text_uppercase_string(string str)
-	{
-		return str.toUpperCase();
-	}
-#endif
+		internal static string text_uppercase_string(string str)
+		{
+			return str.ToUpper();
+		}
 
 		private static void text_close()
 		{

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Borium.RDP
 {
@@ -14,18 +15,16 @@ namespace Borium.RDP
 			id = other.id;
 		}
 
-#if false
 		internal void unlinkScope()
-	{
-		Symbol s = this;
-		s = s.next_scope;
-		while (s != null)
 		{
-			s.unlinkSymbol();
+			Symbol s = this;
 			s = s.next_scope;
+			while (s != null)
+			{
+				s.unlinkSymbol();
+				s = s.next_scope;
+			}
 		}
-	}
-#endif
 
 		/// <summary>
 		/// Sort a scope region. Don't change positions in the hash table: just move pointers in the scope chain
@@ -60,9 +59,7 @@ namespace Borium.RDP
 				temp_scope = temp_scope.next_scope;
 			}
 			Symbol[] array = list.ToArray();
-#if false
-			Arrays.sort(array);
-#endif
+			Array.Sort(array);
 			foreach (Symbol sym in array)
 			{
 				sym.next_scope = null;

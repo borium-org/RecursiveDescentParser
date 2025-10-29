@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Borium.RDP
 {
@@ -24,7 +20,7 @@ namespace Borium.RDP
 			{
 				file.Close();
 			}
-			catch (IOException e)
+			catch (IOException)
 			{
 			}
 		}
@@ -35,7 +31,7 @@ namespace Borium.RDP
 			{
 				return file.Peek() == EOF;
 			}
-			catch (IOException e)
+			catch (IOException)
 			{
 			}
 			return true;
@@ -47,7 +43,7 @@ namespace Borium.RDP
 			{
 				return file.Read();
 			}
-			catch (IOException e)
+			catch (IOException)
 			{
 			}
 			return EOF;

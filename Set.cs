@@ -5,12 +5,10 @@ namespace Borium.RDP
 {
 	internal class Set
 	{
-#if false
-	internal interface Indent
-	{
-		int indent();
-	}
-#endif
+		internal interface Indent
+		{
+			int indent();
+		}
 
 		internal static int set_cardinality(Set src)
 		{
@@ -122,32 +120,30 @@ namespace Borium.RDP
 			}
 		}
 
-#if false
-		internal void print(String[] element_names, int initialOffset, Indent indent, int line_length, boolean comments)
-	{
-		int column = initialOffset;
-		boolean not_first = false;
-		Integer[] elements = array();
-		for (int element : elements)
+		internal void print(string[] element_names, int initialOffset, Indent indent, int line_length, bool comments)
 		{
-			if (not_first)
+			int column = initialOffset;
+			bool not_first = false;
+			int[] elements = array();
+			foreach (int element in elements)
 			{
-				column += text_printf(", ");
-			}
-			else
-			{
-				not_first = true;
-			}
+				if (not_first)
+				{
+					column += text_printf(", ");
+				}
+				else
+				{
+					not_first = true;
+				}
 
-			if (line_length != 0 && column >= line_length)
-			{
-				text_printf("\n");
-				column = indent.indent();
+				if (line_length != 0 && column >= line_length)
+				{
+					text_printf("\n");
+					column = indent.indent();
+				}
+				column += set_print_element(element, element_names, comments);
 			}
-			column += set_print_element(element, element_names, comments);
 		}
-	}
-#endif
 
 		internal void set(int element)
 		{

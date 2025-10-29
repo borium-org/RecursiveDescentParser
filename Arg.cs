@@ -22,11 +22,12 @@ namespace Borium.RDP
 			/** All truly integer values are unsigned, no negative integers were used in making this app. */
 			internal int[] unsignedvalue;
 			internal string[] str;
+			internal ArgData next;
 		}
 
 		const int EXIT_FAILURE = 1;
 
-		private static List<ArgData> Args = new List<ArgData>();
+		private static ArgData argsBase;
 
 		internal static void arg_boolean(char key, string description, bool[] intvalue)
 		{
@@ -36,7 +37,7 @@ namespace Borium.RDP
 		internal static void arg_help(string msg)
 		{
 			Console.Write("\n\nFatal - " + (msg ?? "") + "\n\n");
-			Print();
+			Print(argsBase);
 			Environment.Exit(EXIT_FAILURE);
 		}
 
@@ -61,8 +62,12 @@ namespace Borium.RDP
 					{
 						arg_help("bad command line argument");
 					}
-					ArgData temp = Args.Find(a => a.key == arg[1]);
-					if (temp == null)
+					ArgData temp = argsBase;
+					while (temp.next != null && temp.key != arg[1])
+					{
+						temp = temp.next;
+					}
+					if (temp.key != arg[1])
 					{
 						arg_help("unknown command line argument");
 					}
@@ -107,15 +112,17 @@ namespace Borium.RDP
 				description = description,
 				boolvalue = boolvalue,
 				unsignedvalue = unsignedvalue,
-				str = str
+				str = str,
+				next = argsBase
 			};
-			Args.Add(temp);
+			argsBase = temp;
 		}
 
-		private static void Print()
+		private static void Print(ArgData p)
 		{
-			foreach (ArgData p in Args)
+			if (p != null)
 			{
+				Print(p.next);
 				if (p.kind != ARG_BLANK)
 				{
 					Console.Write("-" + p.key + (p.kind == ARG_NUMERIC ? "<n>" : p.kind == ARG_STRING ? "<s>" : "   ") + " ");
