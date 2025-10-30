@@ -309,8 +309,8 @@ private static String RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compile
 				text_message(TEXT_FATAL, "multiple source files not allowed\n");
 			}
 			text_init(rdp_textsize.value(), 50, 120, rdp_tabwidth.value());
+			scan_init(false, false, true, rdp_symbol_echo.value(), rdp_tokens);
 #if false
-	scan_init(false, false, true, rdp_symbol_echo.value(), rdp_tokens);
 	if (rdp_lexicalise.value())
 		scan_lexicalise();
 	locals = symbol_new_table("locals", 101, 31, new CompareHashPrint());

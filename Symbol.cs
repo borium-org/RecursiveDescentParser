@@ -5,10 +5,10 @@ namespace Borium.RDP
 {
 	internal class Symbol : IComparable<Symbol>
 	{
-#if false
 		private static SymbolTable symbol_tables = null;
 
-		public static Symbol symbol_insert_symbol(SymbolTable table, Symbol symbol)
+#if false
+		internal static Symbol symbol_insert_symbol(SymbolTable table, Symbol symbol)
 		{
 			Symbol s = symbol;
 
@@ -38,7 +38,7 @@ namespace Borium.RDP
 		}
 
 		/** lookup a symbol by id. Return null if it is not found */
-		public static Symbol symbol_lookup_key(SymbolTable table, String key, SymbolScopeData scope)
+		internal static Symbol symbol_lookup_key(SymbolTable table, String key, SymbolScopeData scope)
 		{
 			int hash = table.hash(table.hash_prime, key);
 			Symbol p = table.table[hash % table.hash_size];
@@ -52,7 +52,7 @@ namespace Borium.RDP
 			return p;
 		}
 
-		public static SymbolScopeData symbol_new_scope(SymbolTable table, String id)
+		internal static SymbolScopeData symbol_new_scope(SymbolTable table, String id)
 		{
 			SymbolScopeData p = new SymbolScopeData();
 
@@ -63,8 +63,9 @@ namespace Borium.RDP
 				p.next_hash.last_hash.set(p.next_hash);
 			return p;
 		}
+#endif
 
-		public static SymbolTable symbol_new_table(String name, int symbol_hashsize, int symbol_hashprime,
+		internal static SymbolTable symbol_new_table(string name, int symbol_hashsize, int symbol_hashprime,
 				CompareHashPrint compareHashPrint)
 		{
 			SymbolTable temp = new SymbolTable();
@@ -83,6 +84,8 @@ namespace Borium.RDP
 
 			return temp;
 		}
+
+#if false
 
 		/** next symbol in hash list */
 		Symbol next_hash;
@@ -104,20 +107,17 @@ namespace Borium.RDP
 
 		public int CompareTo(Symbol other)
 		{
-#if false
-			return text_get_string(id).compareTo(text_get_string(other.id));
-#else
-			return 0;
-#endif
+			return text_get_string(id).CompareTo(text_get_string(other.id));
 		}
+
 #if false
 		/** Return next symbol in scope chain. Return NULL if at end */
-		public Symbol nextSymbolInScope()
+		internal Symbol nextSymbolInScope()
 		{
 			return next_scope;
 		}
 
-		public void print()
+		internal void print()
 		{
 			text_printf(id == 0 ? "Null symbol" : text_get_string(id));
 		}

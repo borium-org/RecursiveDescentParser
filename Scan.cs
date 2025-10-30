@@ -27,22 +27,17 @@ namespace Borium.RDP
 #endif
 		}
 
-#if false
-		private static class ScanCommentBlock
-	{
-		@SuppressWarnings("unused")
-		String comment;
-		@SuppressWarnings("unused")
-		int column;
-		@SuppressWarnings("unused")
-		int sequence_number;
-		@SuppressWarnings("unused")
-		ScanCommentBlock next;
-		@SuppressWarnings("unused")
-		ScanCommentBlock previous;
-	}
+		private class ScanCommentBlock
+		{
+			internal string comment;
+			internal int column;
+			internal int sequence_number;
+			internal ScanCommentBlock next;
+			internal ScanCommentBlock previous;
+		}
 
-	static final int SCAN_P_IGNORE = 0;
+#if false
+		static final int SCAN_P_IGNORE = 0;
 	static final int SCAN_P_ID = 1;
 	static final int SCAN_P_INTEGER = 2;
 	static final int SCAN_P_REAL = 3;
@@ -59,24 +54,27 @@ namespace Borium.RDP
 	static final int SCAN_P_EOF = 14;
 	static final int SCAN_P_EOLN = 15;
 	static final int SCAN_P_TOP = 16;
+#endif
 
-	private static boolean scan_case_insensitive = false;
-	private static boolean scan_show_skips = false;
-	private static boolean scan_newline_visible = false;
-	private static boolean scan_symbol_echo = false;
-	private static String[] scan_token_names = null;
-	private static ScanCommentBlock scan_comment_list = null;
-	private static ScanCommentBlock scan_comment_list_end = null;
-	private static ScanCommentBlock last_comment_block;
-	private static SymbolTable scan_table;
-	private static boolean scan_lexicalise_flag = false;
-	@SuppressWarnings("unused")
+		private static bool scan_case_insensitive = false;
+		private static bool scan_show_skips = false;
+		private static bool scan_newline_visible = false;
+		private static bool scan_symbol_echo = false;
+		private static string[] scan_token_names = null;
+		private static ScanCommentBlock scan_comment_list = null;
+		private static ScanCommentBlock scan_comment_list_end = null;
+		private static ScanCommentBlock last_comment_block;
+
+		private static SymbolTable scan_table;
+
+#if false
+		private static bool scan_lexicalise_flag = false;
 	private static int last_line_number = 0;
 	private static int last_column = 0;
-	private static boolean retain_comments = false;
+	private static bool retain_comments = false;
 	private static int scan_sequence_running_number = 0;
 
-	public static void memcpy(ScanData to, ScanData from)
+	internal static void memcpy(ScanData to, ScanData from)
 	{
 		to.next_hash = from.next_hash;
 		to.last_hash.set(from.last_hash.value());
@@ -95,7 +93,7 @@ namespace Borium.RDP
 		to.p = from.p;
 	}
 
-	public static void memset(ScanData to)
+	internal static void memset(ScanData to)
 	{
 		to.next_hash = null;
 		to.last_hash.set(null);
@@ -114,7 +112,7 @@ namespace Borium.RDP
 		to.p = null;
 	}
 
-	public static void scan_()
+	internal static void scan_()
 	{
 		int start;
 		ScanData s;
@@ -650,29 +648,31 @@ namespace Borium.RDP
 			// text_printf("%s ", text_scan_data.id);
 		}
 	}
+#endif
 
-	public static void scan_init(boolean case_insensitive, boolean newline_visible, boolean show_skips,
-			boolean symbol_echo, String[] token_names)
-	{
-		scan_case_insensitive = case_insensitive;
-		scan_show_skips = show_skips;
-		scan_newline_visible = newline_visible;
-		scan_symbol_echo = symbol_echo;
-		scan_token_names = token_names;
+		internal static void scan_init(bool case_insensitive, bool newline_visible, bool show_skips,
+				bool symbol_echo, string[] token_names)
+		{
+			scan_case_insensitive = case_insensitive;
+			scan_show_skips = show_skips;
+			scan_newline_visible = newline_visible;
+			scan_symbol_echo = symbol_echo;
+			scan_token_names = token_names;
 
-		scan_comment_list = new ScanCommentBlock();
-		scan_comment_list_end = scan_comment_list;
-		text_scan_data = new ScanData();
-		scan_table = symbol_new_table("scan table", 101, 31, new CompareHashPrint());
-		scan_insert_comment_block("", 0, 0);
-	}
+			scan_comment_list = new ScanCommentBlock();
+			scan_comment_list_end = scan_comment_list;
+			text_scan_data = new ScanData();
+			scan_table = symbol_new_table("scan table", 101, 31, new CompareHashPrint());
+			scan_insert_comment_block("", 0, 0);
+		}
 
-	public static void scan_lexicalise()
+#if false
+		internal static void scan_lexicalise()
 	{
 		scan_lexicalise_flag = true;
 	}
 
-	public static void scan_load_keyword(String id1, String id2, int token, int extended)
+	internal static void scan_load_keyword(String id1, String id2, int token, int extended)
 	{
 		ScanData d = new ScanData();
 		d.id = text_insert_string(id1);
@@ -685,7 +685,7 @@ namespace Borium.RDP
 		symbol_insert_symbol(scan_table, d);
 	}
 
-	public static boolean scan_test(String production, int valid, Set stop)
+	internal static boolean scan_test(String production, int valid, Set stop)
 	{
 		if (valid != text_scan_data.token)
 		{
@@ -702,7 +702,7 @@ namespace Borium.RDP
 		return true;
 	}
 
-	public static boolean scan_test_set(String production, Set valid, Set stop)
+	internal static boolean scan_test_set(String production, Set valid, Set stop)
 	{
 		if (!valid.includes(text_scan_data.token))
 		{
@@ -731,20 +731,22 @@ namespace Borium.RDP
 		}
 		set_print_element(text_scan_data.token, scan_token_names, true);
 	}
+#endif
 
-	private static void scan_insert_comment_block(String pattern, int column, int sequence_number)
-	{
-		ScanCommentBlock temp = new ScanCommentBlock();
-		scan_comment_list_end.comment = pattern;
-		scan_comment_list_end.sequence_number = sequence_number;
-		scan_comment_list_end.column = column;
-		temp.previous = scan_comment_list_end;
-		scan_comment_list_end.next = temp;
-		scan_comment_list_end = temp;
-		last_comment_block = temp;
-	}
+		private static void scan_insert_comment_block(string pattern, int column, int sequence_number)
+		{
+			ScanCommentBlock temp = new ScanCommentBlock();
+			scan_comment_list_end.comment = pattern;
+			scan_comment_list_end.sequence_number = sequence_number;
+			scan_comment_list_end.column = column;
+			temp.previous = scan_comment_list_end;
+			scan_comment_list_end.next = temp;
+			scan_comment_list_end = temp;
+			last_comment_block = temp;
+		}
 
-	private static void skip(Set stop)
+#if false
+		private static void skip(Set stop)
 	{
 		while (!stop.includes(text_scan_data.token))
 		{

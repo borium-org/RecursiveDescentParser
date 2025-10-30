@@ -162,9 +162,12 @@ namespace Borium.RDP
 		/// </summary>
 		private static int tabwidth;
 
-#if false
-		static ScanData text_scan_data; // pointer to the last thing read by the scanner
+		/// <summary>
+		/// Pointer to the last thing read by the scanner
+		/// </summary>
+		internal static ScanData text_scan_data;
 
+#if false
 		/** enable line echoing */
 		private static boolean echo;
 
@@ -312,17 +315,17 @@ namespace Borium.RDP
 			}
 			text_char = text_bot[--text_current];
 		}
+#endif
 
-		internal static String text_get_string(int start)
+		internal static string text_get_string(int start)
 		{
-			String s = "";
+			string s = "";
 			while (text_bot[start] != 0)
 			{
 				s += text_bot[start++];
 			}
 			return s;
 		}
-#endif
 
 		internal static void text_init(int max_text, int max_errors, int max_warnings, int tab_width)
 		{
@@ -336,7 +339,6 @@ namespace Borium.RDP
 			text_current = last_char = first_char = maxtext;
 		}
 
-#if false
 		internal static int text_insert_char(char c)
 		{
 			int start = text_top;
@@ -351,6 +353,7 @@ namespace Borium.RDP
 			return start;
 		}
 
+#if false
 		internal static int text_insert_characters(String str)
 		{
 			int start = text_top;
@@ -372,11 +375,12 @@ namespace Borium.RDP
 			text_insert_char((char)(n % 10 + '0'));
 			return start;
 		}
+#endif
 
-		internal static int text_insert_string(String str)
+		internal static int text_insert_string(string str)
 		{
 			int start = text_top;
-			for (char ch : str.toCharArray())
+			foreach (char ch in str)
 			{
 				text_insert_char(ch);
 			}
@@ -384,6 +388,7 @@ namespace Borium.RDP
 			return start;
 		}
 
+#if false
 		/** put an id_number into text buffer */
 		internal static int text_insert_substring(String prefix, String str, int n)
 		{
