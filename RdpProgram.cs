@@ -11,7 +11,7 @@ using static Borium.RDP.RdpGram;
 using static Borium.RDP.Scan;
 using static Borium.RDP.Symbol;
 using static Borium.RDP.Text;
-//using static Borium.RDP.Text.TextMessageType;
+using static Borium.RDP.Text.TextMessageType;
 
 namespace Borium.RDP
 {
@@ -237,6 +237,11 @@ private static String RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compile
 
 		public static void Main(string[] args)
 		{
+			if (args.Length == 0)
+			{
+				args = new string[] { "-C.", "rdp.bnf" };
+			}
+
 			long rdp_start_time = CurrentTimeMillis();
 
 			Pointer<bool> rdp_symbol_statistics = new Pointer<bool>(false); // show symbol_ table statistics flag
@@ -280,31 +285,30 @@ private static String RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compile
 			arg_string('J', "Java parser output file path", rdp_java_path);
 			arg_string('j', "Java parser fully qualified prefix", rdp_java_prefix);
 
-#if false
-	rdp_sourcefilenames = arg_process(args);
+			rdp_sourcefilenames = arg_process(args);
 
-	// Fix up filetypes
-	for (rdp_sourcefilenumber = 0; rdp_sourcefilenumber < rdp_sourcefilenames.length; rdp_sourcefilenumber++)
-	{
-		rdp_sourcefilenames[rdp_sourcefilenumber] = text_default_filetype(rdp_sourcefilenames[rdp_sourcefilenumber],
-				"bnf");
-	}
+			// Fix up filetypes
+			for (rdp_sourcefilenumber = 0; rdp_sourcefilenumber < rdp_sourcefilenames.Length; rdp_sourcefilenumber++)
+			{
+				rdp_sourcefilenames[rdp_sourcefilenumber] = text_default_filetype(rdp_sourcefilenames[rdp_sourcefilenumber], "bnf");
+			}
 
-	if (rdp_filter.value())
-	{
-		rdp_sourcefilenames = new String[] { "-" };
-		rdp_outputfilename.set("-");
-	}
+			if (rdp_filter.value())
+			{
+				rdp_sourcefilenames = new string[] { "-" };
+				rdp_outputfilename.set("-");
+			}
 
-	if (rdp_sourcefilenames.length == 0)
-#endif
+			if (rdp_sourcefilenames.Length == 0)
 			{
 				arg_help("no source files specified");
 			}
-#if false
 			rdp_sourcefilename = rdp_sourcefilenames[0];
-	if (rdp_sourcefilenames.length != 1)
-		text_message(TEXT_FATAL, "multiple source files not allowed\n");
+			if (rdp_sourcefilenames.Length != 1)
+			{
+				text_message(TEXT_FATAL, "multiple source files not allowed\n");
+			}
+#if false
 	text_init(rdp_textsize.value(), 50, 120, rdp_tabwidth.value());
 	scan_init(false, false, true, rdp_symbol_echo.value(), rdp_tokens);
 	if (rdp_lexicalise.value())

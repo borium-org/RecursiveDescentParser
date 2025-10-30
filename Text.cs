@@ -2,19 +2,19 @@
 using System.IO;
 using static Borium.RDP.CRT;
 using static Borium.RDP.Scan;
-//using static Borium.RDP.Text.TextMessageType;
+using static Borium.RDP.Text.TextMessageType;
 
 namespace Borium.RDP
 {
 	internal class Text
 	{
-#if false
-		public enum TextMessageType
+		internal enum TextMessageType
 		{
 			TEXT_INFO, TEXT_WARNING, TEXT_ERROR, TEXT_FATAL, TEXT_INFO_ECHO, TEXT_WARNING_ECHO, TEXT_ERROR_ECHO,
 			TEXT_FATAL_ECHO
 		}
 
+#if false
 		private static class SourceList
 		{
 			/** copy of filename */
@@ -53,60 +53,96 @@ namespace Borium.RDP
 			/** previous file descriptor */
 			SourceList previous;
 		}
+#endif
 
-		/** Maximum number of error markers per line */
-		private static final int MAX_ECHO = 9;
+		/// <summary>
+		/// Maximum number of error markers per line
+		/// </summary>
+		private const int MAX_ECHO = 9;
 
-		private static final int EXIT_FAILURE = 1;
+		private const int EXIT_FAILURE = 1;
 
-		/** total number of errors this run */
+		/// <summary>
+		/// Total number of errors this run
+		/// </summary>
 		private static int totalerrors = 0;
 
-		/** total number of warnings this run */
+		/// <summary>
+		/// Total number of warnings this run
+		/// </summary>
 		private static int totalwarnings = 0;
 
-		/** total errors for this file */
+		/// <summary>
+		/// Total errors for this file
+		/// </summary>
 		private static int errors = 0;
 
-		/** crash if error count exceeds this value */
+		/// <summary>
+		/// Crash if error count exceeds this value
+		/// </summary>
 		private static int maxerrors = 25;
 
-		/** total warnings for this file */
+		/// <summary>
+		/// Total warnings for this file
+		/// </summary>
 		private static int warnings = 0;
 
-		/** crash if warning count exceeds this value */
+		/// <summary>
+		/// Crash if warning count exceeds this value
+		/// </summary>
 		private static int maxwarnings = 100;
 
-		/** filename */
-		private static String name = null;
+		/// <summary>
+		/// Filename
+		/// </summary>
+		private static string name = null;
 
-		/** current line in this file */
+		/// <summary>
+		/// Current line in this file
+		/// </summary>
 		private static int linenumber = 0;
 
+#if false
 		/** cumulative line_number */
 		private static int sequence_number = 0;
+#endif
 
-		/** TEXT_MESSAGES; */
-		private static PrintStream messages = System.out;
+		/// <summary>
+		/// TEXT_MESSAGES
+		/// </summary>
+		private static TextWriter messages = Console.Out;
 
-		/** array of error positions */
+		/// <summary>
+		/// Array of error positions
+		/// </summary>
 		private static int[] echo_pos = new int[MAX_ECHO];
 
-		/** current error number this line */
+		/// <summary>
+		/// current error number this line
+		/// </summary>
 		private static int echo_num = -1;
 
+#if false
 		/** current text character */
 		static int text_char = ' ';
+#endif
 
-		/** first character of current source line */
+		/// <summary>
+		/// First character of current source line
+		/// </summary>
 		private static int first_char;
 
+#if false
 		/** last character of current source line */
 		private static int last_char;
+#endif
 
-		/** pointer to current source character */
+		/// <summary>
+		/// Pointer to current source character
+		/// </summary>
 		static int text_current;
 
+#if false
 		/** text array for storing id's and strings */
 		static char[] text_bot = null;
 
@@ -133,31 +169,33 @@ namespace Borium.RDP
 		/** first character in this symbol */
 		private static int symbol_first_char;
 
-		public static int text_column_number()
+		internal static int text_column_number()
 		{
 			return first_char - text_current;
 		}
+#endif
 
-		public static String text_default_filetype(String fname, String ftype)
+		internal static string text_default_filetype(string fname, string ftype)
 		{
-			if (ftype.length() == 0)
+			if (ftype.Length == 0)
 			{
 				return fname;
 			}
-			String fullname = fname;
-			if (fullname.indexOf('.') == -1)
+			string fullname = fname;
+			if (fullname.IndexOf('.') == -1)
 			{
 				fullname += "." + ftype;
 			}
 			return fullname;
 		}
 
-		public static void text_echo(boolean i)
+#if false
+		internal static void text_echo(boolean i)
 		{
 			echo = i;
 		}
 
-		public static String text_extract_filename(String fname)
+		internal static String text_extract_filename(String fname)
 		{
 			String name = fname;
 			// search backwards for '.' and terminate the string there
@@ -188,7 +226,7 @@ namespace Borium.RDP
 		}
 
 		/** add a new filetype. If ftype is NULL, return just filename */
-		public static String text_force_filetype(String fname, String ftype)
+		internal static String text_force_filetype(String fname, String ftype)
 		{
 			// work backwards from end of filename looking for a dot, or a directory separator
 			int length = fname.length() - 1;
@@ -213,7 +251,7 @@ namespace Borium.RDP
 		}
 
 		/** advance text_current, reading another line if necessary */
-		public static void text_get_char()
+		internal static void text_get_char()
 		{
 			if (text_current <= last_char)
 			{
@@ -267,7 +305,7 @@ namespace Borium.RDP
 			text_char = text_bot[--text_current];
 		}
 
-		public static String text_get_string(int start)
+		internal static String text_get_string(int start)
 		{
 			String s = "";
 			while (text_bot[start] != 0)
@@ -277,7 +315,7 @@ namespace Borium.RDP
 			return s;
 		}
 
-		public static void text_init(int max_text, int max_errors, int max_warnings, int tab_width)
+		internal static void text_init(int max_text, int max_errors, int max_warnings, int tab_width)
 		{
 			tabwidth = tab_width;
 			maxtext = max_text;
@@ -289,7 +327,7 @@ namespace Borium.RDP
 			text_current = last_char = first_char = maxtext;
 		}
 
-		public static int text_insert_char(char c)
+		internal static int text_insert_char(char c)
 		{
 			int start = text_top;
 			if (text_top >= last_char)
@@ -303,7 +341,7 @@ namespace Borium.RDP
 			return start;
 		}
 
-		public static int text_insert_characters(String str)
+		internal static int text_insert_characters(String str)
 		{
 			int start = text_top;
 			for (char ch : str.toCharArray())
@@ -313,7 +351,7 @@ namespace Borium.RDP
 			return start;
 		}
 
-		public static int text_insert_integer(int n)
+		internal static int text_insert_integer(int n)
 		{
 			int start = text_top;
 			if (n > 9)
@@ -325,7 +363,7 @@ namespace Borium.RDP
 			return start;
 		}
 
-		public static int text_insert_string(String str)
+		internal static int text_insert_string(String str)
 		{
 			int start = text_top;
 			for (char ch : str.toCharArray())
@@ -337,7 +375,7 @@ namespace Borium.RDP
 		}
 
 		/** put an id_number into text buffer */
-		public static int text_insert_substring(String prefix, String str, int n)
+		internal static int text_insert_substring(String prefix, String str, int n)
 		{
 			int start = text_top;
 
@@ -350,7 +388,7 @@ namespace Borium.RDP
 			return start;
 		}
 
-		public static boolean text_is_valid_C_id(String s)
+		internal static boolean text_is_valid_C_id(String s)
 		{
 			boolean temp = true;
 			for (char ch : s.toCharArray())
@@ -360,12 +398,13 @@ namespace Borium.RDP
 			return temp;
 		}
 
-		public static int text_line_number()
+		internal static int text_line_number()
 		{
 			return linenumber;
 		}
+#endif
 
-		public static int text_message(TextMessageType type, String message)
+		internal static int text_message(TextMessageType type, String message)
 		{
 			if (message == null)
 			{
@@ -388,52 +427,54 @@ namespace Borium.RDP
 				case TEXT_WARNING_ECHO:
 					warnings++;
 					totalwarnings++;
-					messages.print("Warning ");
+					messages.Write("Warning ");
 					break;
 				case TEXT_ERROR:
 				case TEXT_ERROR_ECHO:
 					errors++;
 					totalerrors++;
-					messages.print("Error ");
+					messages.Write("Error ");
 					break;
 				case TEXT_FATAL:
 				case TEXT_FATAL_ECHO:
-					messages.print("Fatal ");
+					messages.Write("Fatal ");
 					break;
 				default:
-					messages.print("Unknown ");
+					messages.Write("Unknown ");
+					break;
 			}
 			if (type == TEXT_WARNING_ECHO || type == TEXT_ERROR_ECHO)
 			{
-				messages.print(echo_num + 1);
+				messages.Write(echo_num + 1);
 			}
 			if (name != null && linenumber != 0)
 			{
-				messages.print("(" + name + ") ");
+				messages.Write("(" + name + ") ");
 			}
 			else if (type != TEXT_INFO && type != TEXT_INFO_ECHO)
 			{
-				messages.print("- ");
+				messages.Write("- ");
 			}
-			messages.print(message);
+			messages.Write(message);
 			if (type == TEXT_FATAL || type == TEXT_FATAL_ECHO)
 			{
-				System.exit(EXIT_FAILURE);
+				Environment.Exit(EXIT_FAILURE);
 			}
 			if (errors > maxerrors && maxerrors > 0)
 			{
-				messages.println("Fatal (" + (name == null ? "null file" : name) + "): too many errors");
-				System.exit(EXIT_FAILURE);
+				messages.WriteLine("Fatal (" + (name == null ? "null file" : name) + "): too many errors");
+				Environment.Exit(EXIT_FAILURE);
 			}
 			if (warnings > maxwarnings && maxwarnings > 0)
 			{
-				messages.println("Fatal (" + (name == null ? "null file" : name) + "): too many warnings");
-				System.exit(EXIT_FAILURE);
+				messages.WriteLine("Fatal (" + (name == null ? "null file" : name) + "): too many warnings");
+				Environment.Exit(EXIT_FAILURE);
 			}
-			return message.length() + 1;
+			return message.Length + 1;
 		}
 
-		public static InputStream text_open(String s)
+#if false
+		internal static InputStream text_open(String s)
 		{
 			InputStream handle = null;
 			try
@@ -482,7 +523,7 @@ namespace Borium.RDP
 			return handle;
 		}
 
-		public static void text_print_statistics()
+		internal static void text_print_statistics()
 		{
 			long symbolcount = text_top,
 
@@ -499,7 +540,7 @@ namespace Borium.RDP
 			}
 		}
 
-		public static void text_print_time()
+		internal static void text_print_time()
 		{
 			// String __DATE__ = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 			// String __TIME__ = new SimpleDateFormat("HH:mm:ss").format(new Date());
@@ -507,7 +548,7 @@ namespace Borium.RDP
 			text_printf("Sep 19 2015 11:45:00");
 		}
 
-		public static int text_printf(String str)
+		internal static int text_printf(String str)
 		{
 			if (str != null)
 			{
@@ -523,22 +564,22 @@ namespace Borium.RDP
 			return str == null ? 0 : str.length();
 		}
 
-		public static void text_redirect(PrintStream file)
+		internal static void text_redirect(PrintStream file)
 		{
 			messages = file;
 		}
 
-		public static int text_sequence_number()
+		internal static int text_sequence_number()
 		{
 			return sequence_number;
 		}
 
-		public static int text_total_errors()
+		internal static int text_total_errors()
 		{
 			return totalerrors;
 		}
 
-		public static String text_uppercase_string(String str)
+		internal static String text_uppercase_string(String str)
 		{
 			return str.toUpperCase();
 		}
@@ -605,19 +646,19 @@ namespace Borium.RDP
 			// reset echo numbering array pointer
 			echo_num = -1;
 		}
+#endif
 
 		private static void text_echo_line_number()
 		{
 			if (linenumber != 0)
 			{
-				String s = String.format("%6d: ", linenumber);
-				messages.print(s);
+				string s = $"{linenumber:N6}: ";
+				messages.Write(s);
 			}
 			else
 			{
-				messages.print("******: ");
+				messages.Write("******: ");
 			}
 		}
-#endif
 	}
 }

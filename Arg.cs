@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using static Borium.RDP.Arg.ArgKind;
 
 namespace Borium.RDP
@@ -49,24 +50,23 @@ namespace Borium.RDP
 			add_node(ARG_NUMERIC, key, description, null, unsignedvalue, null);
 		}
 
-#if false
 		internal static String[] arg_process(String[] args)
 		{
-			ArrayList<String> ret = new ArrayList<>();
-			for (String arg : args)
+			List<string> ret = new List<string>();
+			foreach (string arg in args)
 			{
-				if (arg.charAt(0) == '-')
+				if (arg[0] == '-')
 				{
-					if (arg.length() < 2)
+					if (arg.Length < 2)
 					{
 						arg_help("bad command line argument");
 					}
-					arg_data temp = base;
-					while (temp.next != null && temp.key != arg.charAt(1))
+					arg_data temp = argBase;
+					while (temp.next != null && temp.key != arg[1])
 					{
 						temp = temp.next;
 					}
-					if (temp.key != arg.charAt(1))
+					if (temp.key != arg[1])
 					{
 						arg_help("unknown command line argument");
 					}
@@ -76,10 +76,10 @@ namespace Borium.RDP
 							temp.intvalue.set(!temp.intvalue.value());
 							break;
 						case ARG_NUMERIC:
-							temp.unsignedvalue.set(Integer.parseInt(arg.substring(2)));
+							temp.unsignedvalue.set(Convert.ToInt32(arg.Substring(2)));
 							break;
 						case ARG_STRING:
-							temp.str.set(arg.substring(2));
+							temp.str.set(arg.Substring(2));
 							break;
 						default:
 							break;
@@ -87,12 +87,11 @@ namespace Borium.RDP
 				}
 				else
 				{
-					ret.add(arg);
+					ret.Add(arg);
 				}
 			}
-			return ret.toArray(new String[ret.size()]);
+			return ret.ToArray();
 		}
-#endif
 
 		internal static void arg_string(char key, string description, Pointer<string> str)
 		{
