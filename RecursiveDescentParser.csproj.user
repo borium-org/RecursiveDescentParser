@@ -3,7 +3,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <StartArguments>
     </StartArguments>
-    <StartWorkingDirectory>..\..\..</StartWorkingDirectory>
+    <StartWorkingDirectory>C:\Aare\Borium\VisualStudio\RecursiveDescentParser\example\C\</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <StartWorkingDirectory>..\..\..</StartWorkingDirectory>
