@@ -132,29 +132,37 @@ namespace Borium.RDP
 		/// </summary>
 		private static int first_char;
 
-#if false
-		/** last character of current source line */
+		/// <summary>
+		/// Last character of current source line
+		/// </summary>
 		private static int last_char;
-#endif
 
 		/// <summary>
 		/// Pointer to current source character
 		/// </summary>
 		static int text_current;
 
-#if false
-		/** text array for storing id's and strings */
+		/// <summary>
+		/// Text array for storing id's and strings
+		/// </summary>
 		static char[] text_bot = null;
 
-		/** top of text character */
+		/// <summary>
+		/// Top of text character
+		/// </summary>
 		static int text_top = 1;
 
-		/** size of text buffer */
+		/// <summary>
+		/// Size of text buffer
+		/// </summary>
 		private static int maxtext;
 
-		/** tab expansion width */
+		/// <summary>
+		/// Tab expansion width
+		/// </summary>
 		private static int tabwidth;
 
+#if false
 		static ScanData text_scan_data; // pointer to the last thing read by the scanner
 
 		/** enable line echoing */
@@ -314,6 +322,7 @@ namespace Borium.RDP
 			}
 			return s;
 		}
+#endif
 
 		internal static void text_init(int max_text, int max_errors, int max_warnings, int tab_width)
 		{
@@ -327,6 +336,7 @@ namespace Borium.RDP
 			text_current = last_char = first_char = maxtext;
 		}
 
+#if false
 		internal static int text_insert_char(char c)
 		{
 			int start = text_top;
