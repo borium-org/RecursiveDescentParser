@@ -281,22 +281,34 @@ namespace Borium.RDP
 	static final int PROMOTE = 2;
 	static final int PROMOTE_AND_COPY = 3;
 	static final int PROMOTE_ABOVE = 4;
+#endif
 
-	/** force output files flag */
-	public static final Pointer<Boolean> rdp_force = new Pointer<>(false);
+		/// <summary>
+		/// Force output files flag
+		/// </summary>
+		public static Pointer<bool> rdp_force = new Pointer<bool>(false);
 
-	/** flag to force writing of production name into error messages */
-	public static final Pointer<Boolean> rdp_error_production_name = new Pointer<>(false);
+		/// <summary>
+		/// Flag to force writing of production name into error messages
+		/// </summary>
+		public static Pointer<bool> rdp_error_production_name = new Pointer<bool>(false);
 
-	/** flag to generate expanded bnf listing */
-	public static final Pointer<Boolean> rdp_expanded = new Pointer<>(false);
+		/// <summary>
+		/// Flag to generate expanded bnf listing
+		/// </summary>
+		public static Pointer<bool> rdp_expanded = new Pointer<bool>(false);
 
-	/** omit semantic actions flag */
-	public static final Pointer<Boolean> rdp_parser_only = new Pointer<>(false);
+		/// <summary>
+		/// Omit semantic actions flag
+		/// </summary>
+		public static Pointer<bool> rdp_parser_only = new Pointer<bool>(false);
 
-	/** add trace messages flag */
-	public static final Pointer<Boolean> rdp_trace = new Pointer<>(false);
+		/// <summary>
+		/// Add trace messages flag
+		/// </summary>
+		public static Pointer<bool> rdp_trace = new Pointer<bool>(false);
 
+#if false
 	/** symbol table for the parser */
 	private static SymbolScopeData rdp_base;
 

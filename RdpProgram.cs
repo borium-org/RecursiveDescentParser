@@ -256,31 +256,31 @@ private static String RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compile
 			rdp_tree.insertGraph("RDP derivation tree");
 			RdpTreeNodeData rdp_tree_root = null;
 
+			arg_message("Recursive descent parser generator V1.65 (c) Adrian Johnstone 2000\n"
+					+ "Ported to Java by Borium\n" + RDP_STAMP + "\n\n" + "Usage: rdparser [options] source[.bnf]");
+
+			arg_message("");
+			arg_boolean('f', "Filter mode (read from stdin and write to stdout)", rdp_filter);
+			arg_boolean('l', "Make a listing", rdp_line_echo);
+			arg_boolean('L', "Print lexicalised source file", rdp_lexicalise);
+			arg_string('o', "Write output to filename", rdp_outputfilename);
+			arg_boolean('s', "Echo each scanner symbol as it is read", rdp_symbol_echo);
+			arg_boolean('S', "Print summary symbol table statistics", rdp_symbol_statistics);
+			arg_numeric('t', "Tab expansion width (default " + rdp_tabwidth.value() + ")", rdp_tabwidth);
+			arg_numeric('T', "Text buffer size in bytes for scanner (default " + rdp_textsize.value() + ")", rdp_textsize);
+			arg_boolean('v', "Set verbose mode", rdp_verbose);
+			arg_string('V', "Write derivation tree to filename in VCG format", rdp_vcg_filename);
+			arg_message("");
+			arg_boolean('e', "Write out expanded BNF along with first and follow sets", rdp_expanded);
+			arg_boolean('E', "Add rule name to error messages in generated parser", rdp_error_production_name);
+			arg_boolean('F', "Force creation of output files", rdp_force);
+			arg_boolean('p', "Make parser only (omit semantic actions from generated code)", rdp_parser_only);
+			arg_boolean('R', "Add rule entry and exit messages", rdp_trace);
+			arg_string('C', "C parser path", rdp_c_path);
+			arg_string('J', "Java parser output file path", rdp_java_path);
+			arg_string('j', "Java parser fully qualified prefix", rdp_java_prefix);
+
 #if false
-	arg_message("Recursive descent parser generator V1.65 (c) Adrian Johnstone 2000\n"
-			+ "Ported to Java by Borium\n" + RDP_STAMP + "\n\n" + "Usage: rdparser [options] source[.bnf]");
-
-	arg_message("");
-	arg_boolean('f', "Filter mode (read from stdin and write to stdout)", rdp_filter);
-	arg_boolean('l', "Make a listing", rdp_line_echo);
-	arg_boolean('L', "Print lexicalised source file", rdp_lexicalise);
-	arg_string('o', "Write output to filename", rdp_outputfilename);
-	arg_boolean('s', "Echo each scanner symbol as it is read", rdp_symbol_echo);
-	arg_boolean('S', "Print summary symbol table statistics", rdp_symbol_statistics);
-	arg_numeric('t', "Tab expansion width (default " + rdp_tabwidth.value() + ")", rdp_tabwidth);
-	arg_numeric('T', "Text buffer size in bytes for scanner (default " + rdp_textsize.value() + ")", rdp_textsize);
-	arg_boolean('v', "Set verbose mode", rdp_verbose);
-	arg_string('V', "Write derivation tree to filename in VCG format", rdp_vcg_filename);
-	arg_message("");
-	arg_boolean('e', "Write out expanded BNF along with first and follow sets", rdp_expanded);
-	arg_boolean('E', "Add rule name to error messages in generated parser", rdp_error_production_name);
-	arg_boolean('F', "Force creation of output files", rdp_force);
-	arg_boolean('p', "Make parser only (omit semantic actions from generated code)", rdp_parser_only);
-	arg_boolean('R', "Add rule entry and exit messages", rdp_trace);
-	arg_string('C', "C parser path", rdp_c_path);
-	arg_string('J', "Java parser output file path", rdp_java_path);
-	arg_string('j', "Java parser fully qualified prefix", rdp_java_prefix);
-
 	rdp_sourcefilenames = arg_process(args);
 
 	// Fix up filetypes
@@ -297,8 +297,12 @@ private static String RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compile
 	}
 
 	if (rdp_sourcefilenames.length == 0)
-		arg_help("no source files specified");
-	rdp_sourcefilename = rdp_sourcefilenames[0];
+#endif
+			{
+				arg_help("no source files specified");
+			}
+#if false
+			rdp_sourcefilename = rdp_sourcefilenames[0];
 	if (rdp_sourcefilenames.length != 1)
 		text_message(TEXT_FATAL, "multiple source files not allowed\n");
 	text_init(rdp_textsize.value(), 50, 120, rdp_tabwidth.value());
