@@ -98,9 +98,10 @@ namespace Borium.RDP
 
 		/** hash value for quick searching */
 		int hash;
-
-		int id;
 #endif
+
+		internal int id;
+
 		public int CompareTo(Symbol other)
 		{
 #if false

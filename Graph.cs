@@ -1,25 +1,30 @@
-﻿using System;
+﻿using static Borium.RDP.GraphEdge;
 using static Borium.RDP.GraphNode;
-using static Borium.RDP.GraphEdge;
 
 namespace Borium.RDP
 {
 	internal class Graph<NodeData, EdgeData> where NodeData : GraphNode where EdgeData : GraphEdge
 	{
-#if false
-		/** The number of the next graph to be created */
+		/// <summary>
+		/// The number of the next graph to be created
+		/// </summary>
 		private static int graph_next_graph_count = 1;
 
-		/** The list of active graph structures */
-		static Graph<? extends GraphNode, ? extends GraphEdge> graph_list = new Graph<>();
+		/// <summary>
+		/// The list of active graph structures
+		/// </summary>
+		static Graph<NodeData, EdgeData> graph_list = new Graph<NodeData, EdgeData>();
 
+#if false
 		GraphNode root;
-		Graph<? extends GraphNode, ? extends GraphEdge> next_graph;
-		Graph<? extends GraphNode, ? extends GraphEdge> previous_graph;
+#endif
+		Graph<NodeData, EdgeData> next_graph;
+		Graph<NodeData, EdgeData> previous_graph;
 		GraphNode next_node;
-		String id;
+		string id;
 		int atom_number;
 
+#if false
 		public void insertNode(GraphNode node)
 		{
 			node.atom_number = graph_next_node_count++;
@@ -37,8 +42,9 @@ namespace Borium.RDP
 				node.next_node.previous_node = node;
 			}
 		}
+#endif
 
-		void insertGraph(String id)
+		internal void insertGraph(string id)
 		{
 			atom_number = graph_next_graph_count++;
 			next_node = null;
@@ -55,6 +61,7 @@ namespace Borium.RDP
 			this.id = id;
 		}
 
+#if false
 		void setRoot(GraphNode root)
 		{
 			this.root = root;

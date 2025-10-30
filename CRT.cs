@@ -5,6 +5,21 @@ namespace Borium.RDP
 {
 	internal class CRT
 	{
+		internal static long CurrentTimeMillis()
+		{
+			DateTime nowUtc = DateTime.UtcNow;
+
+			// Define the Unix Epoch
+			DateTime unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+			// Calculate the TimeSpan between the DateTime and the Unix Epoch
+			TimeSpan timeSinceEpoch = nowUtc - unixEpoch;
+
+			// Get the total milliseconds
+			long milliseconds = (long)timeSinceEpoch.TotalMilliseconds;
+
+			return milliseconds;
+		}
 #if false
 		public static final int EOF = -1;
 

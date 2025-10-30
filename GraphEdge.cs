@@ -2,10 +2,12 @@
 {
 	internal class GraphEdge : GraphBase
 	{
-#if false
-		/** The number of the next edge to be created */
-		static int graph_next_edge_count = 1;
+		/// <summary>
+		/// The number of the next edge to be created
+		/// </summary>
+		internal static int graph_next_edge_count = 1;
 
+#if false
 		GraphNode destination;
 		GraphNode source;
 		GraphBase previous_in_edge;

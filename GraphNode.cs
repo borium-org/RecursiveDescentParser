@@ -2,10 +2,12 @@
 {
 	internal abstract class GraphNode : GraphBase
 	{
-#if false
-		/** The number of the next node to be created */
-		static int graph_next_node_count = 1;
+		/// <summary>
+		/// The number of the next node to be created
+		/// </summary>
+		internal static int graph_next_node_count = 1;
 
+#if false
 		GraphNode next_node;
 		GraphNode previous_node;
 
@@ -29,9 +31,11 @@
 			// point in node at our out
 			previous_node.next_node = next_node;
 		}
+#endif
 
-		abstract int getId();
+		internal abstract int getId();
 
+#if false
 		void insertNode(GraphNode node)
 		{
 			node.atom_number = graph_next_node_count++;

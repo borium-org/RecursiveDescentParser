@@ -12,9 +12,9 @@ namespace Borium.RDP
 {
 	internal class Scan
 	{
-#if false
-		public static class ScanData extends Symbol
+		internal class ScanData : Symbol
 		{
+#if false
 		int token;
 		int extended;
 		ScanCommentBlock comment_block;
@@ -24,9 +24,11 @@ namespace Borium.RDP
 		int i;
 		double r;
 		Object p;
-	}
+#endif
+		}
 
-	private static class ScanCommentBlock
+#if false
+		private static class ScanCommentBlock
 	{
 		@SuppressWarnings("unused")
 		String comment;

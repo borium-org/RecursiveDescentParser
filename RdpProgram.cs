@@ -2,6 +2,7 @@
 using System.Reflection;
 using Borium.RDP;
 using static Borium.RDP.Arg;
+using static Borium.RDP.CRT;
 //using static Borium.RDP.Arg.ArgKind;
 using static Borium.RDP.GraphBase;
 using static Borium.RDP.RdpAux;
@@ -26,130 +27,130 @@ namespace Borium.RDP
 				return value;
 			}
 		}
-#if false
-		private static class RdpTreeEdgeData extends GraphEdge
+		private class RdpTreeEdgeData : GraphEdge
 		{
-		int rdp_edge_kind;
+			int rdp_edge_kind;
 
-		RdpTreeEdgeData(int kind)
-		{
-			rdp_edge_kind = kind;
+			RdpTreeEdgeData(int kind)
+			{
+				rdp_edge_kind = kind;
+			}
 		}
-	}
 
-	private static class RdpTreeNodeData extends GraphNode
-	{
-		ScanData data = new ScanData();
+		private class RdpTreeNodeData : GraphNode
+		{
+			ScanData data = new ScanData();
 
-	@Override
-		int getId()
-	{
-		return data.id;
-	}
-}
+			internal override int getId()
+			{
+				return data.id;
+			}
+		}
 
-static final int RDP_TT_BOTTOM = 16/* SCAN_P_TOP */;
-static final int RDP_T_34 /* " */ = 16/* SCAN_P_TOP */;
-static final int RDP_T_35 /* # */ = 17;
-static final int RDP_T_39 /* ' */ = 18;
-static final int RDP_T_40 /* ( */ = 19;
-static final int RDP_T_4042 /* (* */ = 20;
-static final int RDP_T_41 /* ) */ = 21;
-static final int RDP_T_42 /* * */ = 22;
-static final int RDP_T_46 /* . */ = 23;
-static final int RDP_T_58 = 24;
-static final int RDP_T_5858 /* :: */ = 25;
-static final int RDP_T_585861 /* ::= */ = 26;
-static final int RDP_T_60 /* < */ = 27;
-static final int RDP_T_62 /* > */ = 28;
-static final int RDP_T_64 /* @ */ = 29;
-static final int RDP_T_ALT_ID = 30;
-static final int RDP_T_ANNOTATED_EPSILON_TREE = 31;
-static final int RDP_T_ARG_BLANK = 32;
-static final int RDP_T_ARG_BOOLEAN = 33;
-static final int RDP_T_ARG_NUMERIC = 34;
-static final int RDP_T_ARG_STRING = 35;
-static final int RDP_T_CASE_INSENSITIVE = 36;
-static final int RDP_T_CHAR = 37;
-static final int RDP_T_CHAR_ESC = 38;
-static final int RDP_T_COMMENT = 39;
-static final int RDP_T_COMMENT_LINE = 40;
-static final int RDP_T_COMMENT_LINE_VISIBLE = 41;
-static final int RDP_T_COMMENT_NEST = 42;
-static final int RDP_T_COMMENT_NEST_VISIBLE = 43;
-static final int RDP_T_COMMENT_VISIBLE = 44;
-static final int RDP_T_DERIVATION_TREE = 45;
-static final int RDP_T_EPSILON_TREE = 46;
-static final int RDP_T_GLOBAL = 47;
-static final int RDP_T_HASH_PRIME = 48;
-static final int RDP_T_HASH_SIZE = 49;
-static final int RDP_T_INCLUDE = 50;
-static final int RDP_T_INTERPRETER = 51;
-static final int RDP_T_MAX_ERRORS = 52;
-static final int RDP_T_MAX_WARNINGS = 53;
-static final int RDP_T_MULTIPLE_SOURCE_FILES = 54;
-static final int RDP_T_NEW_ID = 55;
-static final int RDP_T_NUMBER = 56;
-static final int RDP_T_OPTION = 57;
-static final int RDP_T_OUTPUT_FILE = 58;
-static final int RDP_T_PARSER = 59;
-static final int RDP_T_PASSES = 60;
-static final int RDP_T_POST_PARSE = 61;
-static final int RDP_T_POST_PROCESS = 62;
-static final int RDP_T_PRE_PARSE = 63;
-static final int RDP_T_PRE_PROCESS = 64;
-static final int RDP_T_RETAIN_COMMENTS = 65;
-static final int RDP_T_SET_SIZE = 66;
-static final int RDP_T_SHOW_SKIPS = 67;
-static final int RDP_T_STRING = 68;
-static final int RDP_T_STRING_ESC = 69;
-static final int RDP_T_SUFFIX = 70;
-static final int RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS = 71;
-static final int RDP_T_SYMBOL_TABLE = 72;
-static final int RDP_T_TAB_WIDTH = 73;
-static final int RDP_T_TEXT_SIZE = 74;
-static final int RDP_T_TITLE = 75;
-static final int RDP_T_TREE = 76;
-static final int RDP_T_USES = 77;
-static final int RDP_T_91 /* [ */ = 78;
-static final int RDP_T_9142 /* [* */ = 79;
-static final int RDP_T_93 /* ] */ = 80;
-static final int RDP_T_94 = 91;
-static final int RDP_T_9494 = 92;
-static final int RDP_T_949494 /* ^^^ */ = 93;
-static final int RDP_T_9495 /* ^_ */ = 94;
-static final int RDP_T_123 /* { */ = 95;
-static final int RDP_T_124 /* | */ = 96;
-static final int RDP_T_125 /* } */ = 97;
-static final int RDP_TT_TOP = 98;
+		const int RDP_TT_BOTTOM = 16/* SCAN_P_TOP */;
+		const int RDP_T_34 /* " */ = 16/* SCAN_P_TOP */;
+		const int RDP_T_35 /* # */ = 17;
+		const int RDP_T_39 /* ' */ = 18;
+		const int RDP_T_40 /* ( */ = 19;
+		const int RDP_T_4042 /* (* */ = 20;
+		const int RDP_T_41 /* ) */ = 21;
+		const int RDP_T_42 /* * */ = 22;
+		const int RDP_T_46 /* . */ = 23;
+		const int RDP_T_58 = 24;
+		const int RDP_T_5858 /* :: */ = 25;
+		const int RDP_T_585861 /* ::= */ = 26;
+		const int RDP_T_60 /* < */ = 27;
+		const int RDP_T_62 /* > */ = 28;
+		const int RDP_T_64 /* @ */ = 29;
+		const int RDP_T_ALT_ID = 30;
+		const int RDP_T_ANNOTATED_EPSILON_TREE = 31;
+		const int RDP_T_ARG_BLANK = 32;
+		const int RDP_T_ARG_BOOLEAN = 33;
+		const int RDP_T_ARG_NUMERIC = 34;
+		const int RDP_T_ARG_STRING = 35;
+		const int RDP_T_CASE_INSENSITIVE = 36;
+		const int RDP_T_CHAR = 37;
+		const int RDP_T_CHAR_ESC = 38;
+		const int RDP_T_COMMENT = 39;
+		const int RDP_T_COMMENT_LINE = 40;
+		const int RDP_T_COMMENT_LINE_VISIBLE = 41;
+		const int RDP_T_COMMENT_NEST = 42;
+		const int RDP_T_COMMENT_NEST_VISIBLE = 43;
+		const int RDP_T_COMMENT_VISIBLE = 44;
+		const int RDP_T_DERIVATION_TREE = 45;
+		const int RDP_T_EPSILON_TREE = 46;
+		const int RDP_T_GLOBAL = 47;
+		const int RDP_T_HASH_PRIME = 48;
+		const int RDP_T_HASH_SIZE = 49;
+		const int RDP_T_INCLUDE = 50;
+		const int RDP_T_INTERPRETER = 51;
+		const int RDP_T_MAX_ERRORS = 52;
+		const int RDP_T_MAX_WARNINGS = 53;
+		const int RDP_T_MULTIPLE_SOURCE_FILES = 54;
+		const int RDP_T_NEW_ID = 55;
+		const int RDP_T_NUMBER = 56;
+		const int RDP_T_OPTION = 57;
+		const int RDP_T_OUTPUT_FILE = 58;
+		const int RDP_T_PARSER = 59;
+		const int RDP_T_PASSES = 60;
+		const int RDP_T_POST_PARSE = 61;
+		const int RDP_T_POST_PROCESS = 62;
+		const int RDP_T_PRE_PARSE = 63;
+		const int RDP_T_PRE_PROCESS = 64;
+		const int RDP_T_RETAIN_COMMENTS = 65;
+		const int RDP_T_SET_SIZE = 66;
+		const int RDP_T_SHOW_SKIPS = 67;
+		const int RDP_T_STRING = 68;
+		const int RDP_T_STRING_ESC = 69;
+		const int RDP_T_SUFFIX = 70;
+		const int RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS = 71;
+		const int RDP_T_SYMBOL_TABLE = 72;
+		const int RDP_T_TAB_WIDTH = 73;
+		const int RDP_T_TEXT_SIZE = 74;
+		const int RDP_T_TITLE = 75;
+		const int RDP_T_TREE = 76;
+		const int RDP_T_USES = 77;
+		const int RDP_T_91 /* [ */ = 78;
+		const int RDP_T_9142 /* [* */ = 79;
+		const int RDP_T_93 /* ] */ = 80;
+		const int RDP_T_94 = 91;
+		const int RDP_T_9494 = 92;
+		const int RDP_T_949494 /* ^^^ */ = 93;
+		const int RDP_T_9495 /* ^_ */ = 94;
+		const int RDP_T_123 /* { */ = 95;
+		const int RDP_T_124 /* | */ = 96;
+		const int RDP_T_125 /* } */ = 97;
+		const int RDP_TT_TOP = 98;
 
-private static final String __DATE__ = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
-private static final String __TIME__ = new SimpleDateFormat("HH:mm:ss").format(new Date());
+#if false
+private static String __DATE__ = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+private static String __TIME__ = new SimpleDateFormat("HH:mm:ss").format(new Date());
 
-private static final String RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compiled on " + __DATE__ + " at "
+private static String RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compiled on " + __DATE__ + " at "
 		+ __TIME__;
+#endif
 
-private static final int RDP_PASSES = 2;
+		private const int RDP_PASSES = 2;
 
-static String rdp_sourcefilename; // current source file name
-private static String[] rdp_sourcefilenames; // array of source file names
+		static string rdp_sourcefilename; // current source file name
+		private static string[] rdp_sourcefilenames; // array of source file names
 
-private static final Pointer<String> rdp_outputfilename = new Pointer<>("rdparser"); // output file name
+		private static Pointer<string> rdp_outputfilename = new Pointer<string>("rdparser"); // output file name
 
-// set if we want original C parser
-static final Pointer<String> rdp_c_path = new Pointer<>();
+		// set if we want original C parser
+		static Pointer<string> rdp_c_path = new Pointer<string>();
 
-// set if we want new Java parser
-static final Pointer<String> rdp_java_path = new Pointer<>();
-// prefix for the new Java parser
-static final Pointer<String> rdp_java_prefix = new Pointer<>();
+		// set if we want new Java parser
+		static Pointer<string> rdp_java_path = new Pointer<string>();
+		// prefix for the new Java parser
+		static Pointer<string> rdp_java_prefix = new Pointer<string>();
 
-private static final Pointer<Boolean> rdp_symbol_echo = new Pointer<>(false); // symbol echo flag
-static final Pointer<Boolean> rdp_verbose = new Pointer<>(false); // verbosity flag
+		private static Pointer<bool> rdp_symbol_echo = new Pointer<bool>(false); // symbol echo flag
+		static Pointer<bool> rdp_verbose = new Pointer<bool>(false); // verbosity flag
 
-private static int rdp_sourcefilenumber;
+		private static int rdp_sourcefilenumber;
 
-private static String[] rdp_tokens = { "IGNORE", "ID", "INTEGER", "REAL", "CHAR", "CHAR_ESC", "STRING",
+		private static String[] rdp_tokens = { "IGNORE", "ID", "INTEGER", "REAL", "CHAR", "CHAR_ESC", "STRING",
 			"STRING_ESC", "COMMENT", "COMMENT_VISIBLE", "COMMENT_NEST", "COMMENT_NEST_VISIBLE", "COMMENT_LINE",
 			"COMMENT_LINE_VISIBLE", "EOF", "EOLN", "'\"'", "'#'", "'\''", "'('", "'(*'", "')'", "'*'", "'.'", "':'",
 			"'::'", "'::='", "'<'", "'>'", "'@'", "'ALT_ID'", "'ANNOTATED_EPSILON_TREE'", "'ARG_BLANK'",
@@ -162,97 +163,100 @@ private static String[] rdp_tokens = { "IGNORE", "ID", "INTEGER", "REAL", "CHAR"
 			"'SUPPRESS_BUILT_IN_ARGUMENTS'", "'SYMBOL_TABLE'", "'TAB_WIDTH'", "'TEXT_SIZE'", "'TITLE'", "'TREE'",
 			"'USES'", "'['", "'[*'", "']'", "'^'", "'^^'", "'^^^'", "'^_'", "'{'", "'|'", "'}'" };
 
-private static final Set String_stop = new Set();
-private static final Set code_stop = new Set();
-private static final Set comment_stop = new Set();
-private static final Set dir_first = new Set();
-private static final Set dir_stop = new Set();
-private static final Set item_com_first = new Set();
-private static final Set item_com_stop = new Set();
-private static final Set item_inl_first = new Set();
-private static final Set item_inl_stop = new Set();
-private static final Set item_ret_first = new Set();
-private static final Set item_ret_stop = new Set();
-private static final Set prod_first = new Set();
-private static final Set prod_stop = new Set();
-private static final Set rdp_dir_11_first = new Set();
-private static final Set rdp_dir_3_first = new Set();
-private static final Set rdp_dir_34_first = new Set();
-private static final Set rdp_dir_37_first = new Set();
-private static final Set rdp_dir_7_first = new Set();
-private static final Set rdp_item_inl_16_first = new Set();
-private static final Set rdp_item_inl_21_first = new Set();
-private static final Set rdp_item_inl_22_first = new Set();
-private static final Set rdp_item_inl_23_first = new Set();
-private static final Set rdp_item_inl_28_first = new Set();
-private static final Set rdp_item_inl_29_first = new Set();
-private static final Set rdp_item_inl_7_first = new Set();
-private static final Set rdp_item_inl_8_first = new Set();
-private static final Set rdp_item_inl_9_first = new Set();
-private static final Set rdp_item_ret_4_first = new Set();
-private static final Set rdp_item_ret_5_first = new Set();
-private static final Set rdp_item_ret_6_first = new Set();
-private static final Set rdp_prod_0_first = new Set();
-private static final Set rdp_prod_1_first = new Set();
-private static final Set rdp_prod_2_first = new Set();
-private static final Set rdp_rule_16_first = new Set();
-private static final Set rdp_seq_0_first = new Set();
-private static final Set rdp_seq_1_first = new Set();
-private static final Set rdp_seq_10_first = new Set();
-private static final Set rdp_seq_17_first = new Set();
-private static final Set rdp_seq_2_first = new Set();
-private static final Set rdp_seq_23_first = new Set();
-private static final Set rdp_seq_24_first = new Set();
-private static final Set rdp_seq_25_first = new Set();
-private static final Set rdp_seq_28_first = new Set();
-private static final Set rdp_seq_29_first = new Set();
-private static final Set rdp_seq_30_first = new Set();
-private static final Set rdp_seq_31_first = new Set();
-private static final Set rdp_seq_32_first = new Set();
-private static final Set rdp_seq_9_first = new Set();
-private static final Set rdp_unit_1_first = new Set();
-private static final Set rdp_unit_2_first = new Set();
-private static final Set rdp_unit_3_first = new Set();
-private static final Set rule_stop = new Set();
-private static final Set seq_first = new Set();
-private static final Set seq_stop = new Set();
-private static final Set token_stop = new Set();
-private static final Set unit_first = new Set();
-private static final Set unit_stop = new Set();
+		private static Set String_stop = new Set();
+		private static Set code_stop = new Set();
+		private static Set comment_stop = new Set();
+		private static Set dir_first = new Set();
+		private static Set dir_stop = new Set();
+		private static Set item_com_first = new Set();
+		private static Set item_com_stop = new Set();
+		private static Set item_inl_first = new Set();
+		private static Set item_inl_stop = new Set();
+		private static Set item_ret_first = new Set();
+		private static Set item_ret_stop = new Set();
+		private static Set prod_first = new Set();
+		private static Set prod_stop = new Set();
+		private static Set rdp_dir_11_first = new Set();
+		private static Set rdp_dir_3_first = new Set();
+		private static Set rdp_dir_34_first = new Set();
+		private static Set rdp_dir_37_first = new Set();
+		private static Set rdp_dir_7_first = new Set();
+		private static Set rdp_item_inl_16_first = new Set();
+		private static Set rdp_item_inl_21_first = new Set();
+		private static Set rdp_item_inl_22_first = new Set();
+		private static Set rdp_item_inl_23_first = new Set();
+		private static Set rdp_item_inl_28_first = new Set();
+		private static Set rdp_item_inl_29_first = new Set();
+		private static Set rdp_item_inl_7_first = new Set();
+		private static Set rdp_item_inl_8_first = new Set();
+		private static Set rdp_item_inl_9_first = new Set();
+		private static Set rdp_item_ret_4_first = new Set();
+		private static Set rdp_item_ret_5_first = new Set();
+		private static Set rdp_item_ret_6_first = new Set();
+		private static Set rdp_prod_0_first = new Set();
+		private static Set rdp_prod_1_first = new Set();
+		private static Set rdp_prod_2_first = new Set();
+		private static Set rdp_rule_16_first = new Set();
+		private static Set rdp_seq_0_first = new Set();
+		private static Set rdp_seq_1_first = new Set();
+		private static Set rdp_seq_10_first = new Set();
+		private static Set rdp_seq_17_first = new Set();
+		private static Set rdp_seq_2_first = new Set();
+		private static Set rdp_seq_23_first = new Set();
+		private static Set rdp_seq_24_first = new Set();
+		private static Set rdp_seq_25_first = new Set();
+		private static Set rdp_seq_28_first = new Set();
+		private static Set rdp_seq_29_first = new Set();
+		private static Set rdp_seq_30_first = new Set();
+		private static Set rdp_seq_31_first = new Set();
+		private static Set rdp_seq_32_first = new Set();
+		private static Set rdp_seq_9_first = new Set();
+		private static Set rdp_unit_1_first = new Set();
+		private static Set rdp_unit_2_first = new Set();
+		private static Set rdp_unit_3_first = new Set();
+		private static Set rule_stop = new Set();
+		private static Set seq_first = new Set();
+		private static Set seq_stop = new Set();
+		private static Set token_stop = new Set();
+		private static Set unit_first = new Set();
+		private static Set unit_stop = new Set();
 
-static SymbolTable locals = null;
-static SymbolTable codes = null;
-static SymbolTable tokens = null;
-static SymbolTable rdp = null;
+		static SymbolTable locals = null;
+		static SymbolTable codes = null;
+		static SymbolTable tokens = null;
+		static SymbolTable rdp = null;
 
-private static int rdp_pass;
+		private static int rdp_pass;
 
-/** Tree update function flag for noterminal nodes */
-private static boolean rdp_tree_update;
+		/// <summary>
+		/// Tree update function flag for noterminal nodes
+		/// </summary>
+		private static bool rdp_tree_update;
 
-private static RdpTreeNodeData rdp_tree_last_child;
+		private static RdpTreeNodeData rdp_tree_last_child;
 
-public static void main(String[] args)
-{
-	long rdp_start_time = System.currentTimeMillis();
+		public static void Main(string[] args)
+		{
+			long rdp_start_time = CurrentTimeMillis();
 
-	final Pointer<Boolean> rdp_symbol_statistics = new Pointer<>(false); // show symbol_ table statistics flag
-	boolean rdp_line_echo_all = false; // make a listing on all passes flag
-	final Pointer<Boolean> rdp_filter = new Pointer<>(false); // filter flag
-	final Pointer<Boolean> rdp_line_echo = new Pointer<>(false); // make listing flag
+			Pointer<bool> rdp_symbol_statistics = new Pointer<bool>(false); // show symbol_ table statistics flag
+			bool rdp_line_echo_all = false; // make a listing on all passes flag
+			Pointer<bool> rdp_filter = new Pointer<bool>(false); // filter flag
+			Pointer<bool> rdp_line_echo = new Pointer<bool>(false); // make listing flag
 
-	final Pointer<Boolean> rdp_lexicalise = new Pointer<>(false); // print lexicalised output flag
+			Pointer<bool> rdp_lexicalise = new Pointer<bool>(false); // print lexicalised output flag
 
-	final Pointer<Integer> rdp_textsize = new Pointer<>(600000); // size of scanner text array
+			Pointer<int> rdp_textsize = new Pointer<int>(600000); // size of scanner text array
 
-	final Pointer<Integer> rdp_tabwidth = new Pointer<>(8); // tab expansion width
+			Pointer<int> rdp_tabwidth = new Pointer<int>(8); // tab expansion width
 
-	final Pointer<String> rdp_vcg_filename = new Pointer<>(null); // filename for -V option
+			Pointer<string> rdp_vcg_filename = new Pointer<string>(null); // filename for -V option
 
-	Graph<RdpTreeNodeData, RdpTreeEdgeData> rdp_tree = new Graph<>();
-	rdp_tree.insertGraph("RDP derivation tree");
-	RdpTreeNodeData rdp_tree_root = null;
+			Graph<RdpTreeNodeData, RdpTreeEdgeData> rdp_tree = new Graph<RdpTreeNodeData, RdpTreeEdgeData>();
+			rdp_tree.insertGraph("RDP derivation tree");
+			RdpTreeNodeData rdp_tree_root = null;
 
+#if false
 	arg_message("Recursive descent parser generator V1.65 (c) Adrian Johnstone 2000\n"
 			+ "Ported to Java by Borium\n" + RDP_STAMP + "\n\n" + "Usage: rdparser [options] source[.bnf]");
 
@@ -374,9 +378,11 @@ public static void main(String[] args)
 	}
 	// return rdp_error_return;
 	throw new RuntimeException();
-}
+#endif
+		}
 
-protected static void unit(RdpTreeNodeData rdp_tree)
+#if false
+		protected static void unit(RdpTreeNodeData rdp_tree)
 {
 	if (scan_test_set(null, rdp_unit_2_first, null))
 	{

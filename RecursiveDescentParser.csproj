@@ -74,6 +74,7 @@
     <Compile Include="GraphBase.cs" />
     <Compile Include="GraphEdge.cs" />
     <Compile Include="GraphNode.cs" />
+    <Compile Include="Pointer.cs" />
     <Compile Include="RdpAux.cs" />
     <Compile Include="RdpGram.cs" />
     <Compile Include="RdpPrint.cs" />
