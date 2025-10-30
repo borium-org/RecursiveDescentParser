@@ -1,38 +1,41 @@
-﻿using static Borium.RDP.Text;
+﻿using System;
+using static Borium.RDP.Text;
 
 namespace Borium.RDP
 {
 	internal class CompareHashPrint
 	{
-		internal int compare(string key, Symbol p)
+#if false
+		int compare(String key, Symbol p)
 		{
-			string r = text_get_string(p.id);
-			return key.CompareTo(r);
+			String r = text_get_string(p.id);
+			return key.compareTo(r);
 		}
 
-		internal int compare(Symbol left, Symbol right)
+		int compare(Symbol left, Symbol right)
 		{
-			string l = text_get_string(left.id);
-			string r = text_get_string(right.id);
-			return l.CompareTo(r);
+			String l = text_get_string(left.id);
+			String r = text_get_string(right.id);
+			return l.compareTo(r);
 		}
 
-		internal int hash(int hash_prime, string str)
+		int hash(int hash_prime, String str)
 		{
 			int hashnumber = 0;
 			if (str != null)
 			{
-				for (int i = 0; i < str.Length; i++)
+				for (int i = 0; i < str.length(); i++)
 				{
-					hashnumber = str[i] + hash_prime * hashnumber;
+					hashnumber = str.charAt(i) + hash_prime * hashnumber;
 				}
 			}
 			return hashnumber & 0x7FFFFFFF;
 		}
 
-		internal void print(Symbol s)
+		void print(Symbol s)
 		{
 			s.print();
 		}
+#endif
 	}
 }

@@ -5,7 +5,7 @@ using System.Reflection;
 namespace Borium.RDP
 {
 	/// <summary>
-	/// Works if deterministic builds ared turned off
+	/// Works if deterministic builds are turned off
 	/// </summary>
 	internal class BuildInfo
 	{

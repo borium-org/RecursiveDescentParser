@@ -5,9 +5,10 @@ namespace Borium.RDP
 {
 	internal class Symbol : IComparable<Symbol>
 	{
+#if false
 		private static SymbolTable symbol_tables = null;
 
-		internal static Symbol symbol_insert_symbol(SymbolTable table, Symbol symbol)
+		public static Symbol symbol_insert_symbol(SymbolTable table, Symbol symbol)
 		{
 			Symbol s = symbol;
 
@@ -17,13 +18,13 @@ namespace Borium.RDP
 			s.next_hash = table.table[hash_index];
 			table.table[hash_index] = s;
 
-			s.last_hash[0] = table.table[hash_index];
+			s.last_hash.set(table.table[hash_index]);
 
 			// if this wasn't the start of a new list ...
 			if (s.next_hash != null)
 			{
 				// ...point old list next back at s
-				s.next_hash.last_hash[0] = s.next_hash;
+				s.next_hash.last_hash.set(s.next_hash);
 			}
 
 			// now insert in scope list
@@ -36,14 +37,8 @@ namespace Borium.RDP
 			return symbol;
 		}
 
-		/// <summary>
-		/// Lookup a symbol by id. Return null if it is not found
-		/// </summary>
-		/// <param name="table"></param>
-		/// <param name="key"></param>
-		/// <param name="scope"></param>
-		/// <returns></returns>
-		internal static Symbol symbol_lookup_key(SymbolTable table, string key, SymbolScopeData scope)
+		/** lookup a symbol by id. Return null if it is not found */
+		public static Symbol symbol_lookup_key(SymbolTable table, String key, SymbolScopeData scope)
 		{
 			int hash = table.hash(table.hash_prime, key);
 			Symbol p = table.table[hash % table.hash_size];
@@ -57,7 +52,7 @@ namespace Borium.RDP
 			return p;
 		}
 
-		internal static SymbolScopeData symbol_new_scope(SymbolTable table, string id)
+		public static SymbolScopeData symbol_new_scope(SymbolTable table, String id)
 		{
 			SymbolScopeData p = new SymbolScopeData();
 
@@ -65,13 +60,11 @@ namespace Borium.RDP
 			p.next_hash = table.scopes;
 			table.current = table.scopes = p;
 			if (p.next_hash != null)
-			{
-				p.next_hash.last_hash[0] = p.next_hash;
-			}
+				p.next_hash.last_hash.set(p.next_hash);
 			return p;
 		}
 
-		internal static SymbolTable symbol_new_table(string name, int symbol_hashsize, int symbol_hashprime,
+		public static SymbolTable symbol_new_table(String name, int symbol_hashsize, int symbol_hashprime,
 				CompareHashPrint compareHashPrint)
 		{
 			SymbolTable temp = new SymbolTable();
@@ -91,63 +84,53 @@ namespace Borium.RDP
 			return temp;
 		}
 
-		/// <summary>
-		/// Next symbol in hash list
-		/// </summary>
-		internal Symbol next_hash;
+		/** next symbol in hash list */
+		Symbol next_hash;
 
-		/// <summary>
-		/// Pointer to next pointer of last_symbol in hash list
-		/// </summary>
-		internal Symbol[] last_hash = { null };
+		/** pointer to next pointer of last_symbol in hash list */
+		final Pointer<Symbol> last_hash = new Pointer<>();
 
-		/// <summary>
-		/// Next symbol in scope list
-		/// </summary>
-		internal Symbol next_scope;
+		/** next symbol in scope list */
+		Symbol next_scope;
 
-		/// <summary>
-		/// Pointer to the scope symbol
-		/// </summary>
-		internal Symbol scope;
+		/** pointer to the scope symbol */
+		Symbol scope;
 
-		/// <summary>
-		/// Hash value for quick searching
-		/// </summary>
-		internal int hash;
+		/** hash value for quick searching */
+		int hash;
 
-		internal int id;
-
-		int CompareTo(Symbol other)
+		int id;
+#endif
+		public int CompareTo(Symbol other)
 		{
-			return text_get_string(id).CompareTo(text_get_string(other.id));
+#if false
+			return text_get_string(id).compareTo(text_get_string(other.id));
+#else
+			return 0;
+#endif
 		}
-
+#if false
 		/** Return next symbol in scope chain. Return NULL if at end */
-		internal Symbol nextSymbolInScope()
+		public Symbol nextSymbolInScope()
 		{
 			return next_scope;
 		}
 
-		internal void print()
+		public void print()
 		{
 			text_printf(id == 0 ? "Null symbol" : text_get_string(id));
 		}
 
-		internal void unlinkSymbol()
+		protected void unlinkSymbol()
 		{
 			Symbol s = this;
 
-			s.last_hash[0] = s.next_hash; /* point previous pointer to next symbol */
+			s.last_hash.set(s.next_hash); /* point previous pointer to next symbol */
 			if (s.next_hash != null)
 			{
-				s.next_hash.last_hash[0] = s.last_hash[0];
+				s.next_hash.last_hash.set(s.last_hash.value());
 			}
 		}
-
-		int IComparable<Symbol>.CompareTo(Symbol other)
-		{
-			return CompareTo(other);
-		}
+#endif
 	}
 }

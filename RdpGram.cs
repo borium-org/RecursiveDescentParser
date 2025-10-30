@@ -1,4 +1,6 @@
-﻿using static Borium.RDP.CRT;
+﻿using System;
+using System.Globalization;
+using static Borium.RDP.CRT;
 using static Borium.RDP.RdpAux;
 using static Borium.RDP.RdpPrint;
 using static Borium.RDP.RdpProgram;
@@ -6,32 +8,33 @@ using static Borium.RDP.Scan;
 using static Borium.RDP.Set;
 using static Borium.RDP.Symbol;
 using static Borium.RDP.Text;
-using static Borium.RDP.Text.TextMessageType;
+//using static Borium.RDP.Text.TextMessageType;
 
 namespace Borium.RDP
 {
 	internal class RdpGram
 	{
-		private static string[] RDP_RESERVED_WORDS = { "auto", "break", "case", "char", "const", "continue",
+#if false
+		private static final String[] RDP_RESERVED_WORDS = { "auto", "break", "case", "char", "const", "continue",
 			"default", "do", "double", "else", "enum", "extern", "float", "for", "goto", "if", "int", "long",
 			"register", "return", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union",
 			"unsigned", "void", "volatile", "while", "operator", "printf" };
 
-		private static int rdp_follow_changed;
+	private static int rdp_follow_changed;
 
-		internal static int rdp_bad_grammar(SymbolScopeData scopeData)
+		public static int rdp_bad_grammar(SymbolScopeData base)
 		{
 			int bad = 0;
 
 			/* Check for empties */
-			if (rdp_verbose[0])
+			if (rdp_verbose.value())
 			{
 				text_message(TEXT_INFO, "Checking for empty alternates\n");
 			}
-			bad |= rdp_check_empties(scopeData);
+			bad |= rdp_check_empties(base);
 
 			/* Count productions and produce statistics */
-			rdp_count_productions(scopeData);
+			rdp_count_productions(base);
 
 			/* Check promotion operators on start production */
 			if (rdp_start_prod.promote_default != PROMOTE_DONT)
@@ -45,97 +48,93 @@ namespace Borium.RDP
 			}
 
 			/* find first sets */
-			if (rdp_verbose[0])
+			if (rdp_verbose.value())
 			{
 				text_message(TEXT_INFO, "Generating first sets\n");
 			}
-			rdp_find_first(scopeData);
+			rdp_find_first(base);
 
 			/* find follow sets */
-			if (rdp_verbose[0])
+			if (rdp_verbose.value())
 			{
 				text_message(TEXT_INFO, "Generating follow sets\n");
 			}
-			rdp_find_follow(scopeData);
+			rdp_find_follow(base);
 
 			/* check for C reserved words */
-			if (rdp_verbose[0])
+			if (rdp_verbose.value())
 			{
 				text_message(TEXT_INFO, "Checking for clashes with reserved words\n");
 			}
 			bad |= rdp_check_reserved_words();
 
 			/* check that for each production, all alternates have unique start tokens */
-			if (rdp_verbose[0])
+			if (rdp_verbose.value())
 			{
 				text_message(TEXT_INFO, "Checking for disjoint first sets\n");
 			}
-			bad |= rdp_check_disjoint(scopeData);
+			bad |= rdp_check_disjoint(base);
 
 			/* check nullable brackets don't contain nullable productions */
-			if (rdp_verbose[0])
+			if (rdp_verbose.value())
 			{
 				text_message(TEXT_INFO, "Checking for nested nullable subrules\n");
 			}
-			bad |= rdp_check_nested_nullable(scopeData);
+			bad |= rdp_check_nested_nullable(base);
 
 			/* check that first(a) - follow (a) is empty for nullable a */
-			if (rdp_verbose[0])
+			if (rdp_verbose.value())
 			{
 				text_message(TEXT_INFO, "Checking nullable rules\n");
 			}
-			bad |= rdp_check_nullable(scopeData);
+			bad |= rdp_check_nullable(base);
 
 			/* add first() to follow() for iterations so that error handling doesn't just eat entire file! */
-			if (rdp_verbose[0])
+			if (rdp_verbose.value())
 			{
 				text_message(TEXT_INFO, "Updating follow sets\n");
 			}
-			rdp_update_follow_sets(scopeData);
+			rdp_update_follow_sets(base);
 			/* re-close follow sets */
-			rdp_find_follow(scopeData);
+			rdp_find_follow(base);
 
 			return bad;
 		}
 
-		internal static void rdp_check_eoln(string id)
+		public static void rdp_check_eoln(String id)
 		{
-			if (id.Equals("EOLN"))
+			if (id.equals("EOLN"))
 			{
 				rdp_dir_newline_visible = 1; /* Grammar contains an explicit EOLN */
 			}
 		}
 
-		internal static void rdp_check_token_valid(string id)
+		public static void rdp_check_token_valid(String id)
 		{
 			if (id == null)
 				return;
 
-			if (id.Length == 0)
-			{
+			if (id.length() == 0)
 				text_message(TEXT_ERROR_ECHO, "empty tokens are not allowed: use [ ... ] instead\n");
-			}
-
 			// Test for embedded spaces in token
-			bool bad = false;
 
-			foreach (char ch in id)
+			boolean bad = false;
+
+			for (char ch : id.toCharArray())
 			{
 				bad |= !isgraph(ch);
 			}
 
 			if (bad)
-			{
 				text_message(TEXT_ERROR_ECHO, "tokens must not contain spaces or control characters\n");
-			}
 		}
 
-		private static int rdp_check_disjoint(SymbolScopeData scopeData)
+		private static int rdp_check_disjoint(SymbolScopeData base)
 		{
 			int bad = 0;
 			Set work = new Set();
 
-			RdpData temp = (RdpData)scopeData.nextSymbolInScope();
+			RdpData temp = (RdpData)base.nextSymbolInScope();
 
 			while (temp != null)
 			{
@@ -187,10 +186,10 @@ namespace Borium.RDP
 			return bad;
 		}
 
-		private static int rdp_check_empties(SymbolScopeData scopeData)
+		private static int rdp_check_empties(SymbolScopeData base)
 		{
 			int bad = 0;
-			RdpData temp = (RdpData)scopeData.nextSymbolInScope();
+			RdpData temp = (RdpData)base.nextSymbolInScope();
 			while (temp != null)
 			{
 				RdpList list = temp.list;
@@ -257,7 +256,7 @@ namespace Borium.RDP
 			}
 
 			/* Now go over again updating primaries to mark code only productions */
-			temp = (RdpData)scopeData.nextSymbolInScope();
+			temp = (RdpData)base.nextSymbolInScope();
 
 			while (temp != null)
 			{
@@ -273,7 +272,7 @@ namespace Borium.RDP
 			return bad;
 		}
 
-		private static int rdp_check_identifier(string id)
+		private static int rdp_check_identifier(String id)
 		{
 			RdpData s = (RdpData)symbol_lookup_key(rdp, id, null);
 
@@ -288,10 +287,10 @@ namespace Borium.RDP
 			return 0;
 		}
 
-		private static int rdp_check_nested_nullable(SymbolScopeData scopeData)
+		private static int rdp_check_nested_nullable(SymbolScopeData base)
 		{
 			int bad = 0;
-			RdpData temp = (RdpData)scopeData.nextSymbolInScope();
+			RdpData temp = (RdpData)base.nextSymbolInScope();
 
 			while (temp != null)
 			{
@@ -319,11 +318,11 @@ namespace Borium.RDP
 			return bad;
 		}
 
-		private static int rdp_check_nullable(SymbolScopeData scopeData)
+		private static int rdp_check_nullable(SymbolScopeData base)
 		{
 			int bad = 0;
 			Set work = new Set();
-			RdpData temp = (RdpData)scopeData.nextSymbolInScope();
+			RdpData temp = (RdpData)base.nextSymbolInScope();
 			while (temp != null)
 			{
 				if (temp.contains_null && temp.kind != K_CODE)
@@ -349,18 +348,18 @@ namespace Borium.RDP
 		private static int rdp_check_reserved_words()
 		{
 			int bad = 0;
-			foreach (string reserved in RDP_RESERVED_WORDS)
+			for (String reserved : RDP_RESERVED_WORDS)
 			{
 				bad |= rdp_check_identifier(reserved);
 			}
 			return bad;
 		}
 
-		private static void rdp_count_productions(SymbolScopeData scopeData)
+		private static void rdp_count_productions(SymbolScopeData base)
 		{
 			int primaries = 0, internals = 0, codes = 0;
 
-			RdpData temp = (RdpData)scopeData.nextSymbolInScope();
+			RdpData temp = (RdpData)base.nextSymbolInScope();
 
 			while (temp != null)
 			{
@@ -380,16 +379,16 @@ namespace Borium.RDP
 				temp = (RdpData)temp.nextSymbolInScope();
 			}
 
-			if (rdp_verbose[0])
+			if (rdp_verbose.value())
 			{
 				text_message(TEXT_INFO, primaries + " rules, " + (rdp_token_count - SCAN_P_TOP + 1) + " tokens, " + codes
 						+ " actions, " + internals + " subrules\n");
 			}
 		}
 
-		private static void rdp_find_first(SymbolScopeData scopeData)
+		private static void rdp_find_first(SymbolScopeData base)
 		{
-			RdpData temp = (RdpData)scopeData.nextSymbolInScope();
+			RdpData temp = (RdpData)base.nextSymbolInScope();
 
 			while (temp != null)
 			{
@@ -398,7 +397,7 @@ namespace Borium.RDP
 			}
 		}
 
-		private static void rdp_find_follow(SymbolScopeData scopeData)
+		private static void rdp_find_follow(SymbolScopeData base)
 		{
 			RdpData temp;
 			int follow_pass = 0;
@@ -407,7 +406,7 @@ namespace Borium.RDP
 			{
 				follow_pass++;
 				rdp_follow_changed = 0;
-				temp = (RdpData)scopeData.nextSymbolInScope();
+				temp = (RdpData)base.nextSymbolInScope();
 				while (temp != null)
 				{
 					if (temp.kind == K_SEQUENCE)
@@ -422,7 +421,7 @@ namespace Borium.RDP
 				}
 			} while (rdp_follow_changed != 0);
 
-			if (rdp_verbose[0])
+			if (rdp_verbose.value())
 			{
 				text_message(TEXT_INFO,
 						"Follow sets stabilised after " + follow_pass + " pass" + (follow_pass == 1 ? "" : "es") + "\n");
@@ -529,9 +528,9 @@ namespace Borium.RDP
 			}
 		}
 
-		private static void rdp_update_follow_sets(SymbolScopeData scopeData)
+		private static void rdp_update_follow_sets(SymbolScopeData base)
 		{
-			RdpData temp = (RdpData)scopeData.nextSymbolInScope();
+			RdpData temp = (RdpData)base.nextSymbolInScope();
 			while (temp != null)
 			{
 				if (temp.kind == K_LIST && temp.hi != 1 && temp.supplementary_token == null)
@@ -542,5 +541,6 @@ namespace Borium.RDP
 				temp = (RdpData)temp.nextSymbolInScope();
 			}
 		}
+#endif
 	}
 }

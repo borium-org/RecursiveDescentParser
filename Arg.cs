@@ -1,134 +1,132 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using static Borium.RDP.Arg.ArgKind;
+//using static Borium.RDP.Arg.ArgKind;
 
 namespace Borium.RDP
 {
 	internal class Arg
 	{
-		internal enum ArgKind
+#if false
+		protected enum ArgKind
 		{
 			ARG_BLANK, ARG_BOOLEAN, ARG_NUMERIC, ARG_STRING
 		}
 
-		private class ArgData
+		private static class arg_data
 		{
-			internal ArgKind kind;
-			internal char key;
-			internal string description;
+			ArgKind kind;
+			char key;
+			String description;
 			/** Booleans were in RDP 1.5 stored in an integer field, so there's the source for this mismatch. */
-			internal bool[] boolvalue;
+			Pointer<Boolean> intvalue;
 			/** All truly integer values are unsigned, no negative integers were used in making this app. */
-			internal int[] unsignedvalue;
-			internal string[] str;
-			internal ArgData next;
+			Pointer<Integer> unsignedvalue;
+			Pointer<String> str;
+			arg_data next;
 		}
 
-		const int EXIT_FAILURE = 1;
+		private static final int EXIT_FAILURE = 1;
 
-		private static ArgData argsBase;
+		private static arg_data base = null;
 
-		internal static void arg_boolean(char key, string description, bool[] intvalue)
+	public static void arg_boolean(char key, String description, Pointer<Boolean> intvalue)
 		{
-			AddNode(ARG_BOOLEAN, key, description, intvalue, null, null);
+			add_node(ARG_BOOLEAN, key, description, intvalue, null, null);
 		}
 
-		internal static void arg_help(string msg)
+		public static void arg_help(String msg)
 		{
-			Console.Write("\n\nFatal - " + (msg ?? "") + "\n\n");
-			Print(argsBase);
-			Environment.Exit(EXIT_FAILURE);
+			System.out.print("\n\nFatal - " + (msg == null ? "" : msg) + "\n\n");
+			print(base);
+			System.exit(EXIT_FAILURE);
 		}
 
-		internal static void arg_message(string description)
+		public static void arg_message(String description)
 		{
-			AddNode(ARG_BLANK, '\0', description, null, null, null);
+			add_node(ARG_BLANK, '\0', description, null, null, null);
 		}
 
-		internal static void arg_numeric(char key, string description, int[] unsignedvalue)
+		public static void arg_numeric(char key, String description, Pointer<Integer> unsignedvalue)
 		{
-			AddNode(ARG_NUMERIC, key, description, null, unsignedvalue, null);
+			add_node(ARG_NUMERIC, key, description, null, unsignedvalue, null);
 		}
 
-		internal static string[] arg_process(string[] argStrings)
+		public static String[] arg_process(String[] args)
 		{
-			List<string> ret = new List<string>();
-			foreach (string arg in argStrings)
+			ArrayList<String> ret = new ArrayList<>();
+			for (String arg : args)
 			{
-				if (arg[0] == '-')
+				if (arg.charAt(0) == '-')
 				{
-					if (arg.Length < 2)
+					if (arg.length() < 2)
 					{
 						arg_help("bad command line argument");
 					}
-					ArgData temp = argsBase;
-					while (temp.next != null && temp.key != arg[1])
+					arg_data temp = base;
+					while (temp.next != null && temp.key != arg.charAt(1))
 					{
 						temp = temp.next;
 					}
-					if (temp.key != arg[1])
+					if (temp.key != arg.charAt(1))
 					{
 						arg_help("unknown command line argument");
 					}
 					switch (temp.kind)
 					{
 						case ARG_BOOLEAN:
-							temp.boolvalue[0] = !temp.boolvalue[0];
+							temp.intvalue.set(!temp.intvalue.value());
 							break;
-
 						case ARG_NUMERIC:
-							temp.unsignedvalue[0] = Convert.ToInt32(arg.Substring(2));
+							temp.unsignedvalue.set(Integer.parseInt(arg.substring(2)));
 							break;
-
 						case ARG_STRING:
-							temp.str[0] = arg.Substring(2);
+							temp.str.set(arg.substring(2));
 							break;
-
 						default:
 							break;
 					}
 				}
 				else
 				{
-					ret.Add(arg);
+					ret.add(arg);
 				}
 			}
-			return ret.ToArray();
+			return ret.toArray(new String[ret.size()]);
 		}
 
-		internal static void arg_string(char key, string description, string[] str)
+		public static void arg_string(char key, String description, Pointer<String> str)
 		{
-			AddNode(ARG_STRING, key, description, null, null, str);
+			add_node(ARG_STRING, key, description, null, null, str);
 		}
 
-		private static void AddNode(ArgKind kind, char key, string description, bool[] boolvalue,
-				int[] unsignedvalue, string[] str)
+		private static void add_node(ArgKind kind, char key, String description, Pointer<Boolean> intvalue,
+				Pointer<Integer> unsignedvalue, Pointer<String> str)
 		{
-			ArgData temp = new ArgData
-			{
-				kind = kind,
-				key = key,
-				description = description,
-				boolvalue = boolvalue,
-				unsignedvalue = unsignedvalue,
-				str = str,
-				next = argsBase
-			};
-			argsBase = temp;
+			arg_data temp = new arg_data();
+			temp.kind = kind;
+			temp.key = key;
+			temp.description = description;
+			temp.intvalue = intvalue;
+			temp.unsignedvalue = unsignedvalue;
+			temp.str = str;
+			temp.next = base;
+			base = temp;
 		}
 
-		private static void Print(ArgData p)
+		private static void print(arg_data p)
 		{
 			if (p != null)
 			{
-				Print(p.next);
+				print(p.next);
 				if (p.kind != ARG_BLANK)
 				{
-					Console.Write("-" + p.key + (p.kind == ARG_NUMERIC ? "<n>" : p.kind == ARG_STRING ? "<s>" : "   ") + " ");
+					System.out.print(
+							"-" + p.key + (p.kind == ARG_NUMERIC ? "<n>" : p.kind == ARG_STRING ? "<s>" : "   ") + " ");
 				}
-				Console.WriteLine(p.description);
+				System.out.println(p.description);
 			}
 		}
+#endif
 	}
 }

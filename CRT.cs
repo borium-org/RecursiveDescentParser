@@ -5,98 +5,98 @@ namespace Borium.RDP
 {
 	internal class CRT
 	{
-		internal const int EOF = -1;
-
 #if false
-		internal static String capitalizeFirst(String text)
+		public static final int EOF = -1;
+
+		public static String capitalizeFirst(String text)
 		{
 			return Character.toUpperCase(text.charAt(0)) + text.substring(1);
 		}
-#endif
 
-		internal static void fclose(TextReader file)
+		public static void fclose(InputStream file)
 		{
 			try
 			{
-				file.Close();
+				file.close();
 			}
-			catch (IOException)
+			catch (IOException e)
 			{
 			}
 		}
 
-		internal static bool feof(TextReader file)
+		public static boolean feof(InputStream file)
 		{
 			try
 			{
-				return file.Peek() == EOF;
+				return file.available() == 0;
 			}
-			catch (IOException)
+			catch (IOException e)
 			{
 			}
 			return true;
 		}
 
-		internal static int getc(TextReader file)
+		public static int getc(InputStream file)
 		{
 			try
 			{
-				return file.Read();
+				return file.read();
 			}
-			catch (IOException)
+			catch (IOException e)
 			{
 			}
 			return EOF;
 		}
 
-		internal static bool isalnum(int ch)
+		public static boolean isalnum(int ch)
 		{
 			return isalpha(ch) || isdigit(ch);
 		}
 
-		internal static bool isalpha(int ch)
+		public static boolean isalpha(int ch)
 		{
-			return "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".IndexOf((char)ch) >= 0;
+			return "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".indexOf(ch) >= 0;
 		}
 
-		internal static bool isdigit(int ch)
+		public static boolean isdigit(int ch)
 		{
-			return "0123456789".IndexOf((char)ch) >= 0;
+			return "0123456789".indexOf(ch) >= 0;
 		}
 
-		internal static bool isgraph(char ch)
+		public static boolean isgraph(char ch)
 		{
 			return ch > ' ';
 		}
 
-		internal static bool isprint(int ch)
+		public static boolean isprint(int ch)
 		{
 			return ch >= ' ';
 		}
 
-		internal static bool isspace(int ch)
+		public static boolean isspace(int ch)
 		{
 			return ch <= ' ';
 		}
 
-		internal static bool isxdigit(int ch)
+		public static boolean isxdigit(int ch)
 		{
-			return "0123456789ABCDEFabcdef".IndexOf((char)ch) >= 0;
+			return "0123456789ABCDEFabcdef".indexOf(ch) >= 0;
 		}
 
-		internal static int strcmp(String str1, String str2)
+		public static int strcmp(String str1, String str2)
 		{
-			return str1.CompareTo(str2);
+			return str1.compareTo(str2);
 		}
 
-		internal static long strtol(string nptr, string[] endptr, int fromBase)
+		public static long strtol(String nptr, Pointer<String> endptr, int base)
 		{
 			if (endptr != null)
 			{
-				throw new NotImplementedException("strtol: endptr is not implemented");
+				System.err.println("strtol: endptr is not implemented");
 			}
-			long result = Convert.ToInt64(nptr, fromBase);
+			long result = Long.parseLong(nptr, base);
 			return result;
 		}
+#endif
 	}
 }

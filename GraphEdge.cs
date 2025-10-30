@@ -2,17 +2,16 @@
 {
 	internal class GraphEdge : GraphBase
 	{
-		/// <summary>
-		/// The number of the next edge to be created
-		/// </summary>
-		internal static int graph_next_edge_count = 1;
+#if false
+		/** The number of the next edge to be created */
+		static int graph_next_edge_count = 1;
 
-		internal GraphNode destination;
-		internal GraphNode source;
+		GraphNode destination;
+		GraphNode source;
 		GraphBase previous_in_edge;
-		internal GraphBase previous_out_edge;
+		GraphBase previous_out_edge;
 
-		internal void deleteEdge()
+		void deleteEdge()
 		{
 			/* unlink this edge from the out list */
 			/* make next node point back to our in */
@@ -35,7 +34,7 @@
 			}
 		}
 
-		internal GraphEdge insertEdgeAfterFinal(GraphNode destination_node, GraphNode source_node)
+		GraphEdge insertEdgeAfterFinal(GraphNode destination_node, GraphNode source_node)
 		{
 			GraphNode source_node_base = source_node;
 			GraphNode destination_node_base = destination_node;
@@ -76,5 +75,6 @@
 			destination = destination_node_base;
 			return this;
 		}
+#endif
 	}
 }

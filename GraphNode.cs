@@ -2,14 +2,14 @@
 {
 	internal abstract class GraphNode : GraphBase
 	{
+#if false
 		/** The number of the next node to be created */
-		internal static int graph_next_node_count = 1;
+		static int graph_next_node_count = 1;
 
-		internal GraphNode next_node;
+		GraphNode next_node;
+		GraphNode previous_node;
 
-		internal GraphNode previous_node;
-
-		internal void deleteNode()
+		void deleteNode()
 		{
 			// delete out edges
 			while (next_out_edge != null)
@@ -30,9 +30,9 @@
 			previous_node.next_node = next_node;
 		}
 
-		internal abstract int getId();
+		abstract int getId();
 
-		internal void insertNode(GraphNode node)
+		void insertNode(GraphNode node)
 		{
 			node.atom_number = graph_next_node_count++;
 			node.next_out_edge = null;
@@ -49,5 +49,6 @@
 				node.next_node.previous_node = node;
 			}
 		}
+#endif
 	}
 }

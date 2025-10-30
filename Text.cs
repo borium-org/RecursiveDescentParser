@@ -2,261 +2,185 @@
 using System.IO;
 using static Borium.RDP.CRT;
 using static Borium.RDP.Scan;
-using static Borium.RDP.Text.TextMessageType;
+//using static Borium.RDP.Text.TextMessageType;
 
 namespace Borium.RDP
 {
 	internal class Text
 	{
-		internal enum TextMessageType
+#if false
+		public enum TextMessageType
 		{
 			TEXT_INFO, TEXT_WARNING, TEXT_ERROR, TEXT_FATAL, TEXT_INFO_ECHO, TEXT_WARNING_ECHO, TEXT_ERROR_ECHO,
 			TEXT_FATAL_ECHO
 		}
 
-		private class SourceList
+		private static class SourceList
 		{
-			/// <summary>
-			/// Copy of filename
-			/// </summary>
-			internal string name;
+			/** copy of filename */
+			String name;
 
-			/// <summary>
-			/// Copy of total errors for this file
-			/// </summary>
-			internal int errors;
+			/** copy of total errors for this file */
+			int errors;
 
-			/// <summary>
-			/// Copy of current file handle
-			/// </summary>
-			internal TextReader file;
+			/** copy of current file handle */
+			InputStream file;
 
-			/// <summary>
-			/// Copy of first character of current source line
-			/// </summary>
-			internal int first_char;
+			/** copy of first character of current source line */
+			int first_char;
 
-			/// <summary>
-			/// Copy of last character of current source line
-			/// </summary>
-			internal int last_char;
+			/** copy of last character of current source line */
+			int last_char;
 
-			/// <summary>
-			/// Copy of current line in this file
-			/// </summary>
-			internal int linenumber;
+			/** copy of current line in this file */
+			int linenumber;
 
-			/// <summary>
-			/// Copy of current text character
-			/// </summary>
-			internal int text_char;
+			/** copy of current text character */
+			int text_char;
 
-			/// <summary>
-			/// Copy of pointer to current source character
-			/// </summary>
-			internal int text_current;
+			/** copy of pointer to current source character */
+			int text_current;
 
-			/// <summary>
-			/// Copy of pointer to the last thing read by the scanner
-			/// </summary>
-			internal ScanData text_scan_data = new ScanData();
+			/** copy of pointer to the last thing read by the scanner */
+			ScanData text_scan_data = new ScanData();
 
-			/// <summary>
-			/// Copy of first character of this symbol
-			/// </summary>
-			internal int symbol_first_char;
+			/** copy of first character of this symbol */
+			int symbol_first_char;
 
-			/// <summary>
-			/// Copy of total warnings for this file
-			/// </summary>
-			internal int warnings;
+			/** copy of total warnings for this file */
+			int warnings;
 
-			/// <summary>
-			/// Previous file descriptor
-			/// </summary>
-			internal SourceList previous;
+			/** previous file descriptor */
+			SourceList previous;
 		}
 
-		///
-		/// Maximum number of error markers per line
-		///
-		private const int MAX_ECHO = 9;
+		/** Maximum number of error markers per line */
+		private static final int MAX_ECHO = 9;
 
-		private const int EXIT_FAILURE = 1;
+		private static final int EXIT_FAILURE = 1;
 
-		/// <summary>
-		/// Total number of errors this run
-		/// </summary>
+		/** total number of errors this run */
 		private static int totalerrors = 0;
 
-		/// <summary>
-		/// Total number of warnings this run
-		/// </summary>
+		/** total number of warnings this run */
 		private static int totalwarnings = 0;
 
-		/// <summary>
-		/// total errors for this file
-		/// </summary>
+		/** total errors for this file */
 		private static int errors = 0;
 
-		/// <summary>
-		/// crash if error count exceeds this value
-		/// </summary>
+		/** crash if error count exceeds this value */
 		private static int maxerrors = 25;
 
-		/// <summary>
-		/// Total warnings for this file
-		/// </summary>
+		/** total warnings for this file */
 		private static int warnings = 0;
 
-		/// <summary>
-		/// Crash if warning count exceeds this value 
-		/// </summary>
+		/** crash if warning count exceeds this value */
 		private static int maxwarnings = 100;
 
-		/// <summary>
-		/// File name
-		/// </summary>
-		private static string name = null;
+		/** filename */
+		private static String name = null;
 
-		/// <summary>
-		/// Current line in this file
-		/// </summary>
+		/** current line in this file */
 		private static int linenumber = 0;
 
-		/// <summary>
-		/// Cumulative line_number
-		/// </summary>
+		/** cumulative line_number */
 		private static int sequence_number = 0;
 
-		/// <summary>
-		/// TEXT_MESSAGES;
-		/// </summary>
-		private static TextWriter messages = Console.Out;
+		/** TEXT_MESSAGES; */
+		private static PrintStream messages = System.out;
 
-		/// <summary>
-		/// Array of error positions
-		/// </summary>
+		/** array of error positions */
 		private static int[] echo_pos = new int[MAX_ECHO];
 
-		/// <summary>
-		/// Current error number this line
-		/// </summary>
+		/** current error number this line */
 		private static int echo_num = -1;
 
-		/// <summary>
-		/// Current text character
-		/// </summary>
-		internal static int text_char = ' ';
+		/** current text character */
+		static int text_char = ' ';
 
-		/// <summary>
-		/// First character of current source line
-		/// </summary>
+		/** first character of current source line */
 		private static int first_char;
 
-		/// <summary>
-		/// Last character of current source line
-		/// </summary>
+		/** last character of current source line */
 		private static int last_char;
 
-		/// <summary>
-		/// Pointer to current source character
-		/// </summary>
-		internal static int text_current;
+		/** pointer to current source character */
+		static int text_current;
 
-		/// <summary>
-		/// Text array for storing id's and strings
-		/// </summary>
-		internal static char[] text_bot = null;
+		/** text array for storing id's and strings */
+		static char[] text_bot = null;
 
-		/// <summary>
-		/// Top of text character
-		/// </summary>
-		internal static int text_top = 1;
+		/** top of text character */
+		static int text_top = 1;
 
-		/// <summary>
-		/// Size of text buffer
-		/// </summary>
+		/** size of text buffer */
 		private static int maxtext;
 
-		/// <summary>
-		/// Tab expansion width
-		/// </summary>
+		/** tab expansion width */
 		private static int tabwidth;
 
-		/// <summary>
-		/// Pointer to the last thing read by the scanner
-		/// </summary>
-		internal static ScanData text_scan_data;
+		static ScanData text_scan_data; // pointer to the last thing read by the scanner
 
-		/// <summary>
-		/// Enable line echoing
-		/// </summary>
-		private static bool echo;
+		/** enable line echoing */
+		private static boolean echo;
 
-		/// <summary>
-		/// Current file handle
-		/// </summary>
-		private static TextReader file;
+		/** current file handle */
+		private static InputStream file;
 
-		/// <summary>
-		/// Head of file descriptor list
-		/// </summary>
+		/** head of file descriptor list */
 		private static SourceList source_descriptor_list;
 
-		/// <summary>
-		/// First character in this symbol
-		/// </summary>
+		/** first character in this symbol */
 		private static int symbol_first_char;
 
-		internal static int text_column_number()
+		public static int text_column_number()
 		{
 			return first_char - text_current;
 		}
 
-		internal static string text_default_filetype(string fname, string ftype)
+		public static String text_default_filetype(String fname, String ftype)
 		{
-			if (ftype.Length == 0)
+			if (ftype.length() == 0)
 			{
 				return fname;
 			}
-			string fullname = fname;
-			if (fullname.IndexOf('.') == -1)
+			String fullname = fname;
+			if (fullname.indexOf('.') == -1)
 			{
 				fullname += "." + ftype;
 			}
 			return fullname;
 		}
 
-		internal static void text_echo(bool i)
+		public static void text_echo(boolean i)
 		{
 			echo = i;
 		}
 
-		internal static string text_extract_filename(string fname)
+		public static String text_extract_filename(String fname)
 		{
-			string name = fname;
+			String name = fname;
 			// search backwards for '.' and terminate the string there
-			int temp = name.Length;
+			int temp = name.length();
 			while (--temp > 0)
 			{
-				if (name[temp] == '.')
+				if (name.charAt(temp) == '.')
 				{
-					name = name.Substring(0, temp);
+					name = name.substring(0, temp);
 					break;
 				}
 			}
 			// we didn't find a dot, so start again at the end
-			if (temp != name.Length)
+			if (temp != name.length())
 			{
-				temp = fname.Length;
+				temp = fname.length();
 			}
 			// search backwards for '/' or '\' and start the string there
 			while (--temp > 0)
 			{
-				if (name[temp] == '/' || name[temp] == '\\')
+				if (name.charAt(temp) == '/' || name.charAt(temp) == '\\')
 				{
-					name = name.Substring(temp + 1);
+					name = name.substring(temp + 1);
 					break;
 				}
 			}
@@ -264,32 +188,32 @@ namespace Borium.RDP
 		}
 
 		/** add a new filetype. If ftype is NULL, return just filename */
-		internal static string text_force_filetype(string fname, string ftype)
+		public static String text_force_filetype(String fname, String ftype)
 		{
 			// work backwards from end of filename looking for a dot, or a directory separator
-			int length = fname.Length - 1;
-			while (fname[length] != '.' && fname[length] != '/' && fname[length] != '\\' && length > 0)
+			int length = fname.length() - 1;
+			while (fname.charAt(length) != '.' && fname.charAt(length) != '/' && fname.charAt(length) != '\\' && length > 0)
 			{
 				length--;
 			}
-			if (fname[length] != '.')
+			if (fname.charAt(length) != '.')
 			{
-				length = fname.Length;
+				length = fname.length();
 			}
-			string fullname = null;
+			String fullname = null;
 			if (ftype == null)
 			{
 				fullname = fname;
 			}
 			else
 			{
-				fullname = fname.Substring(0, length) + "." + ftype;
+				fullname = fname.substring(0, length) + "." + ftype;
 			}
 			return fullname;
 		}
 
 		/** advance text_current, reading another line if necessary */
-		internal static void text_get_char()
+		public static void text_get_char()
 		{
 			if (text_current <= last_char)
 			{
@@ -343,9 +267,9 @@ namespace Borium.RDP
 			text_char = text_bot[--text_current];
 		}
 
-		internal static string text_get_string(int start)
+		public static String text_get_string(int start)
 		{
-			string s = "";
+			String s = "";
 			while (text_bot[start] != 0)
 			{
 				s += text_bot[start++];
@@ -353,7 +277,7 @@ namespace Borium.RDP
 			return s;
 		}
 
-		internal static void text_init(int max_text, int max_errors, int max_warnings, int tab_width)
+		public static void text_init(int max_text, int max_errors, int max_warnings, int tab_width)
 		{
 			tabwidth = tab_width;
 			maxtext = max_text;
@@ -365,7 +289,7 @@ namespace Borium.RDP
 			text_current = last_char = first_char = maxtext;
 		}
 
-		internal static int text_insert_char(char c)
+		public static int text_insert_char(char c)
 		{
 			int start = text_top;
 			if (text_top >= last_char)
@@ -379,17 +303,17 @@ namespace Borium.RDP
 			return start;
 		}
 
-		internal static int text_insert_characters(string str)
+		public static int text_insert_characters(String str)
 		{
 			int start = text_top;
-			foreach (char ch in str)
+			for (char ch : str.toCharArray())
 			{
 				text_insert_char(ch);
 			}
 			return start;
 		}
 
-		internal static int text_insert_integer(int n)
+		public static int text_insert_integer(int n)
 		{
 			int start = text_top;
 			if (n > 9)
@@ -401,10 +325,10 @@ namespace Borium.RDP
 			return start;
 		}
 
-		internal static int text_insert_string(string str)
+		public static int text_insert_string(String str)
 		{
 			int start = text_top;
-			foreach (char ch in str)
+			for (char ch : str.toCharArray())
 			{
 				text_insert_char(ch);
 			}
@@ -412,14 +336,8 @@ namespace Borium.RDP
 			return start;
 		}
 
-		/// <summary>
-		/// Put an id_number into text buffer
-		/// </summary>
-		/// <param name="prefix"></param>
-		/// <param name="str"></param>
-		/// <param name="n"></param>
-		/// <returns></returns>
-		internal static int text_insert_substring(string prefix, string str, int n)
+		/** put an id_number into text buffer */
+		public static int text_insert_substring(String prefix, String str, int n)
 		{
 			int start = text_top;
 
@@ -432,22 +350,22 @@ namespace Borium.RDP
 			return start;
 		}
 
-		internal static bool text_is_valid_C_id(string s)
+		public static boolean text_is_valid_C_id(String s)
 		{
-			bool temp = true;
-			foreach (char ch in s)
+			boolean temp = true;
+			for (char ch : s.toCharArray())
 			{
 				temp = temp && (isalnum(ch) || ch == '_');
 			}
 			return temp;
 		}
 
-		internal static int text_line_number()
+		public static int text_line_number()
 		{
 			return linenumber;
 		}
 
-		internal static int text_message(TextMessageType type, string message)
+		public static int text_message(TextMessageType type, String message)
 		{
 			if (message == null)
 			{
@@ -470,64 +388,63 @@ namespace Borium.RDP
 				case TEXT_WARNING_ECHO:
 					warnings++;
 					totalwarnings++;
-					messages.Write("Warning ");
+					messages.print("Warning ");
 					break;
 				case TEXT_ERROR:
 				case TEXT_ERROR_ECHO:
 					errors++;
 					totalerrors++;
-					messages.Write("Error ");
+					messages.print("Error ");
 					break;
 				case TEXT_FATAL:
 				case TEXT_FATAL_ECHO:
-					messages.Write("Fatal ");
+					messages.print("Fatal ");
 					break;
 				default:
-					messages.Write("Unknown ");
-					break;
+					messages.print("Unknown ");
 			}
 			if (type == TEXT_WARNING_ECHO || type == TEXT_ERROR_ECHO)
 			{
-				messages.Write(echo_num + 1);
+				messages.print(echo_num + 1);
 			}
 			if (name != null && linenumber != 0)
 			{
-				messages.Write("(" + name + ") ");
+				messages.print("(" + name + ") ");
 			}
 			else if (type != TEXT_INFO && type != TEXT_INFO_ECHO)
 			{
-				messages.Write("- ");
+				messages.print("- ");
 			}
-			messages.Write(message);
+			messages.print(message);
 			if (type == TEXT_FATAL || type == TEXT_FATAL_ECHO)
 			{
-				Environment.Exit(EXIT_FAILURE);
+				System.exit(EXIT_FAILURE);
 			}
 			if (errors > maxerrors && maxerrors > 0)
 			{
-				messages.WriteLine("Fatal (" + (name == null ? "null file" : name) + "): too many errors");
-				Environment.Exit(EXIT_FAILURE);
+				messages.println("Fatal (" + (name == null ? "null file" : name) + "): too many errors");
+				System.exit(EXIT_FAILURE);
 			}
 			if (warnings > maxwarnings && maxwarnings > 0)
 			{
-				messages.WriteLine("Fatal (" + (name == null ? "null file" : name) + "): too many warnings");
-				Environment.Exit(EXIT_FAILURE);
+				messages.println("Fatal (" + (name == null ? "null file" : name) + "): too many warnings");
+				System.exit(EXIT_FAILURE);
 			}
-			return message.Length + 1;
+			return message.length() + 1;
 		}
 
-		internal static TextReader text_open(string s)
+		public static InputStream text_open(String s)
 		{
-			TextReader handle = null;
+			InputStream handle = null;
 			try
 			{
-				handle = s == "-" ? Console.In : new StreamReader(s);
+				handle = s.equals("-") ? System.in : new FileInputStream(s);
 			}
-			catch (FileNotFoundException)
+			catch (FileNotFoundException e)
 			{
 				handle = null;
 			}
-			TextReader old = file;
+			InputStream old = file;
 			if (handle != null) // we found a file
 			{
 				if (old != null) // save current file context
@@ -565,10 +482,11 @@ namespace Borium.RDP
 			return handle;
 		}
 
-		internal static void text_print_statistics()
+		public static void text_print_statistics()
 		{
-			long symbolcount = text_top;
-			long linecount = -last_char + maxtext;
+			long symbolcount = text_top,
+
+					linecount = -last_char + maxtext;
 
 			if (text_bot == null)
 			{
@@ -581,50 +499,48 @@ namespace Borium.RDP
 			}
 		}
 
-		internal static void text_print_time()
+		public static void text_print_time()
 		{
-			// string __DATE__ = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
-			// string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(new Date());
+			// String __DATE__ = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+			// String __TIME__ = new SimpleDateFormat("HH:mm:ss").format(new Date());
 			// text_printf(__DATE__ + " " + __TIME__);
 			text_printf("Sep 19 2015 11:45:00");
 		}
 
-		internal static int text_printf(string str)
+		public static int text_printf(String str)
 		{
-			if (str == null)
+			if (str != null)
 			{
-				return 0;
-			}
-
-			foreach (char ch in str)
-			{
-				if (ch == '\n')
+				for (char ch : str.toCharArray())
 				{
-					messages.Write('\r');
+					if (ch == '\n')
+					{
+						messages.print('\r');
+					}
+					messages.print("" + ch);
 				}
-				messages.Write("" + ch);
 			}
-			return str.Length;
+			return str == null ? 0 : str.length();
 		}
 
-		internal static void text_redirect(TextWriter file)
+		public static void text_redirect(PrintStream file)
 		{
 			messages = file;
 		}
 
-		internal static int text_sequence_number()
+		public static int text_sequence_number()
 		{
 			return sequence_number;
 		}
 
-		internal static int text_total_errors()
+		public static int text_total_errors()
 		{
 			return totalerrors;
 		}
 
-		internal static string text_uppercase_string(string str)
+		public static String text_uppercase_string(String str)
 		{
-			return str.ToUpper();
+			return str.toUpperCase();
 		}
 
 		private static void text_close()
@@ -666,7 +582,7 @@ namespace Borium.RDP
 			// print backwards from last character of text buffer
 			for (int temp = first_char - 1; temp > last_char; temp--)
 			{
-				messages.Write(text_bot[temp]);
+				messages.print(text_bot[temp]);
 			}
 			// now print out the echo number line
 			if (echo_num >= 0)
@@ -680,11 +596,11 @@ namespace Borium.RDP
 				{
 					while (char_count++ < echo_pos[num_count] - 1)
 					{
-						messages.Write('-');
+						messages.print('-');
 					}
-					messages.Write((char)('1' + num_count));
+					messages.print((char)('1' + num_count));
 				}
-				messages.WriteLine();
+				messages.println();
 			}
 			// reset echo numbering array pointer
 			echo_num = -1;
@@ -694,13 +610,14 @@ namespace Borium.RDP
 		{
 			if (linenumber != 0)
 			{
-				string s = string.Format("%6d: ", linenumber);
-				messages.Write(s);
+				String s = String.format("%6d: ", linenumber);
+				messages.print(s);
 			}
 			else
 			{
-				messages.Write("******: ");
+				messages.print("******: ");
 			}
 		}
+#endif
 	}
 }

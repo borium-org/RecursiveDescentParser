@@ -1,58 +1,46 @@
-﻿namespace Borium.RDP
+﻿using System;
+
+namespace Borium.RDP
 {
 	internal class SymbolTable
 	{
-		/// <summary>
-		/// An identifying string
-		/// </summary>
-		internal string name;
+#if false
+		/** an identifying string */
+		String name;
 
-		/// <summary>
-		/// Table of pointers to hash lists
-		/// </summary>
-		internal Symbol[] table;
+		/** table of pointers to hash lists */
+		Symbol[] table;
 
-		/// <summary>
-		/// Pointers to chain of scope lists
-		/// </summary>
-		internal SymbolScopeData current;
+		/** pointers to chain of scope lists */
+		SymbolScopeData current;
 
-		/// <summary>
-		/// Pointer to first scope list
-		/// </summary>
-		internal SymbolScopeData scopes;
+		/** pointer to first scope list */
+		SymbolScopeData scopes;
 
-		/// <summary>
-		/// Number of buckets in symbol table
-		/// </summary>
-		internal int hash_size;
+		/** number of buckets in symbol table */
+		int hash_size;
+		/** hashing prime: hashsize and hashprime should be coprime */
+		int hash_prime;
+		CompareHashPrint compareHashPrint;
 
-		/// <summary>
-		/// Hashing prime: hashsize and hashprime should be coprime
-		/// </summary>
-		internal int hash_prime;
+		/** pointer to last declared symbol table */
+		SymbolTable next;
 
-		internal CompareHashPrint compareHashPrint;
-
-		/// <summary>
-		/// Pointer to last declared symbol table
-		/// </summary>
-		internal SymbolTable next;
-
-		internal int compare(string key, Symbol p)
+		int compare(String key, Symbol p)
 		{
 			return compareHashPrint.compare(key, p);
 		}
 
 		/** return current scope */
-		internal SymbolScopeData getScope()
+		SymbolScopeData getScope()
 		{
 			return current;
 		}
 
-		internal int hash(int prime, string key)
+		int hash(int prime, String key)
 		{
 			return compareHashPrint.hash(prime, key);
 		}
+#endif
 	}
 }
