@@ -67,8 +67,8 @@ namespace Borium.RDP
 
 		private static SymbolTable scan_table;
 
-#if false
 		private static bool scan_lexicalise_flag = false;
+#if false
 	private static int last_line_number = 0;
 	private static int last_column = 0;
 	private static bool retain_comments = false;
@@ -666,12 +666,12 @@ namespace Borium.RDP
 			scan_insert_comment_block("", 0, 0);
 		}
 
-#if false
 		internal static void scan_lexicalise()
-	{
-		scan_lexicalise_flag = true;
-	}
+		{
+			scan_lexicalise_flag = true;
+		}
 
+#if false
 	internal static void scan_load_keyword(String id1, String id2, int token, int extended)
 	{
 		ScanData d = new ScanData();
