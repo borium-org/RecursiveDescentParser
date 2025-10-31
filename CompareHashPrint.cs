@@ -18,20 +18,22 @@ namespace Borium.RDP
 			String r = text_get_string(right.id);
 			return l.compareTo(r);
 		}
+#endif
 
-		int hash(int hash_prime, String str)
+		internal int hash(int hash_prime, string str)
 		{
 			int hashnumber = 0;
 			if (str != null)
 			{
-				for (int i = 0; i < str.length(); i++)
+				for (int i = 0; i < str.Length; i++)
 				{
-					hashnumber = str.charAt(i) + hash_prime * hashnumber;
+					hashnumber = str[i] + hash_prime * hashnumber;
 				}
 			}
 			return hashnumber & 0x7FFFFFFF;
 		}
 
+#if false
 		void print(Symbol s)
 		{
 			s.print();

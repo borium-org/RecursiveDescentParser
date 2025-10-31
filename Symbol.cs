@@ -7,7 +7,6 @@ namespace Borium.RDP
 	{
 		private static SymbolTable symbol_tables = null;
 
-#if false
 		internal static Symbol symbol_insert_symbol(SymbolTable table, Symbol symbol)
 		{
 			Symbol s = symbol;
@@ -37,6 +36,7 @@ namespace Borium.RDP
 			return symbol;
 		}
 
+#if false
 		/** lookup a symbol by id. Return null if it is not found */
 		internal static Symbol symbol_lookup_key(SymbolTable table, String key, SymbolScopeData scope)
 		{
@@ -85,13 +85,11 @@ namespace Borium.RDP
 			return temp;
 		}
 
-#if false
-
 		/** next symbol in hash list */
 		Symbol next_hash;
 
 		/** pointer to next pointer of last_symbol in hash list */
-		final Pointer<Symbol> last_hash = new Pointer<>();
+		Pointer<Symbol> last_hash = new Pointer<Symbol>();
 
 		/** next symbol in scope list */
 		Symbol next_scope;
@@ -101,7 +99,6 @@ namespace Borium.RDP
 
 		/** hash value for quick searching */
 		int hash;
-#endif
 
 		internal int id;
 

@@ -52,11 +52,11 @@ namespace Borium.RDP
 		{
 			return current;
 		}
+#endif
 
-		int hash(int prime, String key)
+		internal int hash(int prime, string key)
 		{
 			return compareHashPrint.hash(prime, key);
 		}
-#endif
 	}
 }

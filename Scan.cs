@@ -14,9 +14,9 @@ namespace Borium.RDP
 	{
 		internal class ScanData : Symbol
 		{
+			internal int token;
+			internal int extended;
 #if false
-		int token;
-		int extended;
 		ScanCommentBlock comment_block;
 		String sourcefilename;
 		int line_number;
@@ -669,7 +669,6 @@ namespace Borium.RDP
 			scan_lexicalise_flag = true;
 		}
 
-#if false
 	internal static void scan_load_keyword(String id1, String id2, int token, int extended)
 	{
 		ScanData d = new ScanData();
@@ -683,6 +682,7 @@ namespace Borium.RDP
 		symbol_insert_symbol(scan_table, d);
 	}
 
+#if false
 	internal static boolean scan_test(String production, int valid, Set stop)
 	{
 		if (valid != text_scan_data.token)
