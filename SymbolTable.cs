@@ -41,12 +41,12 @@ namespace Borium.RDP
 		/// </summary>
 		internal SymbolTable next;
 
-#if false
-		int compare(String key, Symbol p)
+		internal int compare(string key, Symbol p)
 		{
 			return compareHashPrint.compare(key, p);
 		}
 
+#if false
 		/** return current scope */
 		SymbolScopeData getScope()
 		{

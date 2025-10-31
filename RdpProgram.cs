@@ -132,7 +132,7 @@ private static String RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compile
 
 		private const int RDP_PASSES = 2;
 
-		static string rdp_sourcefilename; // current source file name
+		internal static string rdp_sourcefilename; // current source file name
 		private static string[] rdp_sourcefilenames; // array of source file names
 
 		private static Pointer<string> rdp_outputfilename = new Pointer<string>("rdparser"); // output file name
@@ -222,9 +222,9 @@ private static String RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compile
 		private static Set unit_stop = new Set();
 
 		static SymbolTable locals = null;
-		static SymbolTable codes = null;
-		static SymbolTable tokens = null;
-		static SymbolTable rdp = null;
+		internal static SymbolTable codes = null;
+		internal static SymbolTable tokens = null;
+		internal static SymbolTable rdp = null;
 
 		private static int rdp_pass;
 
@@ -318,8 +318,8 @@ private static String RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compile
 			rdp = symbol_new_table("rdp", 101, 31, new CompareHashPrint());
 			rdp_set_initialise();
 			rdp_load_keywords();
+			rdp_pre_parse();
 #if false
-	rdp_pre_parse();
 	if (rdp_verbose.value())
 		text_printf("\nRecursive descent parser generator V1.65 (c) Adrian Johnstone 2000\n" + RDP_STAMP + "\n\n");
 	for (rdp_pass = 1; rdp_pass <= RDP_PASSES; rdp_pass++)

@@ -35,14 +35,15 @@ namespace Borium.RDP
 
 		private uint[] data = new uint[10];
 
-#if false
-		/** clear a dst and then set only those bits specified by src */
+		/// <summary>
+		/// Clear a dst and then set only those bits specified by src
+		/// </summary>
+		/// <param name="element"></param>
 		internal void assign(int element)
 		{
 			clear();
 			set(element);
 		}
-#endif
 
 		internal void assignList(params int[] bits)
 		{

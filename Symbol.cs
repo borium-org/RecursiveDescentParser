@@ -36,8 +36,13 @@ namespace Borium.RDP
 			return symbol;
 		}
 
-#if false
-		/** lookup a symbol by id. Return null if it is not found */
+		/// <summary>
+		/// Lookup a symbol by id. Return null if it is not found
+		/// </summary>
+		/// <param name="table"></param>
+		/// <param name="key"></param>
+		/// <param name="scope"></param>
+		/// <returns></returns>
 		internal static Symbol symbol_lookup_key(SymbolTable table, String key, SymbolScopeData scope)
 		{
 			int hash = table.hash(table.hash_prime, key);
@@ -52,7 +57,7 @@ namespace Borium.RDP
 			return p;
 		}
 
-		internal static SymbolScopeData symbol_new_scope(SymbolTable table, String id)
+		internal static SymbolScopeData symbol_new_scope(SymbolTable table, string id)
 		{
 			SymbolScopeData p = new SymbolScopeData();
 
@@ -63,7 +68,6 @@ namespace Borium.RDP
 				p.next_hash.last_hash.set(p.next_hash);
 			return p;
 		}
-#endif
 
 		internal static SymbolTable symbol_new_table(string name, int symbol_hashsize, int symbol_hashprime,
 				CompareHashPrint compareHashPrint)

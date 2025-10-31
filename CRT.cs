@@ -21,14 +21,14 @@ namespace Borium.RDP
 			return milliseconds;
 		}
 #if false
-		public static final int EOF = -1;
+		internal static final int EOF = -1;
 
-		public static String capitalizeFirst(String text)
+		internal static String capitalizeFirst(String text)
 		{
 			return Character.toUpperCase(text.charAt(0)) + text.substring(1);
 		}
 
-		public static void fclose(InputStream file)
+		internal static void fclose(InputStream file)
 		{
 			try
 			{
@@ -39,7 +39,7 @@ namespace Borium.RDP
 			}
 		}
 
-		public static boolean feof(InputStream file)
+		internal static boolean feof(InputStream file)
 		{
 			try
 			{
@@ -51,7 +51,7 @@ namespace Borium.RDP
 			return true;
 		}
 
-		public static int getc(InputStream file)
+		internal static int getc(InputStream file)
 		{
 			try
 			{
@@ -63,47 +63,49 @@ namespace Borium.RDP
 			return EOF;
 		}
 
-		public static boolean isalnum(int ch)
+		internal static boolean isalnum(int ch)
 		{
 			return isalpha(ch) || isdigit(ch);
 		}
 
-		public static boolean isalpha(int ch)
+		internal static boolean isalpha(int ch)
 		{
 			return "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".indexOf(ch) >= 0;
 		}
 
-		public static boolean isdigit(int ch)
+		internal static boolean isdigit(int ch)
 		{
 			return "0123456789".indexOf(ch) >= 0;
 		}
+#endif
 
-		public static boolean isgraph(char ch)
+		internal static bool isgraph(char ch)
 		{
 			return ch > ' ';
 		}
 
-		public static boolean isprint(int ch)
+#if false
+		internal static boolean isprint(int ch)
 		{
 			return ch >= ' ';
 		}
 
-		public static boolean isspace(int ch)
+		internal static boolean isspace(int ch)
 		{
 			return ch <= ' ';
 		}
 
-		public static boolean isxdigit(int ch)
+		internal static boolean isxdigit(int ch)
 		{
 			return "0123456789ABCDEFabcdef".indexOf(ch) >= 0;
 		}
 
-		public static int strcmp(String str1, String str2)
+		internal static int strcmp(String str1, String str2)
 		{
 			return str1.compareTo(str2);
 		}
 
-		public static long strtol(String nptr, Pointer<String> endptr, int base)
+		internal static long strtol(String nptr, Pointer<String> endptr, int base)
 		{
 			if (endptr != null)
 			{

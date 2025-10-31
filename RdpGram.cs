@@ -8,7 +8,7 @@ using static Borium.RDP.Scan;
 using static Borium.RDP.Set;
 using static Borium.RDP.Symbol;
 using static Borium.RDP.Text;
-//using static Borium.RDP.Text.TextMessageType;
+using static Borium.RDP.Text.TextMessageType;
 
 namespace Borium.RDP
 {
@@ -22,7 +22,7 @@ namespace Borium.RDP
 
 	private static int rdp_follow_changed;
 
-		public static int rdp_bad_grammar(SymbolScopeData base)
+		internal static int rdp_bad_grammar(SymbolScopeData base)
 		{
 			int bad = 0;
 
@@ -101,26 +101,27 @@ namespace Borium.RDP
 			return bad;
 		}
 
-		public static void rdp_check_eoln(String id)
+		internal static void rdp_check_eoln(String id)
 		{
 			if (id.equals("EOLN"))
 			{
 				rdp_dir_newline_visible = 1; /* Grammar contains an explicit EOLN */
 			}
 		}
+#endif
 
-		public static void rdp_check_token_valid(String id)
+		internal static void rdp_check_token_valid(String id)
 		{
 			if (id == null)
 				return;
 
-			if (id.length() == 0)
+			if (id.Length == 0)
 				text_message(TEXT_ERROR_ECHO, "empty tokens are not allowed: use [ ... ] instead\n");
 			// Test for embedded spaces in token
 
-			boolean bad = false;
+			bool bad = false;
 
-			for (char ch : id.toCharArray())
+			foreach (char ch in id)
 			{
 				bad |= !isgraph(ch);
 			}
@@ -129,6 +130,7 @@ namespace Borium.RDP
 				text_message(TEXT_ERROR_ECHO, "tokens must not contain spaces or control characters\n");
 		}
 
+#if false
 		private static int rdp_check_disjoint(SymbolScopeData base)
 		{
 			int bad = 0;

@@ -5,18 +5,18 @@ namespace Borium.RDP
 {
 	internal class CompareHashPrint
 	{
-#if false
-		int compare(String key, Symbol p)
+		internal int compare(string key, Symbol p)
 		{
-			String r = text_get_string(p.id);
-			return key.compareTo(r);
+			string r = text_get_string(p.id);
+			return key.CompareTo(r);
 		}
 
-		int compare(Symbol left, Symbol right)
+#if false
+		internal int compare(Symbol left, Symbol right)
 		{
 			String l = text_get_string(left.id);
 			String r = text_get_string(right.id);
-			return l.compareTo(r);
+			return l.CompareTo(r);
 		}
 #endif
 

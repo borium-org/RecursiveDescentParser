@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection.Emit;
 using static Borium.RDP.Arg;
-//using static Borium.RDP.Arg.ArgKind;
+using static Borium.RDP.Arg.ArgKind;
 using static Borium.RDP.RdpGram;
 using static Borium.RDP.RdpPrint;
 using static Borium.RDP.RdpProgram;
@@ -12,7 +12,7 @@ using static Borium.RDP.Scan;
 using static Borium.RDP.Set;
 using static Borium.RDP.Symbol;
 using static Borium.RDP.Text;
-//using static Borium.RDP.Text.TextMessageType;
+using static Borium.RDP.Text.TextMessageType;
 
 namespace Borium.RDP
 {
@@ -22,28 +22,43 @@ namespace Borium.RDP
 		static class LocalsData extends Symbol
 		{
 		}
+#endif
 
-		static class RdpArgList
+		private class RdpArgList
 		{
-			ArgKind kind;
-			String var;
-			String key;
-			String desc;
-			RdpArgList next;
+			internal ArgKind kind;
+			internal string var;
+			internal string key;
+			internal string desc;
+			internal RdpArgList next;
 		}
 
-		static class RdpData extends Symbol
+		private class RdpData : Symbol
 		{
-		int token;
-		/** token value for tokens */
-		int token_value;
+			internal int token;
+
+			/// <summary>
+			/// Token value for tokens
+			/// </summary>
+			internal int token_value;
+
+#if false
 		/** extended value for tokens */
 		int extended_value;
-		int kind;
-		/** return_type name */
-		String return_type;
-		/** number of indirections in return type */
-		int return_type_stars;
+#endif
+			internal int kind;
+
+			/// <summary>
+			/// Return_type name
+			/// </summary>
+			internal string return_type;
+
+			/// <summary>
+			/// Number of indirections in return type
+			/// </summary>
+			internal int return_type_stars;
+
+#if false
 		/** pointer to token value as a string */
 		int token_string;
 		/** pointer to token value as enum element */
@@ -82,22 +97,45 @@ namespace Borium.RDP
 		int follow_done;
 		/** set of first symbols */
 		final Set first = new Set();
-		/** how many times production is called */
-		int call_count;
-		/** number of elements in first set */
-		int first_cardinality;
-		/** set of follow symbols */
-		final Set follow = new Set();
-		/** number of elements in follow set */
-		int follow_cardinality;
+#endif
+			/// <summary>
+			/// How many times production is called
+			/// </summary>
+			internal int call_count;
+
+			/// <summary>
+			/// Number of elements in first set
+			/// </summary>
+			internal int first_cardinality;
+
+			/// <summary>
+			/// set of follow symbols
+			/// </summary>
+			internal Set follow = new Set();
+
+			/// <summary>
+			/// Number of elements in follow set
+			/// </summary>
+			internal int follow_cardinality;
+
+#if false
 		/** active parser pass for code element */
 		int code_pass;
-		/** minimum iteration count */
-		int lo;
-		/** maximum iteration count */
-		int hi;
-		/** list of parameter names (and types) */
-		RdpParamList params;
+#endif
+
+			/// <summary>
+			/// Minimum iteration count
+			/// </summary>
+			internal int lo;
+
+			/// <summary>
+			/// Maximum iteration count
+			/// </summary>
+			internal int hi;
+
+#if false
+			/** list of parameter names (and types) */
+			RdpParamList params;
 		/** list of actuals filled in by item_ret */
 		RdpParamList actuals;
 		/** list of alternatives or items */
@@ -210,9 +248,11 @@ namespace Borium.RDP
 				list = list.next;
 			}
 		}
-	}
+#endif
+		}
 
-	static class RdpList
+#if false
+		static class RdpList
 	{
 		String return_name;
 		RdpData production;
@@ -261,27 +301,27 @@ namespace Borium.RDP
 		String data_fields;
 		RdpTableList next;
 	}
-
-	static final int K_EXTENDED = 0;
-	static final int K_INTEGER = 1;
-	static final int K_REAL = 2;
-	static final int K_STRING = 3;
-	static final int K_CODE = 4;
-	static final int K_TOKEN = 5;
-	static final int K_PRIMARY = 6;
-	static final int K_SEQUENCE = 7;
-	static final int K_LIST = 8;
-
-	static final int RDP_OLD = 0;
-	static final int RDP_NEW = 1;
-	static final int RDP_ANY = 2;
-
-	static final int PROMOTE_DONT = 0;
-	static final int PROMOTE_DEFAULT = 1;
-	static final int PROMOTE = 2;
-	static final int PROMOTE_AND_COPY = 3;
-	static final int PROMOTE_ABOVE = 4;
 #endif
+
+		internal const int K_EXTENDED = 0;
+		internal const int K_INTEGER = 1;
+		internal const int K_REAL = 2;
+		internal const int K_STRING = 3;
+		internal const int K_CODE = 4;
+		internal const int K_TOKEN = 5;
+		internal const int K_PRIMARY = 6;
+		internal const int K_SEQUENCE = 7;
+		internal const int K_LIST = 8;
+
+		internal const int RDP_OLD = 0;
+		internal const int RDP_NEW = 1;
+		internal const int RDP_ANY = 2;
+
+		internal const int PROMOTE_DONT = 0;
+		internal const int PROMOTE_DEFAULT = 1;
+		internal const int PROMOTE = 2;
+		internal const int PROMOTE_AND_COPY = 3;
+		internal const int PROMOTE_ABOVE = 4;
 
 		/// <summary>
 		/// Force output files flag
@@ -308,20 +348,25 @@ namespace Borium.RDP
 		/// </summary>
 		public static Pointer<bool> rdp_trace = new Pointer<bool>(false);
 
+		/// <summary>
+		/// Symbol table for the parser
+		/// </summary>
+		private static SymbolScopeData rdp_base;
+
+		/** string from OUTPUT_FILE directive */
+		static string rdp_dir_output_file = null;
+
+		static Set rdp_production_set = new Set();
+
+		/** data from ARG_* directives */
+		static RdpArgList rdp_dir_args = null;
+
+		/// <summary>
+		/// Convert symbols flag
+		/// </summary>
+		private static bool rdp_undeclared_symbols_are_tokens;
+
 #if false
-	/** symbol table for the parser */
-	private static SymbolScopeData rdp_base;
-
-	/** string from OUTPUT_FILE directive */
-	static String rdp_dir_output_file = null;
-
-	static Set rdp_production_set = new Set();
-
-	/** data from ARG_* directives */
-	static RdpArgList rdp_dir_args = null;
-
-	/** convert symbols flag */
-	private static boolean rdp_undeclared_symbols_are_tokens;
 
 	/** sub-production component number */
 	static int rdp_component;
@@ -409,90 +454,94 @@ namespace Borium.RDP
 
 	/** number of tokens + extendeds */
 	static int rdp_token_count = SCAN_P_TOP;
+#endif
 
-	static void rdp_add_arg(ArgKind kind, String key, String var, String desc)
-	{
-		RdpArgList temp = new RdpArgList();
-
-		temp.kind = kind;
-		temp.key = key;
-		temp.var = var;
-		temp.desc = desc;
-		temp.next = rdp_dir_args;
-		rdp_dir_args = temp;
-	}
-
-	static RdpData rdp_find(int id, int kind, int symbol)
-	{
-		return rdp_find(text_get_string(id), kind, symbol);
-	}
-
-	static RdpData rdp_find(String id, int kind, int symbol)
-	{
-		SymbolTable table;
-		// Figure out which table to use
-		switch (kind)
+		private static void rdp_add_arg(ArgKind kind, String key, String var, String desc)
 		{
-			case K_CODE:
-				table = codes;
-				break;
-			case K_TOKEN:
-			case K_EXTENDED:
-				table = tokens;
-				break;
-			default:
-				table = rdp;
+			RdpArgList temp = new RdpArgList();
+
+			temp.kind = kind;
+			temp.key = key;
+			temp.var = var;
+			temp.desc = desc;
+			temp.next = rdp_dir_args;
+			rdp_dir_args = temp;
 		}
-		RdpData temp = null;
-		if ((temp = (RdpData)symbol_lookup_key(table, id, null)) == null)
+
+		private static RdpData rdp_find(int id, int kind, int symbol)
 		{
-			if (symbol == RDP_OLD && rdp_undeclared_symbols_are_tokens)
+			return rdp_find(text_get_string(id), kind, symbol);
+		}
+
+		private static RdpData rdp_find(string id, int kind, int symbol)
+		{
+			SymbolTable table;
+			// Figure out which table to use
+			switch (kind)
 			{
-				text_message(TEXT_WARNING_ECHO, "Undeclared symbol \'" + id + "\' converted to token\n");
-				rdp_process_token(id);
+				case K_CODE:
+					table = codes;
+					break;
+				case K_TOKEN:
+				case K_EXTENDED:
+					table = tokens;
+					break;
+				default:
+					table = rdp;
+					break;
 			}
-			else
+			RdpData temp = null;
+			if ((temp = (RdpData)symbol_lookup_key(table, id, null)) == null)
 			{
-				if (symbol == RDP_OLD)
+				if (symbol == RDP_OLD && rdp_undeclared_symbols_are_tokens)
 				{
-					text_message(TEXT_ERROR_ECHO, "Undeclared symbol \'" + id + "\'\n");
+					text_message(TEXT_WARNING_ECHO, "Undeclared symbol \'" + id + "\' converted to token\n");
+					rdp_process_token(id);
 				}
-				temp = new RdpData();
-				temp.id = text_insert_string(id);
-				symbol_insert_symbol(table, temp);
-				temp.token = SCAN_P_ID;
-				temp.kind = kind;
-				temp.hi = temp.lo = 1; /* set instance numbers to one */
-				temp.first_cardinality = 0;
-				temp.follow.assign(SCAN_P_EOF);
-				temp.follow_cardinality = 1;
-				temp.return_type_stars = 0;
-				switch (kind)
+				else
 				{
-					case K_INTEGER:
-						temp.return_type = "long int";
-						break;
-					case K_REAL:
-						temp.return_type = "double";
-						break;
-					case K_TOKEN:
-					case K_STRING:
-						temp.return_type = "char";
-						temp.return_type_stars = 1;
-						break;
-					default:
-						temp.return_type = "void";
+					if (symbol == RDP_OLD)
+					{
+						text_message(TEXT_ERROR_ECHO, "Undeclared symbol \'" + id + "\'\n");
+					}
+					temp = new RdpData();
+					temp.id = text_insert_string(id);
+					symbol_insert_symbol(table, temp);
+					temp.token = SCAN_P_ID;
+					temp.kind = kind;
+					temp.hi = temp.lo = 1; /* set instance numbers to one */
+					temp.first_cardinality = 0;
+					temp.follow.assign(SCAN_P_EOF);
+					temp.follow_cardinality = 1;
+					temp.return_type_stars = 0;
+					switch (kind)
+					{
+						case K_INTEGER:
+							temp.return_type = "long int";
+							break;
+						case K_REAL:
+							temp.return_type = "double";
+							break;
+						case K_TOKEN:
+						case K_STRING:
+							temp.return_type = "char";
+							temp.return_type_stars = 1;
+							break;
+						default:
+							temp.return_type = "void";
+							break;
+					}
 				}
 			}
+			else if (symbol == RDP_NEW)
+			{
+				text_message(TEXT_ERROR_ECHO, "Doubly declared symbol \'" + id + "\'\n");
+			}
+			return temp;
 		}
-		else if (symbol == RDP_NEW)
-		{
-			text_message(TEXT_ERROR_ECHO, "Doubly declared symbol \'" + id + "\'\n");
-		}
-		return temp;
-	}
 
-	static RdpData rdp_find_extended(String open, String close, int token)
+#if false
+		static RdpData rdp_find_extended(String open, String close, int token)
 	{
 
 		rdp_check_token_valid(open);
@@ -565,41 +614,43 @@ namespace Borium.RDP
 			text_print_statistics();
 		}
 	}
+#endif
 
-	static void rdp_pre_parse()
-	{
-		rdp_dir_output_file = text_force_filetype(rdp_sourcefilename, "out");
-		rdp_base = symbol_new_scope(rdp, "parser");
-		rdp_production_set.assignList(K_PRIMARY, K_SEQUENCE, K_LIST);
+		internal static void rdp_pre_parse()
+		{
+			rdp_dir_output_file = text_force_filetype(rdp_sourcefilename, "out");
+			rdp_base = symbol_new_scope(rdp, "parser");
+			rdp_production_set.assignList(K_PRIMARY, K_SEQUENCE, K_LIST);
 
-		rdp_add_arg(ARG_BLANK, null, null, "");
-		rdp_add_arg(ARG_BOOLEAN, "f", "rdp_filter", "Filter mode (read from stdin and write to stdout)");
-		rdp_add_arg(ARG_BOOLEAN, "l", "rdp_line_echo", "Make a listing");
-		rdp_add_arg(ARG_BOOLEAN, "L", "rdp_lexicalise", "Print lexicalised source file");
-		rdp_add_arg(ARG_STRING, "o", "rdp_outputfilename", "Write output to filename");
-		rdp_add_arg(ARG_BOOLEAN, "s", "rdp_symbol_echo", "Echo each scanner symbol as it is read");
-		rdp_add_arg(ARG_BOOLEAN, "S", "rdp_symbol_statistics", "Print summary symbol table statistics");
-		rdp_add_arg(ARG_NUMERIC, "t", "rdp_tabwidth", "Tab expansion width (default 8)");
-		rdp_add_arg(ARG_NUMERIC, "T", "rdp_textsize", "Text buffer size in bytes for scanner (default 20000)");
-		rdp_add_arg(ARG_BOOLEAN, "v", "rdp_verbose", "Set verbose mode");
-		rdp_add_arg(ARG_STRING, "V", "rdp_vcg_filename", "Write derivation tree to filename in VCG format");
+			rdp_add_arg(ARG_BLANK, null, null, "");
+			rdp_add_arg(ARG_BOOLEAN, "f", "rdp_filter", "Filter mode (read from stdin and write to stdout)");
+			rdp_add_arg(ARG_BOOLEAN, "l", "rdp_line_echo", "Make a listing");
+			rdp_add_arg(ARG_BOOLEAN, "L", "rdp_lexicalise", "Print lexicalised source file");
+			rdp_add_arg(ARG_STRING, "o", "rdp_outputfilename", "Write output to filename");
+			rdp_add_arg(ARG_BOOLEAN, "s", "rdp_symbol_echo", "Echo each scanner symbol as it is read");
+			rdp_add_arg(ARG_BOOLEAN, "S", "rdp_symbol_statistics", "Print summary symbol table statistics");
+			rdp_add_arg(ARG_NUMERIC, "t", "rdp_tabwidth", "Tab expansion width (default 8)");
+			rdp_add_arg(ARG_NUMERIC, "T", "rdp_textsize", "Text buffer size in bytes for scanner (default 20000)");
+			rdp_add_arg(ARG_BOOLEAN, "v", "rdp_verbose", "Set verbose mode");
+			rdp_add_arg(ARG_STRING, "V", "rdp_vcg_filename", "Write derivation tree to filename in VCG format");
 
-		/* add predefined primitive productions */
-		rdp_find("ID", K_STRING, RDP_ANY).token_value = SCAN_P_ID;
-		rdp_find("INTEGER", K_INTEGER, RDP_ANY).token_value = SCAN_P_INTEGER;
-		rdp_find("REAL", K_REAL, RDP_ANY).token_value = SCAN_P_REAL;
-		rdp_find("EOLN", K_STRING, RDP_ANY).token_value = SCAN_P_EOLN;
-	}
+			/* add predefined primitive productions */
+			rdp_find("ID", K_STRING, RDP_ANY).token_value = SCAN_P_ID;
+			rdp_find("INTEGER", K_INTEGER, RDP_ANY).token_value = SCAN_P_INTEGER;
+			rdp_find("REAL", K_REAL, RDP_ANY).token_value = SCAN_P_REAL;
+			rdp_find("EOLN", K_STRING, RDP_ANY).token_value = SCAN_P_EOLN;
+		}
 
-	static RdpData rdp_process_token(String name)
-	{
-		rdp_check_token_valid(name);
-		RdpData result = rdp_find(name, K_TOKEN, RDP_ANY);
-		result.call_count++;
+		static RdpData rdp_process_token(string name)
+		{
+			rdp_check_token_valid(name);
+			RdpData result = rdp_find(name, K_TOKEN, RDP_ANY);
+			result.call_count++;
 
-		return result;
-	}
+			return result;
+		}
 
+#if false
 	private static void rdp_add_continuations(SymbolScopeData base)
 	{
 		RdpData temp = (RdpData)base.nextSymbolInScope();
