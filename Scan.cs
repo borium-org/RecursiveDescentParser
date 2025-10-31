@@ -36,25 +36,23 @@ namespace Borium.RDP
 			internal ScanCommentBlock previous;
 		}
 
-#if false
-		static final int SCAN_P_IGNORE = 0;
-	static final int SCAN_P_ID = 1;
-	static final int SCAN_P_INTEGER = 2;
-	static final int SCAN_P_REAL = 3;
-	static final int SCAN_P_CHAR = 4;
-	static final int SCAN_P_CHAR_ESC = 5;
-	static final int SCAN_P_STRING = 6;
-	static final int SCAN_P_STRING_ESC = 7;
-	static final int SCAN_P_COMMENT = 8;
-	static final int SCAN_P_COMMENT_VISIBLE = 9;
-	static final int SCAN_P_COMMENT_NEST = 10;
-	static final int SCAN_P_COMMENT_NEST_VISIBLE = 11;
-	static final int SCAN_P_COMMENT_LINE = 12;
-	static final int SCAN_P_COMMENT_LINE_VISIBLE = 13;
-	static final int SCAN_P_EOF = 14;
-	static final int SCAN_P_EOLN = 15;
-	static final int SCAN_P_TOP = 16;
-#endif
+		internal const int SCAN_P_IGNORE = 0;
+		internal const int SCAN_P_ID = 1;
+		internal const int SCAN_P_INTEGER = 2;
+		internal const int SCAN_P_REAL = 3;
+		internal const int SCAN_P_CHAR = 4;
+		internal const int SCAN_P_CHAR_ESC = 5;
+		internal const int SCAN_P_STRING = 6;
+		internal const int SCAN_P_STRING_ESC = 7;
+		internal const int SCAN_P_COMMENT = 8;
+		internal const int SCAN_P_COMMENT_VISIBLE = 9;
+		internal const int SCAN_P_COMMENT_NEST = 10;
+		internal const int SCAN_P_COMMENT_NEST_VISIBLE = 11;
+		internal const int SCAN_P_COMMENT_LINE = 12;
+		internal const int SCAN_P_COMMENT_LINE_VISIBLE = 13;
+		internal const int SCAN_P_EOF = 14;
+		internal const int SCAN_P_EOLN = 15;
+		internal const int SCAN_P_TOP = 16;
 
 		private static bool scan_case_insensitive = false;
 		private static bool scan_show_skips = false;

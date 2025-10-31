@@ -7,17 +7,17 @@ namespace Borium.RDP
 	internal class Set
 	{
 #if false
-		public interface Indent
+		internal interface Indent
 		{
 			int indent();
 		}
 
-		public static int set_cardinality(Set src)
+		internal static int set_cardinality(Set src)
 		{
 			return src == null ? 0 : src.cardinality();
 		}
 
-		public static int set_print_element(int element, String[] element_names, boolean comments)
+		internal static int set_print_element(int element, String[] element_names, boolean comments)
 		{
 			if (element_names == null)
 			{
@@ -31,41 +31,47 @@ namespace Borium.RDP
 				return text_printf(elementString);
 			}
 		}
+#endif
 
-		private long[] data = new long[10];
+		private uint[] data = new uint[10];
 
+#if false
 		/** clear a dst and then set only those bits specified by src */
-		public void assign(int element)
+		internal void assign(int element)
 		{
 			clear();
 			set(element);
 		}
+#endif
 
-		public void assignList(int... bits)
+		internal void assignList(params int[] bits)
 		{
 			clear();
-			for (int bit : bits)
+			foreach (int bit in bits)
 			{
 				set(bit);
 			}
 		}
 
+#if false
 		/** assign one set to another */
-		public void assignSet(Set src)
+		internal void assignSet(Set src)
 		{
 			clear();
 			unite(src);
 		}
+#endif
 
-		public void clear()
+		internal void clear()
 		{
-			for (int i = 0; i < data.length; i++)
+			for (int i = 0; i < data.Length; i++)
 			{
 				data[i] = 0;
 			}
 		}
 
-		public boolean includes(int element)
+#if false
+		internal boolean includes(int element)
 		{
 			grow(element);
 			int index = element / 32;
@@ -73,7 +79,7 @@ namespace Borium.RDP
 			return (data[index] & 1 << element) != 0;
 		}
 
-		public void intersect(Set src)
+		internal void intersect(Set src)
 		{
 			/* only iterate over shortest set */
 			int length = length() < src.length() ? length() : src.length();
@@ -88,7 +94,7 @@ namespace Borium.RDP
 			}
 		}
 
-		public void print(String[] element_names, int line_length)
+		internal void print(String[] element_names, int line_length)
 		{
 			int column = 0;
 			boolean not_first = false;
@@ -113,7 +119,7 @@ namespace Borium.RDP
 			}
 		}
 
-		public void print(String[] element_names, int initialOffset, Indent indent, int line_length, boolean comments)
+		internal void print(String[] element_names, int initialOffset, Indent indent, int line_length, boolean comments)
 		{
 			int column = initialOffset;
 			boolean not_first = false;
@@ -137,16 +143,18 @@ namespace Borium.RDP
 				column += set_print_element(element, element_names, comments);
 			}
 		}
+#endif
 
-		public void set(int element)
+		internal void set(int element)
 		{
 			grow(element);
 			int index = element / 32;
 			element &= 0x1F;
-			data[index] |= 1 << element;
+			data[index] |= (uint)(1 << element);
 		}
 
-		public void unite(Set src)
+#if false
+		internal void unite(Set src)
 		{
 			grow(src.length());
 			for (int i = 0; i < data.length; i++)
@@ -186,18 +194,19 @@ namespace Borium.RDP
 			}
 			return cardinality;
 		}
+#endif
 
 		private void grow(int bits)
 		{
 			int index = (bits + 31) / 32;
-			if (index >= data.length)
+			if (index >= data.Length)
 			{
-				long[] newData = new long[index + 5];
-				for (int i = 0; i < newData.length; i++)
+				uint[] newData = new uint[index + 5];
+				for (int i = 0; i < newData.Length; i++)
 				{
 					newData[i] = 0;
 				}
-				for (int i = 0; i < data.length; i++)
+				for (int i = 0; i < data.Length; i++)
 				{
 					newData[i] = data[i];
 				}
@@ -205,6 +214,7 @@ namespace Borium.RDP
 			}
 		}
 
+#if false
 		private int length()
 		{
 			return data.length;
