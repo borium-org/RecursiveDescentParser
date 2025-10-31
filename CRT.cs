@@ -20,49 +20,52 @@ namespace Borium.RDP
 
 			return milliseconds;
 		}
-#if false
-		internal static final int EOF = -1;
 
+		internal const int EOF = -1;
+
+#if false
 		internal static String capitalizeFirst(String text)
 		{
 			return Character.toUpperCase(text.charAt(0)) + text.substring(1);
 		}
+#endif
 
-		internal static void fclose(InputStream file)
+		internal static void fclose(TextReader file)
 		{
 			try
 			{
-				file.close();
+				file.Close();
 			}
-			catch (IOException e)
+			catch (IOException)
 			{
 			}
 		}
 
-		internal static boolean feof(InputStream file)
+		internal static bool feof(TextReader file)
 		{
 			try
 			{
-				return file.available() == 0;
+				return file.Peek() == EOF;
 			}
-			catch (IOException e)
+			catch (IOException)
 			{
 			}
 			return true;
 		}
 
-		internal static int getc(InputStream file)
+		internal static int getc(TextReader file)
 		{
 			try
 			{
-				return file.read();
+				return file.Read();
 			}
-			catch (IOException e)
+			catch (IOException)
 			{
 			}
 			return EOF;
 		}
 
+#if false
 		internal static boolean isalnum(int ch)
 		{
 			return isalpha(ch) || isdigit(ch);

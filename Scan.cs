@@ -16,18 +16,16 @@ namespace Borium.RDP
 		{
 			internal int token;
 			internal int extended;
-#if false
-		ScanCommentBlock comment_block;
-		String sourcefilename;
-		int line_number;
-		int u;
-		int i;
-		double r;
-		Object p;
-#endif
+			internal ScanCommentBlock comment_block;
+			internal string sourcefilename;
+			internal int line_number;
+			internal int u;
+			internal int i;
+			internal double r;
+			internal object p;
 		}
 
-		private class ScanCommentBlock
+		internal class ScanCommentBlock
 		{
 			internal string comment;
 			internal int column;
@@ -71,27 +69,29 @@ namespace Borium.RDP
 	private static int last_column = 0;
 	private static bool retain_comments = false;
 	private static int scan_sequence_running_number = 0;
+#endif
 
-	internal static void memcpy(ScanData to, ScanData from)
-	{
-		to.next_hash = from.next_hash;
-		to.last_hash.set(from.last_hash.value());
-		to.next_scope = from.next_scope;
-		to.scope = from.scope;
-		to.hash = from.hash;
-		to.id = from.id;
-		to.token = from.token;
-		to.extended = from.extended;
-		to.comment_block = from.comment_block;
-		to.sourcefilename = from.sourcefilename;
-		to.line_number = from.line_number;
-		to.u = from.u;
-		to.i = from.i;
-		to.r = from.r;
-		to.p = from.p;
-	}
+		internal static void memcpy(ScanData to, ScanData from)
+		{
+			to.next_hash = from.next_hash;
+			to.last_hash.set(from.last_hash.value());
+			to.next_scope = from.next_scope;
+			to.scope = from.scope;
+			to.hash = from.hash;
+			to.id = from.id;
+			to.token = from.token;
+			to.extended = from.extended;
+			to.comment_block = from.comment_block;
+			to.sourcefilename = from.sourcefilename;
+			to.line_number = from.line_number;
+			to.u = from.u;
+			to.i = from.i;
+			to.r = from.r;
+			to.p = from.p;
+		}
 
-	internal static void memset(ScanData to)
+#if false
+		internal static void memset(ScanData to)
 	{
 		to.next_hash = null;
 		to.last_hash.set(null);
@@ -669,18 +669,18 @@ namespace Borium.RDP
 			scan_lexicalise_flag = true;
 		}
 
-	internal static void scan_load_keyword(String id1, String id2, int token, int extended)
-	{
-		ScanData d = new ScanData();
-		d.id = text_insert_string(id1);
-		if (id2 != null)
+		internal static void scan_load_keyword(String id1, String id2, int token, int extended)
 		{
-			text_insert_string(id2);
+			ScanData d = new ScanData();
+			d.id = text_insert_string(id1);
+			if (id2 != null)
+			{
+				text_insert_string(id2);
+			}
+			d.token = token;
+			d.extended = extended;
+			symbol_insert_symbol(scan_table, d);
 		}
-		d.token = token;
-		d.extended = extended;
-		symbol_insert_symbol(scan_table, d);
-	}
 
 #if false
 	internal static boolean scan_test(String production, int valid, Set stop)

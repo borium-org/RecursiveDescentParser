@@ -14,46 +14,68 @@ namespace Borium.RDP
 			TEXT_FATAL_ECHO
 		}
 
-#if false
-		private static class SourceList
+		private class SourceList
 		{
-			/** copy of filename */
-			String name;
+			/// <summary>
+			/// Copy of filename
+			/// </summary>
+			internal string name;
 
-			/** copy of total errors for this file */
-			int errors;
+			/// <summary>
+			/// Copy of total errors for this file
+			/// </summary>
+			internal int errors;
 
-			/** copy of current file handle */
-			InputStream file;
+			/// <summary>
+			/// Copy of current file handle
+			/// </summary>
+			internal TextReader file;
 
-			/** copy of first character of current source line */
-			int first_char;
+			/// <summary>
+			/// Copy of first character of current source line
+			/// </summary>
+			internal int first_char;
 
-			/** copy of last character of current source line */
-			int last_char;
+			/// <summary>
+			/// Copy of last character of current source line
+			/// </summary>
+			internal int last_char;
 
-			/** copy of current line in this file */
-			int linenumber;
+			/// <summary>
+			/// Copy of current line in this file
+			/// </summary>
+			internal int linenumber;
 
-			/** copy of current text character */
-			int text_char;
+			/// <summary>
+			/// Copy of current text character
+			/// </summary>
+			internal int text_char;
 
-			/** copy of pointer to current source character */
-			int text_current;
+			/// <summary>
+			/// Copy of pointer to current source character
+			/// </summary>
+			internal int text_current;
 
-			/** copy of pointer to the last thing read by the scanner */
-			ScanData text_scan_data = new ScanData();
+			/// <summary>
+			/// Copy of pointer to the last thing read by the scanner
+			/// </summary>
+			internal ScanData text_scan_data = new ScanData();
 
-			/** copy of first character of this symbol */
-			int symbol_first_char;
+			/// <summary>
+			/// copy of first character of this symbol
+			/// </summary>
+			internal int symbol_first_char;
 
-			/** copy of total warnings for this file */
-			int warnings;
+			/// <summary>
+			/// Copy of total warnings for this file
+			/// </summary>
+			internal int warnings;
 
-			/** previous file descriptor */
-			SourceList previous;
+			/// <summary>
+			/// Previous file descriptor
+			/// </summary>
+			internal SourceList previous;
 		}
-#endif
 
 		/// <summary>
 		/// Maximum number of error markers per line
@@ -102,10 +124,10 @@ namespace Borium.RDP
 		/// </summary>
 		private static int linenumber = 0;
 
-#if false
-		/** cumulative line_number */
+		/// <summary>
+		/// Cumulative line_number
+		/// </summary>
 		private static int sequence_number = 0;
-#endif
 
 		/// <summary>
 		/// TEXT_MESSAGES
@@ -122,10 +144,10 @@ namespace Borium.RDP
 		/// </summary>
 		private static int echo_num = -1;
 
-#if false
-		/** current text character */
-		static int text_char = ' ';
-#endif
+		/// <summary>
+		/// Current text character
+		/// </summary>
+		internal static int text_char = ' ';
 
 		/// <summary>
 		/// First character of current source line
@@ -167,19 +189,27 @@ namespace Borium.RDP
 		/// </summary>
 		internal static ScanData text_scan_data;
 
-#if false
-		/** enable line echoing */
-		private static boolean echo;
+		/// <summary>
+		/// Enable line echoing
+		/// </summary>
+		private static bool echo;
 
-		/** current file handle */
-		private static InputStream file;
+		/// <summary>
+		/// Current file handle
+		/// </summary>
+		private static TextReader file;
 
-		/** head of file descriptor list */
+		/// <summary>
+		/// Head of file descriptor list
+		/// </summary>
 		private static SourceList source_descriptor_list;
 
-		/** first character in this symbol */
+		/// <summary>
+		/// First character in this symbol
+		/// </summary>
 		private static int symbol_first_char;
 
+#if false
 		internal static int text_column_number()
 		{
 			return first_char - text_current;
@@ -200,12 +230,12 @@ namespace Borium.RDP
 			return fullname;
 		}
 
-#if false
-		internal static void text_echo(boolean i)
+		internal static void text_echo(bool i)
 		{
 			echo = i;
 		}
 
+#if false
 		internal static String text_extract_filename(String fname)
 		{
 			String name = fname;
@@ -262,7 +292,6 @@ namespace Borium.RDP
 			return fullname;
 		}
 
-#if false
 		/** advance text_current, reading another line if necessary */
 		internal static void text_get_char()
 		{
@@ -317,7 +346,6 @@ namespace Borium.RDP
 			}
 			text_char = text_bot[--text_current];
 		}
-#endif
 
 		internal static string text_get_string(int start)
 		{
@@ -490,19 +518,18 @@ namespace Borium.RDP
 			return message.Length + 1;
 		}
 
-#if false
-		internal static InputStream text_open(String s)
+		internal static TextReader text_open(string s)
 		{
-			InputStream handle = null;
+			TextReader handle = null;
 			try
 			{
-				handle = s.equals("-") ? System.in : new FileInputStream(s);
+				handle = s.Equals("-") ? Console.In : new StreamReader(s);
 			}
 			catch (FileNotFoundException e)
 			{
 				handle = null;
 			}
-			InputStream old = file;
+			TextReader old = file;
 			if (handle != null) // we found a file
 			{
 				if (old != null) // save current file context
@@ -540,6 +567,7 @@ namespace Borium.RDP
 			return handle;
 		}
 
+#if false
 		internal static void text_print_statistics()
 		{
 			long symbolcount = text_top,
@@ -564,23 +592,25 @@ namespace Borium.RDP
 			// text_printf(__DATE__ + " " + __TIME__);
 			text_printf("Sep 19 2015 11:45:00");
 		}
+#endif
 
-		internal static int text_printf(String str)
+		internal static int text_printf(string str)
 		{
 			if (str != null)
 			{
-				for (char ch : str.toCharArray())
+				foreach (char ch in str)
 				{
 					if (ch == '\n')
 					{
-						messages.print('\r');
+						messages.Write('\r');
 					}
-					messages.print("" + ch);
+					messages.Write("" + ch);
 				}
 			}
-			return str == null ? 0 : str.length();
+			return str == null ? 0 : str.Length;
 		}
 
+#if false
 		internal static void text_redirect(PrintStream file)
 		{
 			messages = file;
@@ -590,16 +620,19 @@ namespace Borium.RDP
 		{
 			return sequence_number;
 		}
+#endif
 
 		internal static int text_total_errors()
 		{
 			return totalerrors;
 		}
 
+#if false
 		internal static String text_uppercase_string(String str)
 		{
 			return str.toUpperCase();
 		}
+#endif
 
 		private static void text_close()
 		{
@@ -640,7 +673,7 @@ namespace Borium.RDP
 			// print backwards from last character of text buffer
 			for (int temp = first_char - 1; temp > last_char; temp--)
 			{
-				messages.print(text_bot[temp]);
+				messages.Write(text_bot[temp]);
 			}
 			// now print out the echo number line
 			if (echo_num >= 0)
@@ -654,16 +687,15 @@ namespace Borium.RDP
 				{
 					while (char_count++ < echo_pos[num_count] - 1)
 					{
-						messages.print('-');
+						messages.Write('-');
 					}
-					messages.print((char)('1' + num_count));
+					messages.Write((char)('1' + num_count));
 				}
-				messages.println();
+				messages.WriteLine();
 			}
 			// reset echo numbering array pointer
 			echo_num = -1;
 		}
-#endif
 
 		private static void text_echo_line_number()
 		{

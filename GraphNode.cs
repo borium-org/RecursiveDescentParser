@@ -7,11 +7,10 @@
 		/// </summary>
 		internal static int graph_next_node_count = 1;
 
-#if false
 		GraphNode next_node;
 		GraphNode previous_node;
 
-		void deleteNode()
+		internal void deleteNode()
 		{
 			// delete out edges
 			while (next_out_edge != null)
@@ -31,7 +30,6 @@
 			// point in node at our out
 			previous_node.next_node = next_node;
 		}
-#endif
 
 		internal abstract int getId();
 

@@ -90,19 +90,19 @@ namespace Borium.RDP
 		}
 
 		/** next symbol in hash list */
-		Symbol next_hash;
+		internal Symbol next_hash;
 
 		/** pointer to next pointer of last_symbol in hash list */
-		Pointer<Symbol> last_hash = new Pointer<Symbol>();
+		internal Pointer<Symbol> last_hash = new Pointer<Symbol>();
 
 		/** next symbol in scope list */
-		Symbol next_scope;
+		internal Symbol next_scope;
 
 		/** pointer to the scope symbol */
-		Symbol scope;
+		internal Symbol scope;
 
 		/** hash value for quick searching */
-		int hash;
+		internal int hash;
 
 		internal int id;
 
