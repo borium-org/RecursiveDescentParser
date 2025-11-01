@@ -383,11 +383,10 @@ namespace Borium.RDP
 			return start;
 		}
 
-#if false
 		internal static int text_insert_characters(string str)
 		{
 			int start = text_top;
-			for (char ch : str.toCharArray())
+			foreach (char ch in str)
 			{
 				text_insert_char(ch);
 			}
@@ -405,7 +404,6 @@ namespace Borium.RDP
 			text_insert_char((char)(n % 10 + '0'));
 			return start;
 		}
-#endif
 
 		internal static int text_insert_string(string str)
 		{
@@ -418,8 +416,13 @@ namespace Borium.RDP
 			return start;
 		}
 
-#if false
-		/** put an id_number into text buffer */
+		/// <summary>
+		/// Put an id_number into text buffer
+		/// </summary>
+		/// <param name="prefix"></param>
+		/// <param name="str"></param>
+		/// <param name="n"></param>
+		/// <returns></returns>
 		internal static int text_insert_substring(string prefix, string str, int n)
 		{
 			int start = text_top;
@@ -433,6 +436,7 @@ namespace Borium.RDP
 			return start;
 		}
 
+#if false
 		internal static boolean text_is_valid_C_id(string s)
 		{
 			boolean temp = true;

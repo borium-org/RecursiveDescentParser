@@ -3,10 +3,10 @@ using System.Reflection;
 using Borium.RDP;
 using static Borium.RDP.Arg;
 using static Borium.RDP.CRT;
-//using static Borium.RDP.Arg.ArgKind;
+using static Borium.RDP.Arg.ArgKind;
 using static Borium.RDP.GraphBase;
 using static Borium.RDP.RdpAux;
-//using static Borium.RDP.RdpAux.RdpParamType;
+using static Borium.RDP.RdpAux.RdpParamType;
 using static Borium.RDP.RdpGram;
 using static Borium.RDP.Scan;
 using static Borium.RDP.Symbol;
@@ -31,15 +31,15 @@ namespace Borium.RDP
 		{
 			int rdp_edge_kind;
 
-			RdpTreeEdgeData(int kind)
+			internal RdpTreeEdgeData(int kind)
 			{
 				rdp_edge_kind = kind;
 			}
 		}
 
-		private class RdpTreeNodeData : GraphNode
+		internal class RdpTreeNodeData : GraphNode
 		{
-			ScanData data = new ScanData();
+			internal ScanData data = new ScanData();
 
 			internal override int getId()
 			{
@@ -334,10 +334,8 @@ private static string RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compile
 
 					text_get_char();
 					scan_();
-#if false
 					// call parser at top level
 					unit(rdp_tree_root = rdp_add_node("unit", rdp_tree));
-#endif
 					if (text_total_errors() != 0)
 					{
 						text_message(TEXT_FATAL, "error" + (text_total_errors() == 1 ? "" : "s")
@@ -390,2156 +388,2154 @@ private static string RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compile
 #endif
 		}
 
-#if false
 		protected static void unit(RdpTreeNodeData rdp_tree)
-{
-	if (scan_test_set(null, rdp_unit_2_first, null))
-	{
-		while (true)
 		{
-			if (scan_test(null, SCAN_P_ID, null))
+			if (scan_test_set(null, rdp_unit_2_first, null))
 			{
-				rule(rdp_add_child("rule", rdp_tree));
-			}
-			else if (scan_test_set(null, rdp_unit_1_first, null))
-			{
-				dir(rdp_add_child("dir", rdp_tree));
-			}
-			else
-			{
-				scan_test_set(null, rdp_unit_2_first, unit_stop);
-			}
-			if (!scan_test_set(null, rdp_unit_2_first, null))
-			{
-				break;
-			}
-		}
-	}
-	else if (rdp_tree_update)
-	{
-		RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
-		temp.data.id = 0;
-		temp.data.token = SCAN_P_ID;
-	}
-	if (rdp_rule_count == 0)
-	{
-		text_message(TEXT_FATAL, "no rule definitions found\n");
-	}
-	scan_test_set(null, unit_stop, unit_stop);
-}
-
-private static string code(RdpTreeNodeData rdp_tree)
-{
-	string result;
-	{
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_9142 /* [* */, code_stop);
-		result = text_get_string(text_scan_data.id);
-		scan_();
-		scan_test_set(null, code_stop, code_stop);
-	}
-	return result;
-}
-
-private static void dir(RdpTreeNodeData rdp_tree)
-{
-	string filename;
-	string key;
-	string var = null;
-	string desc;
-	string name;
-	int size;
-	int prime;
-	string compare;
-	string hash;
-	string print;
-	string data_fields;
-	string s;
-	int n;
-	string str;
-	{
-		if (scan_test(null, RDP_T_INCLUDE, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_INCLUDE, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			filename = String(rdp_add_child("String", rdp_tree));
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-			if (rdp_pass == 2)
-			{
-				if (text_open(filename) == null)
-				{
-					text_message(TEXT_ERROR_ECHO, "include file '" + filename + "' not found\n");
-				}
-				else
-				{
-					text_get_char();
-					scan_();
-				}
-
-			}
-		}
-		else if (scan_test(null, RDP_T_ARG_BOOLEAN, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_ARG_BOOLEAN, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, SCAN_P_ID, dir_stop);
-			key = text_get_string(text_scan_data.id);
-			scan_();
-			{ /* Start of rdp_dir_3 */
 				while (true)
 				{
-					scan_test_set(null, rdp_dir_3_first, dir_stop);
+					if (scan_test(null, SCAN_P_ID, null))
 					{
-						if (scan_test(null, SCAN_P_ID, null))
-						{
-							if (rdp_tree_update)
-							{
-								rdp_add_child(null, rdp_tree);
-							}
-							scan_test(null, SCAN_P_ID, dir_stop);
-							var = text_get_string(text_scan_data.id);
-							scan_();
-						}
-						else if (scan_test(null, RDP_T_9142 /* [* */, null))
-						{
-							var = code(rdp_add_child("code", rdp_tree));
-						}
-						else
-						{
-							scan_test_set(null, rdp_dir_3_first, dir_stop);
-						}
+						rule(rdp_add_child("rule", rdp_tree));
 					}
-					break; /* hi limit is 1! */
-				}
-			} /* end of rdp_dir_3 */
-			desc = String(rdp_add_child("String", rdp_tree));
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-			if (rdp_pass == 2)
-			{
-				rdp_add_arg(ARG_BOOLEAN, key, var, desc);
-			}
-		}
-		else if (scan_test(null, RDP_T_ARG_NUMERIC, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_ARG_NUMERIC, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, SCAN_P_ID, dir_stop);
-			key = text_get_string(text_scan_data.id);
-			scan_();
-			{ /* Start of rdp_dir_7 */
-				while (true)
-				{
-					scan_test_set(null, rdp_dir_7_first, dir_stop);
+					else if (scan_test_set(null, rdp_unit_1_first, null))
 					{
-						if (scan_test(null, SCAN_P_ID, null))
-						{
-							if (rdp_tree_update)
-							{
-								rdp_add_child(null, rdp_tree);
-							}
-							scan_test(null, SCAN_P_ID, dir_stop);
-							var = text_get_string(text_scan_data.id);
-							scan_();
-						}
-						else if (scan_test(null, RDP_T_9142 /* [* */, null))
-						{
-							var = code(rdp_add_child("code", rdp_tree));
-						}
-						else
-						{
-							scan_test_set(null, rdp_dir_7_first, dir_stop);
-						}
-					}
-					break; /* hi limit is 1! */
-				}
-			} /* end of rdp_dir_7 */
-			desc = String(rdp_add_child("String", rdp_tree));
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-			if (rdp_pass == 2)
-			{
-				rdp_add_arg(ARG_NUMERIC, key, var, desc);
-			}
-		}
-		else if (scan_test(null, RDP_T_ARG_STRING, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_ARG_STRING, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, SCAN_P_ID, dir_stop);
-			key = text_get_string(text_scan_data.id);
-			scan_();
-			{ /* Start of rdp_dir_11 */
-				while (true)
-				{
-					scan_test_set(null, rdp_dir_11_first, dir_stop);
-					{
-						if (scan_test(null, SCAN_P_ID, null))
-						{
-							if (rdp_tree_update)
-							{
-								rdp_add_child(null, rdp_tree);
-							}
-							scan_test(null, SCAN_P_ID, dir_stop);
-							var = text_get_string(text_scan_data.id);
-							scan_();
-						}
-						else if (scan_test(null, RDP_T_9142 /* [* */, null))
-						{
-							var = code(rdp_add_child("code", rdp_tree));
-						}
-						else
-						{
-							scan_test_set(null, rdp_dir_11_first, dir_stop);
-						}
-					}
-					break; /* hi limit is 1! */
-				}
-			} /* end of rdp_dir_11 */
-			desc = String(rdp_add_child("String", rdp_tree));
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-			if (rdp_pass == 2)
-			{
-				rdp_add_arg(ARG_STRING, key, var, desc);
-			}
-		}
-		else if (scan_test(null, RDP_T_ARG_BLANK, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_ARG_BLANK, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			desc = String(rdp_add_child("String", rdp_tree));
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-			if (rdp_pass == 2)
-			{
-				rdp_add_arg(ARG_BLANK, null, null, desc);
-			}
-		}
-		else if (scan_test(null, RDP_T_SYMBOL_TABLE, null))
-		{
-			RdpTableList temp;
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_SYMBOL_TABLE, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, SCAN_P_ID, dir_stop);
-			name = text_get_string(text_scan_data.id);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, SCAN_P_INTEGER, dir_stop);
-			size = text_scan_data.i;
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, SCAN_P_INTEGER, dir_stop);
-			prime = text_scan_data.i;
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, SCAN_P_ID, dir_stop);
-			compare = text_get_string(text_scan_data.id);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, SCAN_P_ID, dir_stop);
-			hash = text_get_string(text_scan_data.id);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, SCAN_P_ID, dir_stop);
-			print = text_get_string(text_scan_data.id);
-			scan_();
-			data_fields = code(rdp_add_child("code", rdp_tree));
-			if (rdp_pass == 2)
-			{
-				temp = new RdpTableList();
-				temp.name = name;
-				temp.size = size;
-				temp.prime = prime;
-				temp.compare = compare;
-				temp.hash = hash;
-				temp.print = print;
-				temp.data_fields = data_fields;
-				temp.next = rdp_dir_symbol_table;
-				rdp_dir_symbol_table = temp;
-			}
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-		}
-		else if (scan_test(null, RDP_T_USES, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_USES, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			s = String(rdp_add_child("String", rdp_tree));
-			if (rdp_pass == 2)
-			{
-				RdpStringList temp = new RdpStringList();
-				temp.str1 = s;
-				temp.next = rdp_dir_include;
-				rdp_dir_include = temp;
-
-			}
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-		}
-		else if (scan_test(null, RDP_T_OUTPUT_FILE, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_OUTPUT_FILE, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			s = String(rdp_add_child("String", rdp_tree));
-			rdp_dir_output_file = s;
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-		}
-		else if (scan_test(null, RDP_T_PARSER, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_PARSER, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, SCAN_P_ID, dir_stop);
-			name = text_get_string(text_scan_data.id);
-			scan_();
-			if (rdp_pass == 2)
-			{
-				rdp_start_prod = rdp_find(name, K_PRIMARY, RDP_OLD);
-				rdp_start_prod.call_count++;
-			}
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-		}
-		else if (scan_test(null, RDP_T_POST_PARSE, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_POST_PARSE, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			s = code(rdp_add_child("code", rdp_tree));
-			rdp_dir_post_parse = s;
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-		}
-		else if (scan_test(null, RDP_T_PRE_PARSE, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_PRE_PARSE, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			s = code(rdp_add_child("code", rdp_tree));
-			rdp_dir_pre_parse = s;
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-		}
-		else if (scan_test(null, RDP_T_GLOBAL, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_GLOBAL, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			s = code(rdp_add_child("code", rdp_tree));
-			rdp_dir_global = s;
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-		}
-		else if (scan_test(null, RDP_T_SUFFIX, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_SUFFIX, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			s = String(rdp_add_child("String", rdp_tree));
-			rdp_dir_suffix = s;
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-		}
-		else if (scan_test(null, RDP_T_TITLE, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_TITLE, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			s = String(rdp_add_child("String", rdp_tree));
-			rdp_dir_title = s;
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-		}
-		else if (scan_test(null, RDP_T_MAX_ERRORS, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_MAX_ERRORS, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, SCAN_P_INTEGER, dir_stop);
-			n = text_scan_data.i;
-			scan_();
-			rdp_dir_max_errors = n;
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-		}
-		else if (scan_test(null, RDP_T_MAX_WARNINGS, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_MAX_WARNINGS, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, SCAN_P_INTEGER, dir_stop);
-			n = text_scan_data.i;
-			scan_();
-			rdp_dir_max_warnings = n;
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-		}
-		else if (scan_test(null, RDP_T_PASSES, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_PASSES, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, SCAN_P_INTEGER, dir_stop);
-			n = text_scan_data.i;
-			scan_();
-			rdp_dir_passes = n;
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-		}
-		else if (scan_test(null, RDP_T_MULTIPLE_SOURCE_FILES, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_MULTIPLE_SOURCE_FILES, dir_stop);
-			scan_();
-			rdp_dir_multiple_source_files = 1;
-		}
-		else if (scan_test(null, RDP_T_TAB_WIDTH, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_TAB_WIDTH, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, SCAN_P_INTEGER, dir_stop);
-			n = text_scan_data.i;
-			scan_();
-			rdp_dir_tab_width = n;
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-		}
-		else if (scan_test(null, RDP_T_TEXT_SIZE, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_TEXT_SIZE, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, SCAN_P_INTEGER, dir_stop);
-			n = text_scan_data.i;
-			scan_();
-			rdp_dir_text_size = n;
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-		}
-		else if (scan_test_set(null, rdp_dir_37_first, null))
-		{
-			{ /* Start of rdp_dir_34 */
-				while (true)
-				{
-					scan_test_set(null, rdp_dir_34_first, dir_stop);
-					{
-						if (scan_test(null, RDP_T_DERIVATION_TREE, null))
-						{
-							if (rdp_tree_update)
-							{
-								rdp_add_child(null, rdp_tree);
-							}
-							scan_test(null, RDP_T_DERIVATION_TREE, dir_stop);
-							scan_();
-							rdp_dir_derivation_tree = 1;
-						}
-						else if (scan_test(null, RDP_T_ANNOTATED_EPSILON_TREE, null))
-						{
-							if (rdp_tree_update)
-							{
-								rdp_add_child(null, rdp_tree);
-							}
-							scan_test(null, RDP_T_ANNOTATED_EPSILON_TREE, dir_stop);
-							scan_();
-							rdp_dir_annotated_epsilon_tree = 1;
-							rdp_dir_epsilon_tree = 1;
-						}
-						else if (scan_test(null, RDP_T_EPSILON_TREE, null))
-						{
-							if (rdp_tree_update)
-							{
-								rdp_add_child(null, rdp_tree);
-							}
-							scan_test(null, RDP_T_EPSILON_TREE, dir_stop);
-							scan_();
-							rdp_dir_epsilon_tree = 1;
-						}
-						else if (scan_test(null, RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, null))
-						{
-							if (rdp_tree_update)
-							{
-								rdp_add_child(null, rdp_tree);
-							}
-							scan_test(null, RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, dir_stop);
-							scan_();
-							rdp_dir_args = null;
-						}
-						else if (scan_test(null, RDP_T_TREE, null))
-						{
-							if (rdp_tree_update)
-							{
-								rdp_add_child(null, rdp_tree);
-							}
-							scan_test(null, RDP_T_TREE, dir_stop);
-							scan_();
-						}
-						else
-						{
-							scan_test_set(null, rdp_dir_34_first, dir_stop);
-						}
-					}
-					break; /* hi limit is 1! */
-				}
-			} /* end of rdp_dir_34 */
-			if (rdp_pass == 1)
-			{
-				rdp_dir_tree = 1;
-			}
-			if (scan_test(null, RDP_T_40 /* ( */, null))
-			{ /* Start of rdp_dir_36 */
-				while (true)
-				{
-					{
-						if (rdp_tree_update)
-						{
-							rdp_add_child(null, rdp_tree);
-						}
-						scan_test(null, RDP_T_40 /* ( */, dir_stop);
-						scan_();
-						str = code(rdp_add_child("code", rdp_tree));
-						rdp_dir_tree_node_fields = str;
-						str = code(rdp_add_child("code", rdp_tree));
-						rdp_dir_tree_edge_fields = str;
-						if (rdp_tree_update)
-						{
-							rdp_add_child(null, rdp_tree);
-						}
-						scan_test(null, RDP_T_41 /* ) */, dir_stop);
-						scan_();
-					}
-					break; /* hi limit is 1! */
-				}
-			} /* end of rdp_dir_36 */
-			else
-			{
-				/* default action processing for rdp_dir_36 */
-				if (rdp_tree_update)
-				{
-					RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
-					temp.data.id = 0;
-					temp.data.token = SCAN_P_ID;
-				}
-			}
-		}
-		else if (scan_test(null, RDP_T_CASE_INSENSITIVE, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_CASE_INSENSITIVE, dir_stop);
-			scan_();
-			rdp_dir_case_insensitive = 1;
-		}
-		else if (scan_test(null, RDP_T_RETAIN_COMMENTS, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_RETAIN_COMMENTS, dir_stop);
-			scan_();
-			rdp_dir_retain_comments = 1;
-		}
-		else if (scan_test(null, RDP_T_SHOW_SKIPS, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_SHOW_SKIPS, dir_stop);
-			scan_();
-			rdp_dir_show_skips = 1;
-		}
-		else if (scan_test(null, RDP_T_OPTION, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_OPTION, dir_stop);
-			scan_();
-			text_message(TEXT_ERROR_ECHO, "Obsolete directive: OPTION replaced by ARG_* at version 1.5\n");
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			String(rdp_add_child("String", rdp_tree));
-			if (scan_test(null, RDP_T_9142 /* [* */, null))
-			{ /* Start of rdp_dir_42 */
-				while (true)
-				{
-					{
-						code(rdp_add_child("code", rdp_tree));
-					}
-					break; /* hi limit is 1! */
-				}
-			} /* end of rdp_dir_42 */
-			else
-			{
-				/* default action processing for rdp_dir_42 */
-				if (rdp_tree_update)
-				{
-					RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
-					temp.data.id = 0;
-					temp.data.token = SCAN_P_ID;
-				}
-			}
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-		}
-		else if (scan_test(null, RDP_T_PRE_PROCESS, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_PRE_PROCESS, dir_stop);
-			scan_();
-			text_message(TEXT_ERROR_ECHO, "Obsolete directive: PRE_PROCESS renamed PRE_PARSE at version 1.3\n");
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			code(rdp_add_child("code", rdp_tree));
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-		}
-		else if (scan_test(null, RDP_T_POST_PROCESS, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_POST_PROCESS, dir_stop);
-			scan_();
-			text_message(TEXT_ERROR_ECHO, "Obsolete directive: POST_PROCESS renamed POST_PARSE at version 1.3\n");
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			code(rdp_add_child("code", rdp_tree));
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-		}
-		else if (scan_test(null, RDP_T_SET_SIZE, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_SET_SIZE, dir_stop);
-			scan_();
-			text_message(TEXT_ERROR_ECHO, "Obsolete directive: SET_SIZE deleted at version 1.4\n");
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, SCAN_P_INTEGER, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-		}
-		else if (scan_test(null, RDP_T_HASH_SIZE, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_HASH_SIZE, dir_stop);
-			scan_();
-			text_message(TEXT_ERROR_ECHO,
-					"Obsolete directive: HASH_SIZE replaced by SYMBOL_TABLE at version 1.4\n");
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, SCAN_P_INTEGER, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-		}
-		else if (scan_test(null, RDP_T_HASH_PRIME, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_HASH_PRIME, dir_stop);
-			scan_();
-			text_message(TEXT_ERROR_ECHO,
-					"Obsolete directive: HASH_PRIME replaced by SYMBOL_TABLE at version 1.4\n");
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, SCAN_P_INTEGER, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-		}
-		else if (scan_test(null, RDP_T_INTERPRETER, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_INTERPRETER, dir_stop);
-			scan_();
-			text_message(TEXT_ERROR_ECHO, "Obsolete directive: INTERPRETER mode deleted at version 1.4\n");
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, SCAN_P_INTEGER, dir_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, dir_stop);
-			scan_();
-		}
-		else
-		{
-			scan_test_set(null, dir_first, dir_stop);
-		}
-		scan_test_set(null, dir_stop, dir_stop);
-	}
-}
-
-private static RdpData item_com(RdpTreeNodeData rdp_tree)
-{
-	RdpData result = null;
-	string name;
-	string close;
-	{
-		if (scan_test(null, RDP_T_COMMENT, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_COMMENT, item_com_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, item_com_stop);
-			scan_();
-			name = token(rdp_add_child("token", rdp_tree));
-			close = token(rdp_add_child("token", rdp_tree));
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, item_com_stop);
-			scan_();
-			if (rdp_pass == 2)
-			{
-				result = rdp_find_extended(name, close, SCAN_P_COMMENT);
-			}
-		}
-		else if (scan_test(null, RDP_T_COMMENT_LINE, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_COMMENT_LINE, item_com_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, item_com_stop);
-			scan_();
-			name = token(rdp_add_child("token", rdp_tree));
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, item_com_stop);
-			scan_();
-			if (rdp_pass == 2)
-			{
-				result = rdp_find_extended(name, null, SCAN_P_COMMENT_LINE);
-			}
-		}
-		else if (scan_test(null, RDP_T_COMMENT_NEST, null))
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_COMMENT_NEST, item_com_stop);
-			scan_();
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, item_com_stop);
-			scan_();
-			name = token(rdp_add_child("token", rdp_tree));
-			close = token(rdp_add_child("token", rdp_tree));
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_41 /* ) */, item_com_stop);
-			scan_();
-			if (rdp_pass == 2)
-			{
-				result = rdp_find_extended(name, close, SCAN_P_COMMENT_NEST);
-			}
-		}
-		else
-		{
-			scan_test_set(null, item_com_first, item_com_stop);
-		}
-		scan_test_set(null, item_com_stop, item_com_stop);
-	}
-	return result;
-}
-
-private static RdpData item_inl(RdpTreeNodeData rdp_tree)
-{
-	RdpData result = null;
-	string name;
-	int pass;
-	RdpList body;
-	int val;
-	string delimiter;
-	{
-		int promote_op = PROMOTE_DEFAULT;
-		{ /* Start of rdp_item_inl_28 */
-			while (true)
-			{
-				scan_test_set(null, rdp_item_inl_28_first, item_inl_stop);
-				{
-					if (scan_test(null, RDP_T_9142 /* [* */, null))
-					{
-						name = code(rdp_add_child("code", rdp_tree));
-						if (rdp_pass == 2)
-						{
-							result = rdp_find(name, K_CODE, RDP_ANY);
-							result.contains_null = true;
-							result.call_count++; /* increment call count */
-
-						}
-						if (scan_test(null, RDP_T_64 /* @ */, null))
-						{ /* Start of rdp_item_inl_1 */
-							while (true)
-							{
-								{
-									if (rdp_tree_update)
-									{
-										rdp_add_child(null, rdp_tree);
-									}
-									scan_test(null, RDP_T_64 /* @ */, item_inl_stop);
-									scan_();
-									if (rdp_tree_update)
-									{
-										rdp_add_child(null, rdp_tree);
-									}
-									scan_test(null, SCAN_P_INTEGER, item_inl_stop);
-									pass = text_scan_data.i;
-									scan_();
-									if (rdp_pass == 2)
-									{
-										result.code_pass = pass;
-									}
-								}
-								break; /* hi limit is 1! */
-							}
-						} /* end of rdp_item_inl_1 */
-						else
-						{
-							/* default action processing for rdp_item_inl_1 */
-							if (rdp_tree_update)
-							{
-								RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
-								temp.data.id = 0;
-								temp.data.token = SCAN_P_ID;
-							}
-						}
-					}
-					else if (scan_test(null, RDP_T_40 /* ( */, null))
-					{
-						if (rdp_tree_update)
-						{
-							rdp_add_child(null, rdp_tree);
-						}
-						scan_test(null, RDP_T_40 /* ( */, item_inl_stop);
-						scan_();
-						body = prod(rdp_add_child("prod", rdp_tree));
-						if (rdp_tree_update)
-						{
-							rdp_add_child(null, rdp_tree);
-						}
-						scan_test(null, RDP_T_41 /* ) */, item_inl_stop);
-						scan_();
-						if (rdp_pass == 2)
-						{
-							result = rdp_find(text_insert_substring("rdp", rdp_primary_id, rdp_component++), K_LIST,
-									RDP_ANY);
-							result.promote = promote_op;
-							result.list = body;
-							result.call_count++;
-							result.lo = 1;
-							result.hi = 1;
-
-						}
-						if (scan_test_set(null, rdp_item_inl_9_first, null))
-						{ /* Start of rdp_item_inl_9 */
-							while (true)
-							{
-								{
-									{ /* Start of rdp_item_inl_7 */
-										while (true)
-										{
-											scan_test_set(null, rdp_item_inl_7_first, item_inl_stop);
-											{
-												if (scan_test(null, RDP_T_9495 /* ^ _ */, null))
-												{
-													if (rdp_tree_update)
-													{
-														rdp_add_child(null, rdp_tree);
-													}
-													scan_test(null, RDP_T_9495 /* ^ _ */, item_inl_stop);
-													scan_();
-												}
-												else if (scan_test(null, RDP_T_94 /* ^ */, null))
-												{
-													if (rdp_tree_update)
-													{
-														rdp_add_child(null, rdp_tree);
-													}
-													scan_test(null, RDP_T_94 /* ^ */, item_inl_stop);
-													scan_();
-												}
-												else if (scan_test(null, RDP_T_9494 /* ^ ^ */, null))
-												{
-													if (rdp_tree_update)
-													{
-														rdp_add_child(null, rdp_tree);
-													}
-													scan_test(null, RDP_T_9494 /* ^ ^ */, item_inl_stop);
-													scan_();
-												}
-												else if (scan_test(null, RDP_T_949494 /* ^ ^ ^ */, null))
-												{
-													if (rdp_tree_update)
-													{
-														rdp_add_child(null, rdp_tree);
-													}
-													scan_test(null, RDP_T_949494 /* ^ ^ ^ */, item_inl_stop);
-													scan_();
-												}
-												else
-												{
-													scan_test_set(null, rdp_item_inl_7_first, item_inl_stop);
-												}
-											}
-											break; /* hi limit is 1! */
-										}
-									} /* end of rdp_item_inl_7 */
-									if (rdp_pass == 2)
-									{
-										text_message(TEXT_ERROR_ECHO,
-												"Promotion operators may not be attached to do-first expressions\n");
-									}
-								}
-								break; /* hi limit is 1! */
-							}
-						} /* end of rdp_item_inl_9 */
-						else
-						{
-							/* default action processing for rdp_item_inl_9 */
-							if (rdp_tree_update)
-							{
-								RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
-								temp.data.id = 0;
-								temp.data.token = SCAN_P_ID;
-							}
-						}
-						if (scan_test_set(null, rdp_item_inl_23_first, null))
-						{ /* Start of rdp_item_inl_23 */
-							while (true)
-							{
-								{
-									if (scan_test(null, SCAN_P_INTEGER, null))
-									{ /* Start of rdp_item_inl_11 */
-										while (true)
-										{
-											{
-												if (rdp_tree_update)
-												{
-													rdp_add_child(null, rdp_tree);
-												}
-												scan_test(null, SCAN_P_INTEGER, item_inl_stop);
-												val = text_scan_data.i;
-												scan_();
-												if (rdp_pass == 2)
-												{
-													result.lo = val;
-												}
-											}
-											break; /* hi limit is 1! */
-										}
-									} /* end of rdp_item_inl_11 */
-									else
-									{
-										/* default action processing for rdp_item_inl_11 */
-										if (rdp_tree_update)
-										{
-											RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
-											temp.data.id = 0;
-											temp.data.token = SCAN_P_ID;
-										}
-									}
-									if (rdp_tree_update)
-									{
-										rdp_add_child(null, rdp_tree);
-									}
-									scan_test(null, RDP_T_64 /* @ */, item_inl_stop);
-									scan_();
-									if (rdp_pass == 2)
-									{
-										result.hi = 0; /* iterate for ever by default */
-									}
-									if (scan_test(null, SCAN_P_INTEGER, null))
-									{ /* Start of rdp_item_inl_13 */
-										while (true)
-										{
-											{
-												if (rdp_tree_update)
-												{
-													rdp_add_child(null, rdp_tree);
-												}
-												scan_test(null, SCAN_P_INTEGER, item_inl_stop);
-												val = text_scan_data.i;
-												scan_();
-												if (rdp_pass == 2)
-												{
-													result.hi = val;
-												}
-											}
-											break; /* hi limit is 1! */
-										}
-									} /* end of rdp_item_inl_13 */
-									else
-									{
-										/* default action processing for rdp_item_inl_13 */
-										if (rdp_tree_update)
-										{
-											RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
-											temp.data.id = 0;
-											temp.data.token = SCAN_P_ID;
-										}
-									}
-									if (rdp_pass == 2)
-									{
-										if (result.lo == 0)
-										{
-											result.contains_null = true;
-										}
-										if (result.hi != 0 && result.hi < result.lo)
-										{
-											text_message(TEXT_ERROR_ECHO,
-													"Iterator high count must be greater than low count\n");
-										}
-
-									}
-									if (rdp_pass == 2)
-									{
-										result.delimiter_promote = PROMOTE_DONT;
-									}
-									{ /* Start of rdp_item_inl_16 */
-										while (true)
-										{
-											scan_test_set(null, rdp_item_inl_16_first, item_inl_stop);
-											{
-												if (scan_test(null, RDP_T_39 /* ' */, null))
-												{
-													delimiter = token(rdp_add_child("token", rdp_tree));
-													if (rdp_pass == 2)
-													{
-														result.supplementary_token = rdp_find(delimiter, K_TOKEN,
-																RDP_ANY);
-													}
-												}
-												else if (scan_test(null, RDP_T_35 /* # */, null))
-												{
-													if (rdp_tree_update)
-													{
-														rdp_add_child(null, rdp_tree);
-													}
-													scan_test(null, RDP_T_35 /* # */, item_inl_stop);
-													scan_();
-												}
-												else
-												{
-													scan_test_set(null, rdp_item_inl_16_first, item_inl_stop);
-												}
-											}
-											break; /* hi limit is 1! */
-										}
-									} /* end of rdp_item_inl_16 */
-									if (scan_test_set(null, rdp_item_inl_21_first, null))
-									{ /* Start of rdp_item_inl_21 */
-										while (true)
-										{
-											{
-												if (scan_test(null, RDP_T_9495 /* ^ _ */, null))
-												{
-													if (rdp_tree_update)
-													{
-														rdp_add_child(null, rdp_tree);
-													}
-													scan_test(null, RDP_T_9495 /* ^ _ */, item_inl_stop);
-													scan_();
-													if (rdp_pass == 2)
-													{
-														result.delimiter_promote = PROMOTE_DONT;
-													}
-												}
-												else if (scan_test(null, RDP_T_94 /* ^ */, null))
-												{
-													if (rdp_tree_update)
-													{
-														rdp_add_child(null, rdp_tree);
-													}
-													scan_test(null, RDP_T_94 /* ^ */, item_inl_stop);
-													scan_();
-													if (rdp_pass == 2)
-													{
-														result.delimiter_promote = PROMOTE;
-													}
-												}
-												else if (scan_test(null, RDP_T_9494 /* ^ ^ */, null))
-												{
-													if (rdp_tree_update)
-													{
-														rdp_add_child(null, rdp_tree);
-													}
-													scan_test(null, RDP_T_9494 /* ^ ^ */, item_inl_stop);
-													scan_();
-													if (rdp_pass == 2)
-													{
-														result.delimiter_promote = PROMOTE_AND_COPY;
-													}
-												}
-												else if (scan_test(null, RDP_T_949494 /* ^ ^ ^ */, null))
-												{
-													if (rdp_tree_update)
-													{
-														rdp_add_child(null, rdp_tree);
-													}
-													scan_test(null, RDP_T_949494 /* ^ ^ ^ */, item_inl_stop);
-													scan_();
-													if (rdp_pass == 2)
-													{
-														result.delimiter_promote = PROMOTE_ABOVE;
-													}
-												}
-												else
-												{
-													scan_test_set(null, rdp_item_inl_21_first, item_inl_stop);
-												}
-											}
-											break; /* hi limit is 1! */
-										}
-									} /* end of rdp_item_inl_21 */
-									else
-									{
-										/* default action processing for rdp_item_inl_21 */
-										if (rdp_tree_update)
-										{
-											RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
-											temp.data.id = 0;
-											temp.data.token = SCAN_P_ID;
-										}
-									}
-								}
-								break; /* hi limit is 1! */
-							}
-						} /* end of rdp_item_inl_23 */
-						else
-						{
-							/* default action processing for rdp_item_inl_23 */
-							if (rdp_tree_update)
-							{
-								RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
-								temp.data.id = 0;
-								temp.data.token = SCAN_P_ID;
-							}
-						}
-					}
-					else if (scan_test(null, RDP_T_123 /* { */, null))
-					{
-						if (rdp_tree_update)
-						{
-							rdp_add_child(null, rdp_tree);
-						}
-						scan_test(null, RDP_T_123 /* { */, item_inl_stop);
-						scan_();
-						body = prod(rdp_add_child("prod", rdp_tree));
-						if (rdp_tree_update)
-						{
-							rdp_add_child(null, rdp_tree);
-						}
-						scan_test(null, RDP_T_125 /* } */, item_inl_stop);
-						scan_();
-						if (rdp_pass == 2)
-						{
-							result = rdp_find(text_insert_substring("rdp", rdp_primary_id, rdp_component++), K_LIST,
-									RDP_ANY);
-							result.promote = promote_op;
-							result.list = body;
-							result.contains_null = true;
-							result.call_count++;
-							result.lo = 0;
-							result.hi = 0;
-
-						}
-					}
-					else if (scan_test(null, RDP_T_91 /* [ */, null))
-					{
-						if (rdp_tree_update)
-						{
-							rdp_add_child(null, rdp_tree);
-						}
-						scan_test(null, RDP_T_91 /* [ */, item_inl_stop);
-						scan_();
-						body = prod(rdp_add_child("prod", rdp_tree));
-						if (rdp_tree_update)
-						{
-							rdp_add_child(null, rdp_tree);
-						}
-						scan_test(null, RDP_T_93 /* ] */, item_inl_stop);
-						scan_();
-						if (rdp_pass == 2)
-						{
-							result = rdp_find(text_insert_substring("rdp", rdp_primary_id, rdp_component++), K_LIST,
-									RDP_ANY);
-							result.promote = promote_op;
-							result.list = body;
-							result.contains_null = true;
-							result.call_count++;
-							result.lo = 0;
-							result.hi = 1;
-
-						}
-					}
-					else if (scan_test(null, RDP_T_60 /* < */, null))
-					{
-						if (rdp_tree_update)
-						{
-							rdp_add_child(null, rdp_tree);
-						}
-						scan_test(null, RDP_T_60 /* < */, item_inl_stop);
-						scan_();
-						body = prod(rdp_add_child("prod", rdp_tree));
-						if (rdp_tree_update)
-						{
-							rdp_add_child(null, rdp_tree);
-						}
-						scan_test(null, RDP_T_62 /* > */, item_inl_stop);
-						scan_();
-						if (rdp_pass == 2)
-						{
-							result = rdp_find(text_insert_substring("rdp", rdp_primary_id, rdp_component++), K_LIST,
-									RDP_ANY);
-							result.promote = promote_op;
-							result.list = body;
-							result.call_count++;
-							result.lo = 1;
-							result.hi = 0;
-
-						}
+						dir(rdp_add_child("dir", rdp_tree));
 					}
 					else
 					{
-						scan_test_set(null, rdp_item_inl_28_first, item_inl_stop);
+						scan_test_set(null, rdp_unit_2_first, unit_stop);
 					}
-				}
-				break; /* hi limit is 1! */
-			}
-		} /* end of rdp_item_inl_28 */
-		scan_test_set(null, item_inl_stop, item_inl_stop);
-	}
-	return result;
-}
-
-private static RdpData item_ret(RdpTreeNodeData rdp_tree)
-{
-	RdpData result = null;
-	string name;
-	int n;
-	double r;
-	string str;
-	string quote;
-	string close;
-	if (scan_test(null, SCAN_P_ID, null))
-	{
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, SCAN_P_ID, item_ret_stop);
-		name = text_get_string(text_scan_data.id);
-		scan_();
-		if (rdp_pass == 2)
-		{
-			result = rdp_find(name, K_PRIMARY, RDP_OLD);
-			rdp_check_eoln(name);
-			result.call_count++; /* increment call count */
-			result.actuals = null;
-
-		}
-		if (rdp_pass == 2 && result.parameterised)
-		{
-			if (rdp_tree_update)
-			{
-				rdp_add_child(null, rdp_tree);
-			}
-			scan_test(null, RDP_T_40 /* ( */, item_ret_stop);
-			scan_();
-			if (scan_test_set(null, rdp_item_ret_6_first, null))
-			{ /* Start of rdp_item_ret_6 */
-				while (true)
-				{
-					RdpParamList param;
-
-					/* Start of rdp_item_ret_4 */
-					while (true)
-					{
-						scan_test_set(null, rdp_item_ret_4_first, item_ret_stop);
-						if (scan_test(null, SCAN_P_INTEGER, null))
-						{
-							if (rdp_tree_update)
-							{
-								rdp_add_child(null, rdp_tree);
-							}
-							scan_test(null, SCAN_P_INTEGER, item_ret_stop);
-							n = text_scan_data.i;
-							scan_();
-							if (rdp_pass == 2)
-							{
-								param = new RdpParamList();
-								param.n = n;
-								param.next = result.actuals;
-								result.actuals = param;
-								param.flavour = PARAM_INTEGER;
-
-							}
-						}
-						else if (scan_test(null, SCAN_P_REAL, null))
-						{
-							if (rdp_tree_update)
-							{
-								rdp_add_child(null, rdp_tree);
-							}
-							scan_test(null, SCAN_P_REAL, item_ret_stop);
-							r = text_scan_data.r;
-							scan_();
-							if (rdp_pass == 2)
-							{
-								param = new RdpParamList();
-								param.r = r;
-								param.next = result.actuals;
-								result.actuals = param;
-								param.flavour = PARAM_REAL;
-
-							}
-						}
-						else if (scan_test(null, RDP_T_34 /* " */, null))
-						{
-							str = String(rdp_add_child("String", rdp_tree));
-							if (rdp_pass == 2)
-							{
-								param = new RdpParamList();
-								param.id = str;
-								param.next = result.actuals;
-								result.actuals = param;
-								param.flavour = PARAM_STRING;
-							}
-						}
-						else if (scan_test(null, SCAN_P_ID, null))
-						{
-							if (rdp_tree_update)
-							{
-								rdp_add_child(null, rdp_tree);
-							}
-							scan_test(null, SCAN_P_ID, item_ret_stop);
-							name = text_get_string(text_scan_data.id);
-							scan_();
-							if (rdp_pass == 2)
-							{
-								param = new RdpParamList();
-								param.id = name;
-								param.next = result.actuals;
-								result.actuals = param;
-								param.flavour = PARAM_ID;
-
-							}
-						}
-						else
-						{
-							scan_test_set(null, rdp_item_ret_4_first, item_ret_stop);
-						}
-						break; /* hi limit is 1! */
-					}
-					if (!scan_test_set(null, rdp_item_ret_6_first, null))
+					if (!scan_test_set(null, rdp_unit_2_first, null))
 					{
 						break;
 					}
 				}
-			} /* end of rdp_item_ret_6 */
-			else
+			}
+			else if (rdp_tree_update)
 			{
-				/* default action processing for rdp_item_ret_6 */
+				RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
+				temp.data.id = 0;
+				temp.data.token = SCAN_P_ID;
+			}
+			if (rdp_rule_count == 0)
+			{
+				text_message(TEXT_FATAL, "no rule definitions found\n");
+			}
+			scan_test_set(null, unit_stop, unit_stop);
+		}
+
+		private static string code(RdpTreeNodeData rdp_tree)
+		{
+			string result;
+			{
 				if (rdp_tree_update)
 				{
-					// rdp_tree_node_data temp = rdp_add_child(null,
-					// rdp_tree);
-					// temp.id = null;
-					// temp.token = SCAN_P_ID;
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_9142 /* [* */, code_stop);
+				result = text_get_string(text_scan_data.id);
+				scan_();
+				scan_test_set(null, code_stop, code_stop);
+			}
+			return result;
+		}
+
+		private static void dir(RdpTreeNodeData rdp_tree)
+		{
+			string filename;
+			string key;
+			string var = null;
+			string desc;
+			string name;
+			int size;
+			int prime;
+			string compare;
+			string hash;
+			string print;
+			string data_fields;
+			string s;
+			int n;
+			string str;
+			{
+				if (scan_test(null, RDP_T_INCLUDE, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_INCLUDE, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					filename = String(rdp_add_child("String", rdp_tree));
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+					if (rdp_pass == 2)
+					{
+						if (text_open(filename) == null)
+						{
+							text_message(TEXT_ERROR_ECHO, "include file '" + filename + "' not found\n");
+						}
+						else
+						{
+							text_get_char();
+							scan_();
+						}
+
+					}
+				}
+				else if (scan_test(null, RDP_T_ARG_BOOLEAN, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_ARG_BOOLEAN, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, SCAN_P_ID, dir_stop);
+					key = text_get_string(text_scan_data.id);
+					scan_();
+					{ /* Start of rdp_dir_3 */
+						while (true)
+						{
+							scan_test_set(null, rdp_dir_3_first, dir_stop);
+							{
+								if (scan_test(null, SCAN_P_ID, null))
+								{
+									if (rdp_tree_update)
+									{
+										rdp_add_child(null, rdp_tree);
+									}
+									scan_test(null, SCAN_P_ID, dir_stop);
+									var = text_get_string(text_scan_data.id);
+									scan_();
+								}
+								else if (scan_test(null, RDP_T_9142 /* [* */, null))
+								{
+									var = code(rdp_add_child("code", rdp_tree));
+								}
+								else
+								{
+									scan_test_set(null, rdp_dir_3_first, dir_stop);
+								}
+							}
+							break; /* hi limit is 1! */
+						}
+					} /* end of rdp_dir_3 */
+					desc = String(rdp_add_child("String", rdp_tree));
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+					if (rdp_pass == 2)
+					{
+						rdp_add_arg(ARG_BOOLEAN, key, var, desc);
+					}
+				}
+				else if (scan_test(null, RDP_T_ARG_NUMERIC, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_ARG_NUMERIC, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, SCAN_P_ID, dir_stop);
+					key = text_get_string(text_scan_data.id);
+					scan_();
+					{ /* Start of rdp_dir_7 */
+						while (true)
+						{
+							scan_test_set(null, rdp_dir_7_first, dir_stop);
+							{
+								if (scan_test(null, SCAN_P_ID, null))
+								{
+									if (rdp_tree_update)
+									{
+										rdp_add_child(null, rdp_tree);
+									}
+									scan_test(null, SCAN_P_ID, dir_stop);
+									var = text_get_string(text_scan_data.id);
+									scan_();
+								}
+								else if (scan_test(null, RDP_T_9142 /* [* */, null))
+								{
+									var = code(rdp_add_child("code", rdp_tree));
+								}
+								else
+								{
+									scan_test_set(null, rdp_dir_7_first, dir_stop);
+								}
+							}
+							break; /* hi limit is 1! */
+						}
+					} /* end of rdp_dir_7 */
+					desc = String(rdp_add_child("String", rdp_tree));
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+					if (rdp_pass == 2)
+					{
+						rdp_add_arg(ARG_NUMERIC, key, var, desc);
+					}
+				}
+				else if (scan_test(null, RDP_T_ARG_STRING, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_ARG_STRING, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, SCAN_P_ID, dir_stop);
+					key = text_get_string(text_scan_data.id);
+					scan_();
+					{ /* Start of rdp_dir_11 */
+						while (true)
+						{
+							scan_test_set(null, rdp_dir_11_first, dir_stop);
+							{
+								if (scan_test(null, SCAN_P_ID, null))
+								{
+									if (rdp_tree_update)
+									{
+										rdp_add_child(null, rdp_tree);
+									}
+									scan_test(null, SCAN_P_ID, dir_stop);
+									var = text_get_string(text_scan_data.id);
+									scan_();
+								}
+								else if (scan_test(null, RDP_T_9142 /* [* */, null))
+								{
+									var = code(rdp_add_child("code", rdp_tree));
+								}
+								else
+								{
+									scan_test_set(null, rdp_dir_11_first, dir_stop);
+								}
+							}
+							break; /* hi limit is 1! */
+						}
+					} /* end of rdp_dir_11 */
+					desc = String(rdp_add_child("String", rdp_tree));
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+					if (rdp_pass == 2)
+					{
+						rdp_add_arg(ARG_STRING, key, var, desc);
+					}
+				}
+				else if (scan_test(null, RDP_T_ARG_BLANK, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_ARG_BLANK, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					desc = String(rdp_add_child("String", rdp_tree));
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+					if (rdp_pass == 2)
+					{
+						rdp_add_arg(ARG_BLANK, null, null, desc);
+					}
+				}
+				else if (scan_test(null, RDP_T_SYMBOL_TABLE, null))
+				{
+					RdpTableList temp;
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_SYMBOL_TABLE, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, SCAN_P_ID, dir_stop);
+					name = text_get_string(text_scan_data.id);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, SCAN_P_INTEGER, dir_stop);
+					size = text_scan_data.i;
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, SCAN_P_INTEGER, dir_stop);
+					prime = text_scan_data.i;
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, SCAN_P_ID, dir_stop);
+					compare = text_get_string(text_scan_data.id);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, SCAN_P_ID, dir_stop);
+					hash = text_get_string(text_scan_data.id);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, SCAN_P_ID, dir_stop);
+					print = text_get_string(text_scan_data.id);
+					scan_();
+					data_fields = code(rdp_add_child("code", rdp_tree));
+					if (rdp_pass == 2)
+					{
+						temp = new RdpTableList();
+						temp.name = name;
+						temp.size = size;
+						temp.prime = prime;
+						temp.compare = compare;
+						temp.hash = hash;
+						temp.print = print;
+						temp.data_fields = data_fields;
+						temp.next = rdp_dir_symbol_table;
+						rdp_dir_symbol_table = temp;
+					}
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+				}
+				else if (scan_test(null, RDP_T_USES, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_USES, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					s = String(rdp_add_child("String", rdp_tree));
+					if (rdp_pass == 2)
+					{
+						RdpStringList temp = new RdpStringList();
+						temp.str1 = s;
+						temp.next = rdp_dir_include;
+						rdp_dir_include = temp;
+
+					}
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+				}
+				else if (scan_test(null, RDP_T_OUTPUT_FILE, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_OUTPUT_FILE, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					s = String(rdp_add_child("String", rdp_tree));
+					rdp_dir_output_file = s;
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+				}
+				else if (scan_test(null, RDP_T_PARSER, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_PARSER, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, SCAN_P_ID, dir_stop);
+					name = text_get_string(text_scan_data.id);
+					scan_();
+					if (rdp_pass == 2)
+					{
+						rdp_start_prod = rdp_find(name, K_PRIMARY, RDP_OLD);
+						rdp_start_prod.call_count++;
+					}
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+				}
+				else if (scan_test(null, RDP_T_POST_PARSE, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_POST_PARSE, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					s = code(rdp_add_child("code", rdp_tree));
+					rdp_dir_post_parse = s;
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+				}
+				else if (scan_test(null, RDP_T_PRE_PARSE, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_PRE_PARSE, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					s = code(rdp_add_child("code", rdp_tree));
+					rdp_dir_pre_parse = s;
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+				}
+				else if (scan_test(null, RDP_T_GLOBAL, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_GLOBAL, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					s = code(rdp_add_child("code", rdp_tree));
+					rdp_dir_global = s;
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+				}
+				else if (scan_test(null, RDP_T_SUFFIX, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_SUFFIX, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					s = String(rdp_add_child("String", rdp_tree));
+					rdp_dir_suffix = s;
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+				}
+				else if (scan_test(null, RDP_T_TITLE, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_TITLE, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					s = String(rdp_add_child("String", rdp_tree));
+					rdp_dir_title = s;
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+				}
+				else if (scan_test(null, RDP_T_MAX_ERRORS, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_MAX_ERRORS, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, SCAN_P_INTEGER, dir_stop);
+					n = text_scan_data.i;
+					scan_();
+					rdp_dir_max_errors = n;
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+				}
+				else if (scan_test(null, RDP_T_MAX_WARNINGS, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_MAX_WARNINGS, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, SCAN_P_INTEGER, dir_stop);
+					n = text_scan_data.i;
+					scan_();
+					rdp_dir_max_warnings = n;
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+				}
+				else if (scan_test(null, RDP_T_PASSES, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_PASSES, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, SCAN_P_INTEGER, dir_stop);
+					n = text_scan_data.i;
+					scan_();
+					rdp_dir_passes = n;
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+				}
+				else if (scan_test(null, RDP_T_MULTIPLE_SOURCE_FILES, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_MULTIPLE_SOURCE_FILES, dir_stop);
+					scan_();
+					rdp_dir_multiple_source_files = 1;
+				}
+				else if (scan_test(null, RDP_T_TAB_WIDTH, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_TAB_WIDTH, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, SCAN_P_INTEGER, dir_stop);
+					n = text_scan_data.i;
+					scan_();
+					rdp_dir_tab_width = n;
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+				}
+				else if (scan_test(null, RDP_T_TEXT_SIZE, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_TEXT_SIZE, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, SCAN_P_INTEGER, dir_stop);
+					n = text_scan_data.i;
+					scan_();
+					rdp_dir_text_size = n;
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+				}
+				else if (scan_test_set(null, rdp_dir_37_first, null))
+				{
+					{ /* Start of rdp_dir_34 */
+						while (true)
+						{
+							scan_test_set(null, rdp_dir_34_first, dir_stop);
+							{
+								if (scan_test(null, RDP_T_DERIVATION_TREE, null))
+								{
+									if (rdp_tree_update)
+									{
+										rdp_add_child(null, rdp_tree);
+									}
+									scan_test(null, RDP_T_DERIVATION_TREE, dir_stop);
+									scan_();
+									rdp_dir_derivation_tree = 1;
+								}
+								else if (scan_test(null, RDP_T_ANNOTATED_EPSILON_TREE, null))
+								{
+									if (rdp_tree_update)
+									{
+										rdp_add_child(null, rdp_tree);
+									}
+									scan_test(null, RDP_T_ANNOTATED_EPSILON_TREE, dir_stop);
+									scan_();
+									rdp_dir_annotated_epsilon_tree = 1;
+									rdp_dir_epsilon_tree = 1;
+								}
+								else if (scan_test(null, RDP_T_EPSILON_TREE, null))
+								{
+									if (rdp_tree_update)
+									{
+										rdp_add_child(null, rdp_tree);
+									}
+									scan_test(null, RDP_T_EPSILON_TREE, dir_stop);
+									scan_();
+									rdp_dir_epsilon_tree = 1;
+								}
+								else if (scan_test(null, RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, null))
+								{
+									if (rdp_tree_update)
+									{
+										rdp_add_child(null, rdp_tree);
+									}
+									scan_test(null, RDP_T_SUPPRESS_BUILT_IN_ARGUMENTS, dir_stop);
+									scan_();
+									rdp_dir_args = null;
+								}
+								else if (scan_test(null, RDP_T_TREE, null))
+								{
+									if (rdp_tree_update)
+									{
+										rdp_add_child(null, rdp_tree);
+									}
+									scan_test(null, RDP_T_TREE, dir_stop);
+									scan_();
+								}
+								else
+								{
+									scan_test_set(null, rdp_dir_34_first, dir_stop);
+								}
+							}
+							break; /* hi limit is 1! */
+						}
+					} /* end of rdp_dir_34 */
+					if (rdp_pass == 1)
+					{
+						rdp_dir_tree = 1;
+					}
+					if (scan_test(null, RDP_T_40 /* ( */, null))
+					{ /* Start of rdp_dir_36 */
+						while (true)
+						{
+							{
+								if (rdp_tree_update)
+								{
+									rdp_add_child(null, rdp_tree);
+								}
+								scan_test(null, RDP_T_40 /* ( */, dir_stop);
+								scan_();
+								str = code(rdp_add_child("code", rdp_tree));
+								rdp_dir_tree_node_fields = str;
+								str = code(rdp_add_child("code", rdp_tree));
+								rdp_dir_tree_edge_fields = str;
+								if (rdp_tree_update)
+								{
+									rdp_add_child(null, rdp_tree);
+								}
+								scan_test(null, RDP_T_41 /* ) */, dir_stop);
+								scan_();
+							}
+							break; /* hi limit is 1! */
+						}
+					} /* end of rdp_dir_36 */
+					else
+					{
+						/* default action processing for rdp_dir_36 */
+						if (rdp_tree_update)
+						{
+							RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
+							temp.data.id = 0;
+							temp.data.token = SCAN_P_ID;
+						}
+					}
+				}
+				else if (scan_test(null, RDP_T_CASE_INSENSITIVE, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_CASE_INSENSITIVE, dir_stop);
+					scan_();
+					rdp_dir_case_insensitive = 1;
+				}
+				else if (scan_test(null, RDP_T_RETAIN_COMMENTS, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_RETAIN_COMMENTS, dir_stop);
+					scan_();
+					rdp_dir_retain_comments = 1;
+				}
+				else if (scan_test(null, RDP_T_SHOW_SKIPS, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_SHOW_SKIPS, dir_stop);
+					scan_();
+					rdp_dir_show_skips = 1;
+				}
+				else if (scan_test(null, RDP_T_OPTION, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_OPTION, dir_stop);
+					scan_();
+					text_message(TEXT_ERROR_ECHO, "Obsolete directive: OPTION replaced by ARG_* at version 1.5\n");
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					String(rdp_add_child("String", rdp_tree));
+					if (scan_test(null, RDP_T_9142 /* [* */, null))
+					{ /* Start of rdp_dir_42 */
+						while (true)
+						{
+							{
+								code(rdp_add_child("code", rdp_tree));
+							}
+							break; /* hi limit is 1! */
+						}
+					} /* end of rdp_dir_42 */
+					else
+					{
+						/* default action processing for rdp_dir_42 */
+						if (rdp_tree_update)
+						{
+							RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
+							temp.data.id = 0;
+							temp.data.token = SCAN_P_ID;
+						}
+					}
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+				}
+				else if (scan_test(null, RDP_T_PRE_PROCESS, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_PRE_PROCESS, dir_stop);
+					scan_();
+					text_message(TEXT_ERROR_ECHO, "Obsolete directive: PRE_PROCESS renamed PRE_PARSE at version 1.3\n");
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					code(rdp_add_child("code", rdp_tree));
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+				}
+				else if (scan_test(null, RDP_T_POST_PROCESS, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_POST_PROCESS, dir_stop);
+					scan_();
+					text_message(TEXT_ERROR_ECHO, "Obsolete directive: POST_PROCESS renamed POST_PARSE at version 1.3\n");
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					code(rdp_add_child("code", rdp_tree));
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+				}
+				else if (scan_test(null, RDP_T_SET_SIZE, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_SET_SIZE, dir_stop);
+					scan_();
+					text_message(TEXT_ERROR_ECHO, "Obsolete directive: SET_SIZE deleted at version 1.4\n");
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, SCAN_P_INTEGER, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+				}
+				else if (scan_test(null, RDP_T_HASH_SIZE, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_HASH_SIZE, dir_stop);
+					scan_();
+					text_message(TEXT_ERROR_ECHO,
+							"Obsolete directive: HASH_SIZE replaced by SYMBOL_TABLE at version 1.4\n");
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, SCAN_P_INTEGER, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+				}
+				else if (scan_test(null, RDP_T_HASH_PRIME, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_HASH_PRIME, dir_stop);
+					scan_();
+					text_message(TEXT_ERROR_ECHO,
+							"Obsolete directive: HASH_PRIME replaced by SYMBOL_TABLE at version 1.4\n");
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, SCAN_P_INTEGER, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+				}
+				else if (scan_test(null, RDP_T_INTERPRETER, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_INTERPRETER, dir_stop);
+					scan_();
+					text_message(TEXT_ERROR_ECHO, "Obsolete directive: INTERPRETER mode deleted at version 1.4\n");
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, SCAN_P_INTEGER, dir_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, dir_stop);
+					scan_();
+				}
+				else
+				{
+					scan_test_set(null, dir_first, dir_stop);
+				}
+				scan_test_set(null, dir_stop, dir_stop);
+			}
+		}
+
+		private static RdpData item_com(RdpTreeNodeData rdp_tree)
+		{
+			RdpData result = null;
+			string name;
+			string close;
+			{
+				if (scan_test(null, RDP_T_COMMENT, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_COMMENT, item_com_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, item_com_stop);
+					scan_();
+					name = token(rdp_add_child("token", rdp_tree));
+					close = token(rdp_add_child("token", rdp_tree));
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, item_com_stop);
+					scan_();
+					if (rdp_pass == 2)
+					{
+						result = rdp_find_extended(name, close, SCAN_P_COMMENT);
+					}
+				}
+				else if (scan_test(null, RDP_T_COMMENT_LINE, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_COMMENT_LINE, item_com_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, item_com_stop);
+					scan_();
+					name = token(rdp_add_child("token", rdp_tree));
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, item_com_stop);
+					scan_();
+					if (rdp_pass == 2)
+					{
+						result = rdp_find_extended(name, null, SCAN_P_COMMENT_LINE);
+					}
+				}
+				else if (scan_test(null, RDP_T_COMMENT_NEST, null))
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_COMMENT_NEST, item_com_stop);
+					scan_();
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, item_com_stop);
+					scan_();
+					name = token(rdp_add_child("token", rdp_tree));
+					close = token(rdp_add_child("token", rdp_tree));
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, item_com_stop);
+					scan_();
+					if (rdp_pass == 2)
+					{
+						result = rdp_find_extended(name, close, SCAN_P_COMMENT_NEST);
+					}
+				}
+				else
+				{
+					scan_test_set(null, item_com_first, item_com_stop);
+				}
+				scan_test_set(null, item_com_stop, item_com_stop);
+			}
+			return result;
+		}
+
+		private static RdpData item_inl(RdpTreeNodeData rdp_tree)
+		{
+			RdpData result = null;
+			string name;
+			int pass;
+			RdpList body;
+			int val;
+			string delimiter;
+			{
+				int promote_op = PROMOTE_DEFAULT;
+				{ /* Start of rdp_item_inl_28 */
+					while (true)
+					{
+						scan_test_set(null, rdp_item_inl_28_first, item_inl_stop);
+						{
+							if (scan_test(null, RDP_T_9142 /* [* */, null))
+							{
+								name = code(rdp_add_child("code", rdp_tree));
+								if (rdp_pass == 2)
+								{
+									result = rdp_find(name, K_CODE, RDP_ANY);
+									result.contains_null = true;
+									result.call_count++; /* increment call count */
+
+								}
+								if (scan_test(null, RDP_T_64 /* @ */, null))
+								{ /* Start of rdp_item_inl_1 */
+									while (true)
+									{
+										{
+											if (rdp_tree_update)
+											{
+												rdp_add_child(null, rdp_tree);
+											}
+											scan_test(null, RDP_T_64 /* @ */, item_inl_stop);
+											scan_();
+											if (rdp_tree_update)
+											{
+												rdp_add_child(null, rdp_tree);
+											}
+											scan_test(null, SCAN_P_INTEGER, item_inl_stop);
+											pass = text_scan_data.i;
+											scan_();
+											if (rdp_pass == 2)
+											{
+												result.code_pass = pass;
+											}
+										}
+										break; /* hi limit is 1! */
+									}
+								} /* end of rdp_item_inl_1 */
+								else
+								{
+									/* default action processing for rdp_item_inl_1 */
+									if (rdp_tree_update)
+									{
+										RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
+										temp.data.id = 0;
+										temp.data.token = SCAN_P_ID;
+									}
+								}
+							}
+							else if (scan_test(null, RDP_T_40 /* ( */, null))
+							{
+								if (rdp_tree_update)
+								{
+									rdp_add_child(null, rdp_tree);
+								}
+								scan_test(null, RDP_T_40 /* ( */, item_inl_stop);
+								scan_();
+								body = prod(rdp_add_child("prod", rdp_tree));
+								if (rdp_tree_update)
+								{
+									rdp_add_child(null, rdp_tree);
+								}
+								scan_test(null, RDP_T_41 /* ) */, item_inl_stop);
+								scan_();
+								if (rdp_pass == 2)
+								{
+									result = rdp_find(text_insert_substring("rdp", rdp_primary_id, rdp_component++), K_LIST,
+											RDP_ANY);
+									result.promote = promote_op;
+									result.list = body;
+									result.call_count++;
+									result.lo = 1;
+									result.hi = 1;
+
+								}
+								if (scan_test_set(null, rdp_item_inl_9_first, null))
+								{ /* Start of rdp_item_inl_9 */
+									while (true)
+									{
+										{
+											{ /* Start of rdp_item_inl_7 */
+												while (true)
+												{
+													scan_test_set(null, rdp_item_inl_7_first, item_inl_stop);
+													{
+														if (scan_test(null, RDP_T_9495 /* ^ _ */, null))
+														{
+															if (rdp_tree_update)
+															{
+																rdp_add_child(null, rdp_tree);
+															}
+															scan_test(null, RDP_T_9495 /* ^ _ */, item_inl_stop);
+															scan_();
+														}
+														else if (scan_test(null, RDP_T_94 /* ^ */, null))
+														{
+															if (rdp_tree_update)
+															{
+																rdp_add_child(null, rdp_tree);
+															}
+															scan_test(null, RDP_T_94 /* ^ */, item_inl_stop);
+															scan_();
+														}
+														else if (scan_test(null, RDP_T_9494 /* ^ ^ */, null))
+														{
+															if (rdp_tree_update)
+															{
+																rdp_add_child(null, rdp_tree);
+															}
+															scan_test(null, RDP_T_9494 /* ^ ^ */, item_inl_stop);
+															scan_();
+														}
+														else if (scan_test(null, RDP_T_949494 /* ^ ^ ^ */, null))
+														{
+															if (rdp_tree_update)
+															{
+																rdp_add_child(null, rdp_tree);
+															}
+															scan_test(null, RDP_T_949494 /* ^ ^ ^ */, item_inl_stop);
+															scan_();
+														}
+														else
+														{
+															scan_test_set(null, rdp_item_inl_7_first, item_inl_stop);
+														}
+													}
+													break; /* hi limit is 1! */
+												}
+											} /* end of rdp_item_inl_7 */
+											if (rdp_pass == 2)
+											{
+												text_message(TEXT_ERROR_ECHO,
+														"Promotion operators may not be attached to do-first expressions\n");
+											}
+										}
+										break; /* hi limit is 1! */
+									}
+								} /* end of rdp_item_inl_9 */
+								else
+								{
+									/* default action processing for rdp_item_inl_9 */
+									if (rdp_tree_update)
+									{
+										RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
+										temp.data.id = 0;
+										temp.data.token = SCAN_P_ID;
+									}
+								}
+								if (scan_test_set(null, rdp_item_inl_23_first, null))
+								{ /* Start of rdp_item_inl_23 */
+									while (true)
+									{
+										{
+											if (scan_test(null, SCAN_P_INTEGER, null))
+											{ /* Start of rdp_item_inl_11 */
+												while (true)
+												{
+													{
+														if (rdp_tree_update)
+														{
+															rdp_add_child(null, rdp_tree);
+														}
+														scan_test(null, SCAN_P_INTEGER, item_inl_stop);
+														val = text_scan_data.i;
+														scan_();
+														if (rdp_pass == 2)
+														{
+															result.lo = val;
+														}
+													}
+													break; /* hi limit is 1! */
+												}
+											} /* end of rdp_item_inl_11 */
+											else
+											{
+												/* default action processing for rdp_item_inl_11 */
+												if (rdp_tree_update)
+												{
+													RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
+													temp.data.id = 0;
+													temp.data.token = SCAN_P_ID;
+												}
+											}
+											if (rdp_tree_update)
+											{
+												rdp_add_child(null, rdp_tree);
+											}
+											scan_test(null, RDP_T_64 /* @ */, item_inl_stop);
+											scan_();
+											if (rdp_pass == 2)
+											{
+												result.hi = 0; /* iterate for ever by default */
+											}
+											if (scan_test(null, SCAN_P_INTEGER, null))
+											{ /* Start of rdp_item_inl_13 */
+												while (true)
+												{
+													{
+														if (rdp_tree_update)
+														{
+															rdp_add_child(null, rdp_tree);
+														}
+														scan_test(null, SCAN_P_INTEGER, item_inl_stop);
+														val = text_scan_data.i;
+														scan_();
+														if (rdp_pass == 2)
+														{
+															result.hi = val;
+														}
+													}
+													break; /* hi limit is 1! */
+												}
+											} /* end of rdp_item_inl_13 */
+											else
+											{
+												/* default action processing for rdp_item_inl_13 */
+												if (rdp_tree_update)
+												{
+													RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
+													temp.data.id = 0;
+													temp.data.token = SCAN_P_ID;
+												}
+											}
+											if (rdp_pass == 2)
+											{
+												if (result.lo == 0)
+												{
+													result.contains_null = true;
+												}
+												if (result.hi != 0 && result.hi < result.lo)
+												{
+													text_message(TEXT_ERROR_ECHO,
+															"Iterator high count must be greater than low count\n");
+												}
+
+											}
+											if (rdp_pass == 2)
+											{
+												result.delimiter_promote = PROMOTE_DONT;
+											}
+											{ /* Start of rdp_item_inl_16 */
+												while (true)
+												{
+													scan_test_set(null, rdp_item_inl_16_first, item_inl_stop);
+													{
+														if (scan_test(null, RDP_T_39 /* ' */, null))
+														{
+															delimiter = token(rdp_add_child("token", rdp_tree));
+															if (rdp_pass == 2)
+															{
+																result.supplementary_token = rdp_find(delimiter, K_TOKEN,
+																		RDP_ANY);
+															}
+														}
+														else if (scan_test(null, RDP_T_35 /* # */, null))
+														{
+															if (rdp_tree_update)
+															{
+																rdp_add_child(null, rdp_tree);
+															}
+															scan_test(null, RDP_T_35 /* # */, item_inl_stop);
+															scan_();
+														}
+														else
+														{
+															scan_test_set(null, rdp_item_inl_16_first, item_inl_stop);
+														}
+													}
+													break; /* hi limit is 1! */
+												}
+											} /* end of rdp_item_inl_16 */
+											if (scan_test_set(null, rdp_item_inl_21_first, null))
+											{ /* Start of rdp_item_inl_21 */
+												while (true)
+												{
+													{
+														if (scan_test(null, RDP_T_9495 /* ^ _ */, null))
+														{
+															if (rdp_tree_update)
+															{
+																rdp_add_child(null, rdp_tree);
+															}
+															scan_test(null, RDP_T_9495 /* ^ _ */, item_inl_stop);
+															scan_();
+															if (rdp_pass == 2)
+															{
+																result.delimiter_promote = PROMOTE_DONT;
+															}
+														}
+														else if (scan_test(null, RDP_T_94 /* ^ */, null))
+														{
+															if (rdp_tree_update)
+															{
+																rdp_add_child(null, rdp_tree);
+															}
+															scan_test(null, RDP_T_94 /* ^ */, item_inl_stop);
+															scan_();
+															if (rdp_pass == 2)
+															{
+																result.delimiter_promote = PROMOTE;
+															}
+														}
+														else if (scan_test(null, RDP_T_9494 /* ^ ^ */, null))
+														{
+															if (rdp_tree_update)
+															{
+																rdp_add_child(null, rdp_tree);
+															}
+															scan_test(null, RDP_T_9494 /* ^ ^ */, item_inl_stop);
+															scan_();
+															if (rdp_pass == 2)
+															{
+																result.delimiter_promote = PROMOTE_AND_COPY;
+															}
+														}
+														else if (scan_test(null, RDP_T_949494 /* ^ ^ ^ */, null))
+														{
+															if (rdp_tree_update)
+															{
+																rdp_add_child(null, rdp_tree);
+															}
+															scan_test(null, RDP_T_949494 /* ^ ^ ^ */, item_inl_stop);
+															scan_();
+															if (rdp_pass == 2)
+															{
+																result.delimiter_promote = PROMOTE_ABOVE;
+															}
+														}
+														else
+														{
+															scan_test_set(null, rdp_item_inl_21_first, item_inl_stop);
+														}
+													}
+													break; /* hi limit is 1! */
+												}
+											} /* end of rdp_item_inl_21 */
+											else
+											{
+												/* default action processing for rdp_item_inl_21 */
+												if (rdp_tree_update)
+												{
+													RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
+													temp.data.id = 0;
+													temp.data.token = SCAN_P_ID;
+												}
+											}
+										}
+										break; /* hi limit is 1! */
+									}
+								} /* end of rdp_item_inl_23 */
+								else
+								{
+									/* default action processing for rdp_item_inl_23 */
+									if (rdp_tree_update)
+									{
+										RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
+										temp.data.id = 0;
+										temp.data.token = SCAN_P_ID;
+									}
+								}
+							}
+							else if (scan_test(null, RDP_T_123 /* { */, null))
+							{
+								if (rdp_tree_update)
+								{
+									rdp_add_child(null, rdp_tree);
+								}
+								scan_test(null, RDP_T_123 /* { */, item_inl_stop);
+								scan_();
+								body = prod(rdp_add_child("prod", rdp_tree));
+								if (rdp_tree_update)
+								{
+									rdp_add_child(null, rdp_tree);
+								}
+								scan_test(null, RDP_T_125 /* } */, item_inl_stop);
+								scan_();
+								if (rdp_pass == 2)
+								{
+									result = rdp_find(text_insert_substring("rdp", rdp_primary_id, rdp_component++), K_LIST,
+											RDP_ANY);
+									result.promote = promote_op;
+									result.list = body;
+									result.contains_null = true;
+									result.call_count++;
+									result.lo = 0;
+									result.hi = 0;
+
+								}
+							}
+							else if (scan_test(null, RDP_T_91 /* [ */, null))
+							{
+								if (rdp_tree_update)
+								{
+									rdp_add_child(null, rdp_tree);
+								}
+								scan_test(null, RDP_T_91 /* [ */, item_inl_stop);
+								scan_();
+								body = prod(rdp_add_child("prod", rdp_tree));
+								if (rdp_tree_update)
+								{
+									rdp_add_child(null, rdp_tree);
+								}
+								scan_test(null, RDP_T_93 /* ] */, item_inl_stop);
+								scan_();
+								if (rdp_pass == 2)
+								{
+									result = rdp_find(text_insert_substring("rdp", rdp_primary_id, rdp_component++), K_LIST,
+											RDP_ANY);
+									result.promote = promote_op;
+									result.list = body;
+									result.contains_null = true;
+									result.call_count++;
+									result.lo = 0;
+									result.hi = 1;
+
+								}
+							}
+							else if (scan_test(null, RDP_T_60 /* < */, null))
+							{
+								if (rdp_tree_update)
+								{
+									rdp_add_child(null, rdp_tree);
+								}
+								scan_test(null, RDP_T_60 /* < */, item_inl_stop);
+								scan_();
+								body = prod(rdp_add_child("prod", rdp_tree));
+								if (rdp_tree_update)
+								{
+									rdp_add_child(null, rdp_tree);
+								}
+								scan_test(null, RDP_T_62 /* > */, item_inl_stop);
+								scan_();
+								if (rdp_pass == 2)
+								{
+									result = rdp_find(text_insert_substring("rdp", rdp_primary_id, rdp_component++), K_LIST,
+											RDP_ANY);
+									result.promote = promote_op;
+									result.list = body;
+									result.call_count++;
+									result.lo = 1;
+									result.hi = 0;
+
+								}
+							}
+							else
+							{
+								scan_test_set(null, rdp_item_inl_28_first, item_inl_stop);
+							}
+						}
+						break; /* hi limit is 1! */
+					}
+				} /* end of rdp_item_inl_28 */
+				scan_test_set(null, item_inl_stop, item_inl_stop);
+			}
+			return result;
+		}
+
+		private static RdpData item_ret(RdpTreeNodeData rdp_tree)
+		{
+			RdpData result = null;
+			string name;
+			int n;
+			double r;
+			string str;
+			string quote;
+			string close;
+			if (scan_test(null, SCAN_P_ID, null))
+			{
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, SCAN_P_ID, item_ret_stop);
+				name = text_get_string(text_scan_data.id);
+				scan_();
+				if (rdp_pass == 2)
+				{
+					result = rdp_find(name, K_PRIMARY, RDP_OLD);
+					rdp_check_eoln(name);
+					result.call_count++; /* increment call count */
+					result.actuals = null;
+
+				}
+				if (rdp_pass == 2 && result.parameterised)
+				{
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_40 /* ( */, item_ret_stop);
+					scan_();
+					if (scan_test_set(null, rdp_item_ret_6_first, null))
+					{ /* Start of rdp_item_ret_6 */
+						while (true)
+						{
+							RdpParamList param;
+
+							/* Start of rdp_item_ret_4 */
+							while (true)
+							{
+								scan_test_set(null, rdp_item_ret_4_first, item_ret_stop);
+								if (scan_test(null, SCAN_P_INTEGER, null))
+								{
+									if (rdp_tree_update)
+									{
+										rdp_add_child(null, rdp_tree);
+									}
+									scan_test(null, SCAN_P_INTEGER, item_ret_stop);
+									n = text_scan_data.i;
+									scan_();
+									if (rdp_pass == 2)
+									{
+										param = new RdpParamList();
+										param.n = n;
+										param.next = result.actuals;
+										result.actuals = param;
+										param.flavour = PARAM_INTEGER;
+
+									}
+								}
+								else if (scan_test(null, SCAN_P_REAL, null))
+								{
+									if (rdp_tree_update)
+									{
+										rdp_add_child(null, rdp_tree);
+									}
+									scan_test(null, SCAN_P_REAL, item_ret_stop);
+									r = text_scan_data.r;
+									scan_();
+									if (rdp_pass == 2)
+									{
+										param = new RdpParamList();
+										param.r = r;
+										param.next = result.actuals;
+										result.actuals = param;
+										param.flavour = PARAM_REAL;
+
+									}
+								}
+								else if (scan_test(null, RDP_T_34 /* " */, null))
+								{
+									str = String(rdp_add_child("String", rdp_tree));
+									if (rdp_pass == 2)
+									{
+										param = new RdpParamList();
+										param.id = str;
+										param.next = result.actuals;
+										result.actuals = param;
+										param.flavour = PARAM_STRING;
+									}
+								}
+								else if (scan_test(null, SCAN_P_ID, null))
+								{
+									if (rdp_tree_update)
+									{
+										rdp_add_child(null, rdp_tree);
+									}
+									scan_test(null, SCAN_P_ID, item_ret_stop);
+									name = text_get_string(text_scan_data.id);
+									scan_();
+									if (rdp_pass == 2)
+									{
+										param = new RdpParamList();
+										param.id = name;
+										param.next = result.actuals;
+										result.actuals = param;
+										param.flavour = PARAM_ID;
+
+									}
+								}
+								else
+								{
+									scan_test_set(null, rdp_item_ret_4_first, item_ret_stop);
+								}
+								break; /* hi limit is 1! */
+							}
+							if (!scan_test_set(null, rdp_item_ret_6_first, null))
+							{
+								break;
+							}
+						}
+					} /* end of rdp_item_ret_6 */
+					else
+					{
+						/* default action processing for rdp_item_ret_6 */
+						if (rdp_tree_update)
+						{
+							// rdp_tree_node_data temp = rdp_add_child(null,
+							// rdp_tree);
+							// temp.id = null;
+							// temp.token = SCAN_P_ID;
+						}
+					}
+					if (rdp_tree_update)
+					{
+						rdp_add_child(null, rdp_tree);
+					}
+					scan_test(null, RDP_T_41 /* ) */, item_ret_stop);
+					scan_();
 				}
 			}
+			else if (scan_test(null, RDP_T_39 /* ' */, null))
+			{
+				name = token(rdp_add_child("token", rdp_tree));
+				if (rdp_pass == 2)
+				{
+					result = rdp_process_token(name);
+				}
+			}
+			else if (scan_test(null, RDP_T_CHAR, null))
+			{
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_CHAR, item_ret_stop);
+				scan_();
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_40 /* ( */, item_ret_stop);
+				scan_();
+				name = token(rdp_add_child("token", rdp_tree));
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_41 /* ) */, item_ret_stop);
+				scan_();
+				if (rdp_pass == 2)
+				{
+					result = rdp_find_extended(name, null, SCAN_P_CHAR);
+				}
+			}
+			else if (scan_test(null, RDP_T_CHAR_ESC, null))
+			{
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_CHAR_ESC, item_ret_stop);
+				scan_();
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_40 /* ( */, item_ret_stop);
+				scan_();
+				name = token(rdp_add_child("token", rdp_tree));
+				quote = token(rdp_add_child("token", rdp_tree));
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_41 /* ) */, item_ret_stop);
+				scan_();
+				if (rdp_pass == 2)
+				{
+					result = rdp_find_extended(name, quote, SCAN_P_CHAR_ESC);
+				}
+			}
+			else if (scan_test(null, RDP_T_STRING, null))
+			{
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_STRING, item_ret_stop);
+				scan_();
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_40 /* ( */, item_ret_stop);
+				scan_();
+				name = token(rdp_add_child("token", rdp_tree));
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_41 /* ) */, item_ret_stop);
+				scan_();
+				if (rdp_pass == 2)
+				{
+					result = rdp_find_extended(name, null, SCAN_P_STRING);
+				}
+			}
+			else if (scan_test(null, RDP_T_STRING_ESC, null))
+			{
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_STRING_ESC, item_ret_stop);
+				scan_();
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_40 /* ( */, item_ret_stop);
+				scan_();
+				name = token(rdp_add_child("token", rdp_tree));
+				quote = token(rdp_add_child("token", rdp_tree));
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_41 /* ) */, item_ret_stop);
+				scan_();
+				if (rdp_pass == 2)
+				{
+					result = rdp_find_extended(name, quote, SCAN_P_STRING_ESC);
+				}
+			}
+			else if (scan_test(null, RDP_T_COMMENT_VISIBLE, null))
+			{
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_COMMENT_VISIBLE, item_ret_stop);
+				scan_();
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_40 /* ( */, item_ret_stop);
+				scan_();
+				name = token(rdp_add_child("token", rdp_tree));
+				close = token(rdp_add_child("token", rdp_tree));
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_41 /* ) */, item_ret_stop);
+				scan_();
+				if (rdp_pass == 2)
+				{
+					result = rdp_find_extended(name, close, SCAN_P_COMMENT_VISIBLE);
+				}
+			}
+			else if (scan_test(null, RDP_T_COMMENT_NEST_VISIBLE, null))
+			{
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_COMMENT_NEST_VISIBLE, item_ret_stop);
+				scan_();
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_40 /* ( */, item_ret_stop);
+				scan_();
+				name = token(rdp_add_child("token", rdp_tree));
+				close = token(rdp_add_child("token", rdp_tree));
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_41 /* ) */, item_ret_stop);
+				scan_();
+				if (rdp_pass == 2)
+				{
+					result = rdp_find_extended(name, close, SCAN_P_COMMENT_NEST_VISIBLE);
+				}
+			}
+			else if (scan_test(null, RDP_T_COMMENT_LINE_VISIBLE, null))
+			{
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_COMMENT_LINE_VISIBLE, item_ret_stop);
+				scan_();
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_40 /* ( */, item_ret_stop);
+				scan_();
+				name = token(rdp_add_child("token", rdp_tree));
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_41 /* ) */, item_ret_stop);
+				scan_();
+				if (rdp_pass == 2)
+				{
+					result = rdp_find_extended(name, null, SCAN_P_COMMENT_LINE_VISIBLE);
+				}
+			}
+			else if (scan_test(null, RDP_T_NUMBER, null))
+			{
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_NUMBER, item_ret_stop);
+				scan_();
+				text_message(TEXT_ERROR_ECHO, "Obsolete scanner primitive: NUMBER renamed INTEGER at version 1.3\n");
+			}
+			else if (scan_test(null, RDP_T_NEW_ID, null))
+			{
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_NEW_ID, item_ret_stop);
+				scan_();
+				text_message(TEXT_ERROR_ECHO, "Obsolete scanner primitive: NEW_ID deleted at version 1.4\n");
+			}
+			else if (scan_test(null, RDP_T_ALT_ID, null))
+			{
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_ALT_ID, item_ret_stop);
+				scan_();
+				text_message(TEXT_ERROR_ECHO, "Obsolete scanner primitive: ALT_ID deleted at version 1.4\n");
+			}
+			else if (scan_test(null, RDP_T_34 /* " */, null))
+			{
+				str = String(rdp_add_child("String", rdp_tree));
+				if (rdp_pass == 2)
+				{
+					text_message(TEXT_ERROR_ECHO, "Illegal grammar element: perhaps you intended to write '" + str + "'\n");
+				}
+			}
+			else if (scan_test(null, SCAN_P_INTEGER, null))
+			{
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, SCAN_P_INTEGER, item_ret_stop);
+				scan_();
+				if (rdp_pass == 2)
+				{
+					text_message(TEXT_ERROR_ECHO, "Illegal grammar element: an integer may not appear here\n");
+				}
+			}
+			else if (scan_test(null, SCAN_P_REAL, null))
+			{
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, SCAN_P_REAL, item_ret_stop);
+				scan_();
+				if (rdp_pass == 2)
+				{
+					text_message(TEXT_ERROR_ECHO, "Illegal grammar element: a real may not appear here\n");
+				}
+			}
+			else
+			{
+				scan_test_set(null, item_ret_first, item_ret_stop);
+			}
+			scan_test_set(null, item_ret_stop, item_ret_stop);
+			return result;
+		}
+
+		private static RdpList prod(RdpTreeNodeData rdp_tree)
+		{
+			RdpList result = null;
+			RdpList body;
+
+			RdpList end = null;
+			if (rdp_pass == 2)
+			{
+				end = result = new RdpList();
+			}
+			/* Start of rdp_prod_1 */
+			while (true)
+			{
+				scan_test_set(null, rdp_prod_1_first, prod_stop);
+
+				body = seq(rdp_add_child("seq", rdp_tree));
+				if (rdp_pass == 2)
+				{
+					end.next = new RdpList();
+					end = end.next;
+					end.production = rdp_find(text_insert_substring("rdp", rdp_primary_id, rdp_component++), K_SEQUENCE,
+							RDP_NEW);
+					end.production.call_count++;
+					end.production.list = body;
+				}
+				if (text_scan_data.token != RDP_T_124 /* | */)
+				{
+					break;
+				}
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_();
+			}
+			/* end of rdp_prod_1 */
+			if (rdp_pass == 2)
+			{
+				result = result.next;
+			}
+			scan_test_set(null, prod_stop, prod_stop);
+			return result;
+		}
+
+		private static RdpTreeNodeData rdp_add_child(string id, RdpTreeNodeData rdp_tree)
+		{
 			if (rdp_tree_update)
 			{
-				rdp_add_child(null, rdp_tree);
+				rdp_tree_last_child = new RdpTreeNodeData();
+				rdp_tree.insertNode(rdp_tree_last_child);
+				if (id != null)
+				{
+					rdp_tree_last_child.data.id = text_insert_string(id);
+				}
+				else
+				{
+					memcpy(rdp_tree_last_child.data, text_scan_data);
+				}
+				new RdpTreeEdgeData(1).insertEdgeAfterFinal(rdp_tree_last_child, rdp_tree);
+				return rdp_tree_last_child;
 			}
-			scan_test(null, RDP_T_41 /* ) */, item_ret_stop);
-			scan_();
+			return null;
 		}
-	}
-	else if (scan_test(null, RDP_T_39 /* ' */, null))
-	{
-		name = token(rdp_add_child("token", rdp_tree));
-		if (rdp_pass == 2)
-		{
-			result = rdp_process_token(name);
-		}
-	}
-	else if (scan_test(null, RDP_T_CHAR, null))
-	{
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_CHAR, item_ret_stop);
-		scan_();
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_40 /* ( */, item_ret_stop);
-		scan_();
-		name = token(rdp_add_child("token", rdp_tree));
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_41 /* ) */, item_ret_stop);
-		scan_();
-		if (rdp_pass == 2)
-		{
-			result = rdp_find_extended(name, null, SCAN_P_CHAR);
-		}
-	}
-	else if (scan_test(null, RDP_T_CHAR_ESC, null))
-	{
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_CHAR_ESC, item_ret_stop);
-		scan_();
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_40 /* ( */, item_ret_stop);
-		scan_();
-		name = token(rdp_add_child("token", rdp_tree));
-		quote = token(rdp_add_child("token", rdp_tree));
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_41 /* ) */, item_ret_stop);
-		scan_();
-		if (rdp_pass == 2)
-		{
-			result = rdp_find_extended(name, quote, SCAN_P_CHAR_ESC);
-		}
-	}
-	else if (scan_test(null, RDP_T_STRING, null))
-	{
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_STRING, item_ret_stop);
-		scan_();
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_40 /* ( */, item_ret_stop);
-		scan_();
-		name = token(rdp_add_child("token", rdp_tree));
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_41 /* ) */, item_ret_stop);
-		scan_();
-		if (rdp_pass == 2)
-		{
-			result = rdp_find_extended(name, null, SCAN_P_STRING);
-		}
-	}
-	else if (scan_test(null, RDP_T_STRING_ESC, null))
-	{
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_STRING_ESC, item_ret_stop);
-		scan_();
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_40 /* ( */, item_ret_stop);
-		scan_();
-		name = token(rdp_add_child("token", rdp_tree));
-		quote = token(rdp_add_child("token", rdp_tree));
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_41 /* ) */, item_ret_stop);
-		scan_();
-		if (rdp_pass == 2)
-		{
-			result = rdp_find_extended(name, quote, SCAN_P_STRING_ESC);
-		}
-	}
-	else if (scan_test(null, RDP_T_COMMENT_VISIBLE, null))
-	{
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_COMMENT_VISIBLE, item_ret_stop);
-		scan_();
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_40 /* ( */, item_ret_stop);
-		scan_();
-		name = token(rdp_add_child("token", rdp_tree));
-		close = token(rdp_add_child("token", rdp_tree));
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_41 /* ) */, item_ret_stop);
-		scan_();
-		if (rdp_pass == 2)
-		{
-			result = rdp_find_extended(name, close, SCAN_P_COMMENT_VISIBLE);
-		}
-	}
-	else if (scan_test(null, RDP_T_COMMENT_NEST_VISIBLE, null))
-	{
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_COMMENT_NEST_VISIBLE, item_ret_stop);
-		scan_();
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_40 /* ( */, item_ret_stop);
-		scan_();
-		name = token(rdp_add_child("token", rdp_tree));
-		close = token(rdp_add_child("token", rdp_tree));
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_41 /* ) */, item_ret_stop);
-		scan_();
-		if (rdp_pass == 2)
-		{
-			result = rdp_find_extended(name, close, SCAN_P_COMMENT_NEST_VISIBLE);
-		}
-	}
-	else if (scan_test(null, RDP_T_COMMENT_LINE_VISIBLE, null))
-	{
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_COMMENT_LINE_VISIBLE, item_ret_stop);
-		scan_();
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_40 /* ( */, item_ret_stop);
-		scan_();
-		name = token(rdp_add_child("token", rdp_tree));
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_41 /* ) */, item_ret_stop);
-		scan_();
-		if (rdp_pass == 2)
-		{
-			result = rdp_find_extended(name, null, SCAN_P_COMMENT_LINE_VISIBLE);
-		}
-	}
-	else if (scan_test(null, RDP_T_NUMBER, null))
-	{
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_NUMBER, item_ret_stop);
-		scan_();
-		text_message(TEXT_ERROR_ECHO, "Obsolete scanner primitive: NUMBER renamed INTEGER at version 1.3\n");
-	}
-	else if (scan_test(null, RDP_T_NEW_ID, null))
-	{
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_NEW_ID, item_ret_stop);
-		scan_();
-		text_message(TEXT_ERROR_ECHO, "Obsolete scanner primitive: NEW_ID deleted at version 1.4\n");
-	}
-	else if (scan_test(null, RDP_T_ALT_ID, null))
-	{
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_ALT_ID, item_ret_stop);
-		scan_();
-		text_message(TEXT_ERROR_ECHO, "Obsolete scanner primitive: ALT_ID deleted at version 1.4\n");
-	}
-	else if (scan_test(null, RDP_T_34 /* " */, null))
-	{
-		str = String(rdp_add_child("String", rdp_tree));
-		if (rdp_pass == 2)
-		{
-			text_message(TEXT_ERROR_ECHO, "Illegal grammar element: perhaps you intended to write '" + str + "'\n");
-		}
-	}
-	else if (scan_test(null, SCAN_P_INTEGER, null))
-	{
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, SCAN_P_INTEGER, item_ret_stop);
-		scan_();
-		if (rdp_pass == 2)
-		{
-			text_message(TEXT_ERROR_ECHO, "Illegal grammar element: an integer may not appear here\n");
-		}
-	}
-	else if (scan_test(null, SCAN_P_REAL, null))
-	{
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, SCAN_P_REAL, item_ret_stop);
-		scan_();
-		if (rdp_pass == 2)
-		{
-			text_message(TEXT_ERROR_ECHO, "Illegal grammar element: a real may not appear here\n");
-		}
-	}
-	else
-	{
-		scan_test_set(null, item_ret_first, item_ret_stop);
-	}
-	scan_test_set(null, item_ret_stop, item_ret_stop);
-	return result;
-}
 
-private static RdpList prod(RdpTreeNodeData rdp_tree)
-{
-	RdpList result = null;
-	RdpList body;
-
-	RdpList end = null;
-	if (rdp_pass == 2)
-	{
-		end = result = new RdpList();
-	}
-	/* Start of rdp_prod_1 */
-	while (true)
-	{
-		scan_test_set(null, rdp_prod_1_first, prod_stop);
-
-		body = seq(rdp_add_child("seq", rdp_tree));
-		if (rdp_pass == 2)
+		private static RdpTreeNodeData rdp_add_node(string id, Graph<RdpTreeNodeData, RdpTreeEdgeData> rdp_tree)
 		{
-			end.next = new RdpList();
-			end = end.next;
-			end.production = rdp_find(text_insert_substring("rdp", rdp_primary_id, rdp_component++), K_SEQUENCE,
-					RDP_NEW);
-			end.production.call_count++;
-			end.production.list = body;
+			if (rdp_tree_update)
+			{
+				RdpTreeNodeData node = new RdpTreeNodeData();
+				rdp_tree.insertNode(node);
+				if (id != null)
+				{
+					node.data.id = text_insert_string(id);
+				}
+				else
+				{
+					memcpy(node.data, text_scan_data);
+				}
+				return node;
+			}
+			return null;
 		}
-		if (text_scan_data.token != RDP_T_124 /* | */)
-		{
-			break;
-		}
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_();
-	}
-	/* end of rdp_prod_1 */
-	if (rdp_pass == 2)
-	{
-		result = result.next;
-	}
-	scan_test_set(null, prod_stop, prod_stop);
-	return result;
-}
-
-private static RdpTreeNodeData rdp_add_child(string id, RdpTreeNodeData rdp_tree)
-{
-	if (rdp_tree_update)
-	{
-		rdp_tree_last_child = new RdpTreeNodeData();
-		rdp_tree.insertNode(rdp_tree_last_child);
-		if (id != null)
-		{
-			rdp_tree_last_child.data.id = text_insert_string(id);
-		}
-		else
-		{
-			memcpy(rdp_tree_last_child.data, text_scan_data);
-		}
-		new RdpTreeEdgeData(1).insertEdgeAfterFinal(rdp_tree_last_child, rdp_tree);
-		return rdp_tree_last_child;
-	}
-	return null;
-}
-
-private static RdpTreeNodeData rdp_add_node(string id, Graph<RdpTreeNodeData, RdpTreeEdgeData> rdp_tree)
-{
-	if (rdp_tree_update)
-	{
-		RdpTreeNodeData node = new RdpTreeNodeData();
-		rdp_tree.insertNode(node);
-		if (id != null)
-		{
-			node.data.id = text_insert_string(id);
-		}
-		else
-		{
-			memcpy(node.data, text_scan_data);
-		}
-		return node;
-	}
-	return null;
-}
-#endif
 
 		private static void rdp_load_keywords()
 		{
@@ -2795,99 +2791,609 @@ private static RdpTreeNodeData rdp_add_node(string id, Graph<RdpTreeNodeData, Rd
 			unit_stop.assignList(SCAN_P_EOF);
 		}
 
-#if false
 		private static RdpData rule(RdpTreeNodeData rdp_tree)
-{
-	RdpData result;
-	int name;
-	int type;
-	RdpList body;
-	{
-		int stars;
-		if (rdp_tree_update)
 		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, SCAN_P_ID, rule_stop);
-		name = text_scan_data.id;
-		scan_();
-		rdp_primary_id = text_get_string(name);
-		rdp_component = 0;
-		rdp_rule_count++;
-		result = rdp_find(rdp_primary_id, K_PRIMARY, rdp_pass == 1 ? RDP_NEW : RDP_OLD);
-		if (rdp_start_prod == null)
-		{
-			rdp_start_prod = result;
-			result.call_count++;
-		}
-
-		if (scan_test(null, RDP_T_40 /* ( */, null))
-		{ /* Start of rdp_rule_7 */
-			while (true)
+			RdpData result;
+			int name;
+			int type;
+			RdpList body;
 			{
+				int stars;
+				if (rdp_tree_update)
 				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, SCAN_P_ID, rule_stop);
+				name = text_scan_data.id;
+				scan_();
+				rdp_primary_id = text_get_string(name);
+				rdp_component = 0;
+				rdp_rule_count++;
+				result = rdp_find(rdp_primary_id, K_PRIMARY, rdp_pass == 1 ? RDP_NEW : RDP_OLD);
+				if (rdp_start_prod == null)
+				{
+					rdp_start_prod = result;
+					result.call_count++;
+				}
+
+				if (scan_test(null, RDP_T_40 /* ( */, null))
+				{ /* Start of rdp_rule_7 */
+					while (true)
+					{
+						{
+							if (rdp_tree_update)
+							{
+								rdp_add_child(null, rdp_tree);
+							}
+							scan_test(null, RDP_T_40 /* ( */, rule_stop);
+							scan_();
+							result.parameterised = true;
+							if (scan_test(null, SCAN_P_ID, null))
+							{ /* Start of rdp_rule_5 */
+								while (true)
+								{
+									{
+										RdpParamList param;
+										type = text_insert_string("void");
+										stars = 0;
+										if (rdp_tree_update)
+										{
+											rdp_add_child(null, rdp_tree);
+										}
+										scan_test(null, SCAN_P_ID, rule_stop);
+										name = text_scan_data.id;
+										scan_();
+										if (scan_test(null, RDP_T_58 /* : */, null))
+										{ /* Start of rdp_rule_3 */
+											while (true)
+											{
+												{
+													if (rdp_tree_update)
+													{
+														rdp_add_child(null, rdp_tree);
+													}
+													scan_test(null, RDP_T_58 /* : */, rule_stop);
+													scan_();
+													if (rdp_tree_update)
+													{
+														rdp_add_child(null, rdp_tree);
+													}
+													scan_test(null, SCAN_P_ID, rule_stop);
+													type = text_scan_data.id;
+													scan_();
+													if (scan_test(null, RDP_T_42 /* * */, null))
+													{ /* Start of rdp_rule_1 */
+														while (true)
+														{
+															{
+																if (rdp_tree_update)
+																{
+																	rdp_add_child(null, rdp_tree);
+																}
+																scan_test(null, RDP_T_42 /* * */, rule_stop);
+																scan_();
+																stars++;
+															}
+															if (!scan_test(null, RDP_T_42 /* * */, null))
+															{
+																break;
+															}
+														}
+													} /* end of rdp_rule_1 */
+													else
+													{
+														/* default action processing for rdp_rule_1 */
+														if (rdp_tree_update)
+														{
+															RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
+															temp.data.id = 0;
+															temp.data.token = SCAN_P_ID;
+														}
+													}
+												}
+												break; /* hi limit is 1! */
+											}
+										} /* end of rdp_rule_3 */
+										else
+										{
+											/* default action processing for rdp_rule_3 */
+											if (rdp_tree_update)
+											{
+												RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
+												temp.data.id = 0;
+												temp.data.token = SCAN_P_ID;
+											}
+										}
+										if (rdp_pass == 1)
+										{
+											param = new RdpParamList();
+											param.id = text_get_string(name);
+											param.type = text_get_string(type);
+											param.stars = stars;
+											param.next = result.parameters;
+											result.parameters = param;
+										}
+									}
+									if (!scan_test(null, SCAN_P_ID, null))
+									{
+										break;
+									}
+								}
+							} /* end of rdp_rule_5 */
+							else
+							{
+								/* default action processing for rdp_rule_5 */
+								if (rdp_tree_update)
+								{
+									RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
+									temp.data.id = 0;
+									temp.data.token = SCAN_P_ID;
+								}
+							}
+							if (rdp_tree_update)
+							{
+								rdp_add_child(null, rdp_tree);
+							}
+							scan_test(null, RDP_T_41 /* ) */, rule_stop);
+							scan_();
+						}
+						break; /* hi limit is 1! */
+					}
+				} /* end of rdp_rule_7 */
+				else
+				{
+					/* default action processing for rdp_rule_7 */
 					if (rdp_tree_update)
 					{
-						rdp_add_child(null, rdp_tree);
+						RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
+						temp.data.id = 0;
+						temp.data.token = SCAN_P_ID;
 					}
-					scan_test(null, RDP_T_40 /* ( */, rule_stop);
-					scan_();
-					result.parameterised = true;
-					if (scan_test(null, SCAN_P_ID, null))
-					{ /* Start of rdp_rule_5 */
-						while (true)
+				}
+				type = text_insert_string("void");
+				stars = 0;
+				if (scan_test(null, RDP_T_58 /* : */, null))
+				{ /* Start of rdp_rule_11 */
+					while (true)
+					{
 						{
+							if (rdp_tree_update)
 							{
-								RdpParamList param;
-								type = text_insert_string("void");
-								stars = 0;
+								rdp_add_child(null, rdp_tree);
+							}
+							scan_test(null, RDP_T_58 /* : */, rule_stop);
+							scan_();
+							if (rdp_tree_update)
+							{
+								rdp_add_child(null, rdp_tree);
+							}
+							scan_test(null, SCAN_P_ID, rule_stop);
+							type = text_scan_data.id;
+							scan_();
+							if (scan_test(null, RDP_T_42 /* * */, null))
+							{ /* Start of rdp_rule_9 */
+								while (true)
+								{
+									{
+										if (rdp_tree_update)
+										{
+											rdp_add_child(null, rdp_tree);
+										}
+										scan_test(null, RDP_T_42 /* * */, rule_stop);
+										scan_();
+										stars++;
+									}
+									if (!scan_test(null, RDP_T_42 /* * */, null))
+									{
+										break;
+									}
+								}
+							} /* end of rdp_rule_9 */
+							else
+							{
+								/* default action processing for rdp_rule_9 */
+								if (rdp_tree_update)
+								{
+									RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
+									temp.data.id = 0;
+									temp.data.token = SCAN_P_ID;
+								}
+							}
+						}
+						break; /* hi limit is 1! */
+					}
+				} /* end of rdp_rule_11 */
+				else
+				{
+					/* default action processing for rdp_rule_11 */
+					if (rdp_tree_update)
+					{
+						RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
+						temp.data.id = 0;
+						temp.data.token = SCAN_P_ID;
+					}
+				}
+				if (rdp_pass == 2)
+				{
+					result.promote_default = PROMOTE_DONT;
+				}
+				if (scan_test_set(null, rdp_rule_16_first, null))
+				{ /* Start of rdp_rule_16 */
+					while (true)
+					{
+						{
+							if (scan_test(null, RDP_T_9495 /* ^_ */, null))
+							{
 								if (rdp_tree_update)
 								{
 									rdp_add_child(null, rdp_tree);
 								}
-								scan_test(null, SCAN_P_ID, rule_stop);
-								name = text_scan_data.id;
+								scan_test(null, RDP_T_9495 /* ^_ */, rule_stop);
 								scan_();
-								if (scan_test(null, RDP_T_58 /* : */, null))
-								{ /* Start of rdp_rule_3 */
+								if (rdp_pass == 2)
+								{
+									result.promote_default = PROMOTE_DONT;
+								}
+							}
+							else if (scan_test(null, RDP_T_94 /* ^ */, null))
+							{
+								if (rdp_tree_update)
+								{
+									rdp_add_child(null, rdp_tree);
+								}
+								scan_test(null, RDP_T_94 /* ^ */, rule_stop);
+								scan_();
+								if (rdp_pass == 2)
+								{
+									result.promote_default = PROMOTE;
+								}
+							}
+							else if (scan_test(null, RDP_T_9494 /* ^^ */, null))
+							{
+								if (rdp_tree_update)
+								{
+									rdp_add_child(null, rdp_tree);
+								}
+								scan_test(null, RDP_T_9494 /* ^^ */, rule_stop);
+								scan_();
+								if (rdp_pass == 2)
+								{
+									result.promote_default = PROMOTE_AND_COPY;
+								}
+							}
+							else if (scan_test(null, RDP_T_949494 /* ^^^ */, null))
+							{
+								if (rdp_tree_update)
+								{
+									rdp_add_child(null, rdp_tree);
+								}
+								scan_test(null, RDP_T_949494 /* ^^^ */, rule_stop);
+								scan_();
+								if (rdp_pass == 2)
+								{
+									result.promote_default = PROMOTE_ABOVE;
+								}
+							}
+							else
+							{
+								scan_test_set(null, rdp_rule_16_first, rule_stop);
+							}
+						}
+						break; /* hi limit is 1! */
+					}
+				} /* end of rdp_rule_16 */
+				else
+				{
+					/* default action processing for rdp_rule_16 */
+					if (rdp_tree_update)
+					{
+						RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
+						temp.data.id = 0;
+						temp.data.token = SCAN_P_ID;
+					}
+				}
+				rdp_comment_only = true; /* set comments only flag */
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_585861 /* ::= */, rule_stop);
+				scan_();
+				body = prod(rdp_add_child("prod", rdp_tree));
+				if (rdp_pass == 2)
+				{
+					rdp_rule_count++;
+					result.list = body;
+					result.been_defined = 1;
+					result.return_type = text_get_string(type);
+					result.return_type_stars = stars;
+					result.comment_only = rdp_comment_only;
+				}
+				if (rdp_tree_update)
+				{
+					rdp_add_child(null, rdp_tree);
+				}
+				scan_test(null, RDP_T_46 /* . */, rule_stop);
+				scan_();
+				scan_test_set(null, rule_stop, rule_stop);
+			}
+			return result;
+		}
+
+		private static RdpList seq(RdpTreeNodeData rdp_tree)
+		{
+			RdpList result = null;
+			RdpData body = null;
+			string ret_name = null;
+			string default_action = null;
+			RdpList end = null;
+			int promote_op = 0;
+			int promote_epsilon = 0;
+			if (rdp_pass == 2)
+			{
+				end = result = new RdpList();
+			}
+			/* Start of rdp_seq_31 */
+			while (true)
+			{
+				scan_test_set(null, rdp_seq_31_first, seq_stop);
+
+				if (rdp_pass == 2)
+				{
+					ret_name = null;
+					promote_epsilon = PROMOTE_DONT;
+					promote_op = PROMOTE_DEFAULT;
+				}
+				/* Start of rdp_seq_29 */
+				while (true)
+				{
+					scan_test_set(null, rdp_seq_29_first, seq_stop);
+					if (scan_test_set(null, rdp_seq_10_first, null))
+					{
+						/* Start of rdp_seq_2 */
+						while (true)
+						{
+							scan_test_set(null, rdp_seq_2_first, seq_stop);
+							if (scan_test_set(null, rdp_seq_0_first, null))
+							{
+								body = item_ret(rdp_add_child("item_ret", rdp_tree));
+								rdp_comment_only = false;
+							}
+							else if (scan_test_set(null, rdp_seq_1_first, null))
+							{
+								body = item_com(rdp_add_child("item_com", rdp_tree));
+							}
+							else
+							{
+								scan_test_set(null, rdp_seq_2_first, seq_stop);
+							}
+							break; /* hi limit is 1! */
+						}
+						/* end of rdp_seq_2 */
+						if (scan_test(null, RDP_T_58 /* : */, null))
+						{ /* Start of rdp_seq_4 */
+							while (true)
+							{
+								if (rdp_tree_update)
+								{
+									rdp_add_child(null, rdp_tree);
+								}
+								scan_test(null, RDP_T_58 /* : */, seq_stop);
+								scan_();
+								if (rdp_tree_update)
+								{
+									rdp_add_child(null, rdp_tree);
+								}
+								scan_test(null, SCAN_P_ID, seq_stop);
+								ret_name = text_get_string(text_scan_data.id);
+								scan_();
+								break; /* hi limit is 1! */
+							}
+						} /* end of rdp_seq_4 */
+						else
+						{
+							/* default action processing for rdp_seq_4 */
+							if (rdp_tree_update)
+							{
+								RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
+								temp.data.id = 0;
+								temp.data.token = SCAN_P_ID;
+							}
+						}
+						if (scan_test_set(null, rdp_seq_9_first, null))
+						{ /* Start of rdp_seq_9 */
+							while (true)
+							{
+								if (scan_test(null, RDP_T_9495 /* ^_ */, null))
+								{
+									if (rdp_tree_update)
+									{
+										rdp_add_child(null, rdp_tree);
+									}
+									scan_test(null, RDP_T_9495 /* ^_ */, seq_stop);
+									scan_();
+									if (rdp_pass == 2)
+									{
+										promote_op = PROMOTE_DONT;
+									}
+								}
+								else if (scan_test(null, RDP_T_94 /* ^ */, null))
+								{
+									if (rdp_tree_update)
+									{
+										rdp_add_child(null, rdp_tree);
+									}
+									scan_test(null, RDP_T_94 /* ^ */, seq_stop);
+									scan_();
+									if (rdp_pass == 2)
+									{
+										promote_op = PROMOTE;
+									}
+								}
+								else if (scan_test(null, RDP_T_9494 /* ^^ */, null))
+								{
+									if (rdp_tree_update)
+									{
+										rdp_add_child(null, rdp_tree);
+									}
+									scan_test(null, RDP_T_9494 /* ^^ */, seq_stop);
+									scan_();
+									if (rdp_pass == 2)
+									{
+										promote_op = PROMOTE_AND_COPY;
+									}
+								}
+								else if (scan_test(null, RDP_T_949494 /* ^^^ */, null))
+								{
+									if (rdp_tree_update)
+									{
+										rdp_add_child(null, rdp_tree);
+									}
+									scan_test(null, RDP_T_949494 /* ^^ ^ */, seq_stop);
+									scan_();
+									if (rdp_pass == 2)
+									{
+										promote_op = PROMOTE_ABOVE;
+									}
+								}
+								else
+								{
+									scan_test_set(null, rdp_seq_9_first, seq_stop);
+								}
+								break; /* hi limit is 1! */
+							}
+						} /* end of rdp_seq_9 */
+						else
+						{
+							/* default action processing for rdp_seq_9 */
+							if (rdp_tree_update)
+							{
+								RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
+								temp.data.id = 0;
+								temp.data.token = SCAN_P_ID;
+							}
+						}
+					}
+					else if (scan_test_set(null, rdp_seq_28_first, null))
+					{
+						body = item_inl(rdp_add_child("item_inl", rdp_tree));
+						rdp_comment_only = false;
+						if (rdp_pass == 2)
+						{
+							promote_op = body.promote;
+							default_action = null;
+						}
+						if (scan_test(null, RDP_T_58 /* : */, null))
+						{ /* Start of rdp_seq_27 */
+							while (true)
+							{
+								if (rdp_tree_update)
+								{
+									rdp_add_child(null, rdp_tree);
+								}
+								scan_test(null, RDP_T_58 /* : */, seq_stop);
+								scan_();
+								if (scan_test(null, SCAN_P_ID, null))
+								{ /* Start of rdp_seq_12 */
 									while (true)
 									{
+										if (rdp_tree_update)
 										{
-											if (rdp_tree_update)
-											{
-												rdp_add_child(null, rdp_tree);
-											}
-											scan_test(null, RDP_T_58 /* : */, rule_stop);
-											scan_();
-											if (rdp_tree_update)
-											{
-												rdp_add_child(null, rdp_tree);
-											}
-											scan_test(null, SCAN_P_ID, rule_stop);
-											type = text_scan_data.id;
-											scan_();
-											if (scan_test(null, RDP_T_42 /* * */, null))
-											{ /* Start of rdp_rule_1 */
+											rdp_add_child(null, rdp_tree);
+										}
+										scan_test(null, SCAN_P_ID, seq_stop);
+										scan_();
+										if (rdp_pass == 2)
+										{
+											text_message(TEXT_ERROR_ECHO,
+													"Illegal grammar element: expressions may not retun a value");
+										}
+										break; /* hi limit is 1! */
+									}
+								} /* end of rdp_seq_12 */
+								else
+								{
+									/* default action processing for rdp_seq_12 */
+									if (rdp_tree_update)
+									{
+										RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
+										temp.data.id = 0;
+										temp.data.token = SCAN_P_ID;
+									}
+								}
+								if (scan_test_set(null, rdp_seq_25_first, null))
+								{ /* Start of rdp_seq_25 */
+									while (true)
+									{
+										if (scan_test(null, RDP_T_9142 /* [ * */, null))
+										{
+											default_action = code(rdp_add_child("code", rdp_tree));
+											if (scan_test_set(null, rdp_seq_17_first, null))
+											{ /* Start of rdp_seq_17 */
 												while (true)
 												{
+													if (scan_test(null, RDP_T_9495 /* ^ _ */, null))
 													{
 														if (rdp_tree_update)
 														{
 															rdp_add_child(null, rdp_tree);
 														}
-														scan_test(null, RDP_T_42 /* * */, rule_stop);
+														scan_test(null, RDP_T_9495 /* ^ _ */, seq_stop);
 														scan_();
-														stars++;
+														if (rdp_pass == 2)
+														{
+															promote_epsilon = PROMOTE_DONT;
+														}
 													}
-													if (!scan_test(null, RDP_T_42 /* * */, null))
+													else if (scan_test(null, RDP_T_94 /* ^ */, null))
 													{
-														break;
+														if (rdp_tree_update)
+														{
+															rdp_add_child(null, rdp_tree);
+														}
+														scan_test(null, RDP_T_94 /* ^ */, seq_stop);
+														scan_();
+														if (rdp_pass == 2)
+														{
+															promote_epsilon = PROMOTE;
+														}
 													}
+													else if (scan_test(null, RDP_T_9494 /* ^ ^ */, null))
+													{
+														if (rdp_tree_update)
+														{
+															rdp_add_child(null, rdp_tree);
+														}
+														scan_test(null, RDP_T_9494 /* ^ ^ */, seq_stop);
+														scan_();
+														if (rdp_pass == 2)
+														{
+															promote_epsilon = PROMOTE_AND_COPY;
+														}
+													}
+													else if (scan_test(null, RDP_T_949494 /* ^ ^ ^ */, null))
+													{
+														if (rdp_tree_update)
+														{
+															rdp_add_child(null, rdp_tree);
+														}
+														scan_test(null, RDP_T_949494 /* ^ ^ ^ */, seq_stop);
+														scan_();
+														if (rdp_pass == 2)
+														{
+															promote_epsilon = PROMOTE_ABOVE;
+														}
+													}
+													else
+													{
+														scan_test_set(null, rdp_seq_17_first, seq_stop);
+													}
+													break; /* hi limit is 1 ! */
 												}
-											} /* end of rdp_rule_1 */
+											} /* end of rdp_seq_17 */
 											else
 											{
-												/* default action processing for rdp_rule_1 */
+												/* default action processing for rdp_seq_17 */
 												if (rdp_tree_update)
 												{
 													RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
@@ -2896,12 +3402,82 @@ private static RdpTreeNodeData rdp_add_node(string id, Graph<RdpTreeNodeData, Rd
 												}
 											}
 										}
+										else if (scan_test_set(null, rdp_seq_24_first, null))
+										{
+											/* Start of rdp_seq_23 */
+											while (true)
+											{
+												scan_test_set(null, rdp_seq_23_first, seq_stop);
+												if (scan_test(null, RDP_T_9495 /* ^ _ */, null))
+												{
+													if (rdp_tree_update)
+													{
+														rdp_add_child(null, rdp_tree);
+													}
+													scan_test(null, RDP_T_9495 /* ^ _ */, seq_stop);
+													scan_();
+													if (rdp_pass == 2)
+													{
+														promote_epsilon = PROMOTE_DONT;
+													}
+												}
+												else if (scan_test(null, RDP_T_94 /* ^ */, null))
+												{
+													if (rdp_tree_update)
+													{
+														rdp_add_child(null, rdp_tree);
+													}
+													scan_test(null, RDP_T_94 /* ^ */, seq_stop);
+													scan_();
+													if (rdp_pass == 2)
+													{
+														promote_epsilon = PROMOTE;
+													}
+												}
+												else if (scan_test(null, RDP_T_9494 /* ^ ^ */, null))
+												{
+													if (rdp_tree_update)
+													{
+														rdp_add_child(null, rdp_tree);
+													}
+													scan_test(null, RDP_T_9494 /* ^ ^ */, seq_stop);
+													scan_();
+													if (rdp_pass == 2)
+													{
+														promote_epsilon = PROMOTE_AND_COPY;
+													}
+												}
+												else if (scan_test(null, RDP_T_949494 /* ^ ^ ^ */, null))
+												{
+													if (rdp_tree_update)
+													{
+														rdp_add_child(null, rdp_tree);
+													}
+													scan_test(null, RDP_T_949494 /* ^ ^ ^ */, seq_stop);
+													scan_();
+													if (rdp_pass == 2)
+													{
+														promote_epsilon = PROMOTE_ABOVE;
+													}
+												}
+												else
+												{
+													scan_test_set(null, rdp_seq_23_first, seq_stop);
+												}
+												break; /* hi limit is 1 ! */
+											}
+											/* end of rdp_seq_23 */
+										}
+										else
+										{
+											scan_test_set(null, rdp_seq_25_first, seq_stop);
+										}
 										break; /* hi limit is 1! */
 									}
-								} /* end of rdp_rule_3 */
+								} /* end of rdp_seq_25 */
 								else
 								{
-									/* default action processing for rdp_rule_3 */
+									/* default action processing for rdp_seq_25 */
 									if (rdp_tree_update)
 									{
 										RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
@@ -2909,661 +3485,79 @@ private static RdpTreeNodeData rdp_add_node(string id, Graph<RdpTreeNodeData, Rd
 										temp.data.token = SCAN_P_ID;
 									}
 								}
-								if (rdp_pass == 1)
-								{
-									param = new RdpParamList();
-									param.id = text_get_string(name);
-									param.type = text_get_string(type);
-									param.stars = stars;
-									param.next = result.params;
-									result.params = param;
-								}
+								break; /* hi limit is 1! */
 							}
-							if (!scan_test(null, SCAN_P_ID, null))
+						} /* end of rdp_seq_27 */
+						else
+						{
+							/* default action processing for rdp_seq_27 */
+							if (rdp_tree_update)
 							{
-								break;
+								RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
+								temp.data.id = 0;
+								temp.data.token = SCAN_P_ID;
 							}
 						}
-					} /* end of rdp_rule_5 */
-					else
-					{
-						/* default action processing for rdp_rule_5 */
-						if (rdp_tree_update)
-						{
-							RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
-							temp.data.id = 0;
-							temp.data.token = SCAN_P_ID;
-						}
-					}
-					if (rdp_tree_update)
-					{
-						rdp_add_child(null, rdp_tree);
-					}
-					scan_test(null, RDP_T_41 /* ) */, rule_stop);
-					scan_();
-				}
-				break; /* hi limit is 1! */
-			}
-		} /* end of rdp_rule_7 */
-		else
-		{
-			/* default action processing for rdp_rule_7 */
-			if (rdp_tree_update)
-			{
-				RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
-				temp.data.id = 0;
-				temp.data.token = SCAN_P_ID;
-			}
-		}
-		type = text_insert_string("void");
-		stars = 0;
-		if (scan_test(null, RDP_T_58 /* : */, null))
-		{ /* Start of rdp_rule_11 */
-			while (true)
-			{
-				{
-					if (rdp_tree_update)
-					{
-						rdp_add_child(null, rdp_tree);
-					}
-					scan_test(null, RDP_T_58 /* : */, rule_stop);
-					scan_();
-					if (rdp_tree_update)
-					{
-						rdp_add_child(null, rdp_tree);
-					}
-					scan_test(null, SCAN_P_ID, rule_stop);
-					type = text_scan_data.id;
-					scan_();
-					if (scan_test(null, RDP_T_42 /* * */, null))
-					{ /* Start of rdp_rule_9 */
-						while (true)
-						{
-							{
-								if (rdp_tree_update)
-								{
-									rdp_add_child(null, rdp_tree);
-								}
-								scan_test(null, RDP_T_42 /* * */, rule_stop);
-								scan_();
-								stars++;
-							}
-							if (!scan_test(null, RDP_T_42 /* * */, null))
-							{
-								break;
-							}
-						}
-					} /* end of rdp_rule_9 */
-					else
-					{
-						/* default action processing for rdp_rule_9 */
-						if (rdp_tree_update)
-						{
-							RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
-							temp.data.id = 0;
-							temp.data.token = SCAN_P_ID;
-						}
-					}
-				}
-				break; /* hi limit is 1! */
-			}
-		} /* end of rdp_rule_11 */
-		else
-		{
-			/* default action processing for rdp_rule_11 */
-			if (rdp_tree_update)
-			{
-				RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
-				temp.data.id = 0;
-				temp.data.token = SCAN_P_ID;
-			}
-		}
-		if (rdp_pass == 2)
-		{
-			result.promote_default = PROMOTE_DONT;
-		}
-		if (scan_test_set(null, rdp_rule_16_first, null))
-		{ /* Start of rdp_rule_16 */
-			while (true)
-			{
-				{
-					if (scan_test(null, RDP_T_9495 /* ^_ */, null))
-					{
-						if (rdp_tree_update)
-						{
-							rdp_add_child(null, rdp_tree);
-						}
-						scan_test(null, RDP_T_9495 /* ^_ */, rule_stop);
-						scan_();
-						if (rdp_pass == 2)
-						{
-							result.promote_default = PROMOTE_DONT;
-						}
-					}
-					else if (scan_test(null, RDP_T_94 /* ^ */, null))
-					{
-						if (rdp_tree_update)
-						{
-							rdp_add_child(null, rdp_tree);
-						}
-						scan_test(null, RDP_T_94 /* ^ */, rule_stop);
-						scan_();
-						if (rdp_pass == 2)
-						{
-							result.promote_default = PROMOTE;
-						}
-					}
-					else if (scan_test(null, RDP_T_9494 /* ^^ */, null))
-					{
-						if (rdp_tree_update)
-						{
-							rdp_add_child(null, rdp_tree);
-						}
-						scan_test(null, RDP_T_9494 /* ^^ */, rule_stop);
-						scan_();
-						if (rdp_pass == 2)
-						{
-							result.promote_default = PROMOTE_AND_COPY;
-						}
-					}
-					else if (scan_test(null, RDP_T_949494 /* ^^^ */, null))
-					{
-						if (rdp_tree_update)
-						{
-							rdp_add_child(null, rdp_tree);
-						}
-						scan_test(null, RDP_T_949494 /* ^^^ */, rule_stop);
-						scan_();
-						if (rdp_pass == 2)
-						{
-							result.promote_default = PROMOTE_ABOVE;
-						}
 					}
 					else
 					{
-						scan_test_set(null, rdp_rule_16_first, rule_stop);
-					}
-				}
-				break; /* hi limit is 1! */
-			}
-		} /* end of rdp_rule_16 */
-		else
-		{
-			/* default action processing for rdp_rule_16 */
-			if (rdp_tree_update)
-			{
-				RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
-				temp.data.id = 0;
-				temp.data.token = SCAN_P_ID;
-			}
-		}
-		rdp_comment_only = true; /* set comments only flag */
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_585861 /* ::= */, rule_stop);
-		scan_();
-		body = prod(rdp_add_child("prod", rdp_tree));
-		if (rdp_pass == 2)
-		{
-			rdp_rule_count++;
-			result.list = body;
-			result.been_defined = 1;
-			result.return_type = text_get_string(type);
-			result.return_type_stars = stars;
-			result.comment_only = rdp_comment_only;
-		}
-		if (rdp_tree_update)
-		{
-			rdp_add_child(null, rdp_tree);
-		}
-		scan_test(null, RDP_T_46 /* . */, rule_stop);
-		scan_();
-		scan_test_set(null, rule_stop, rule_stop);
-	}
-	return result;
-}
-
-private static RdpList seq(RdpTreeNodeData rdp_tree)
-{
-	RdpList result = null;
-	RdpData body = null;
-	string ret_name = null;
-	string default_action = null;
-	RdpList end = null;
-	int promote_op = 0;
-	int promote_epsilon = 0;
-	if (rdp_pass == 2)
-	{
-		end = result = new RdpList();
-	}
-	/* Start of rdp_seq_31 */
-	while (true)
-	{
-		scan_test_set(null, rdp_seq_31_first, seq_stop);
-
-		if (rdp_pass == 2)
-		{
-			ret_name = null;
-			promote_epsilon = PROMOTE_DONT;
-			promote_op = PROMOTE_DEFAULT;
-		}
-		/* Start of rdp_seq_29 */
-		while (true)
-		{
-			scan_test_set(null, rdp_seq_29_first, seq_stop);
-			if (scan_test_set(null, rdp_seq_10_first, null))
-			{
-				/* Start of rdp_seq_2 */
-				while (true)
-				{
-					scan_test_set(null, rdp_seq_2_first, seq_stop);
-					if (scan_test_set(null, rdp_seq_0_first, null))
-					{
-						body = item_ret(rdp_add_child("item_ret", rdp_tree));
-						rdp_comment_only = false;
-					}
-					else if (scan_test_set(null, rdp_seq_1_first, null))
-					{
-						body = item_com(rdp_add_child("item_com", rdp_tree));
-					}
-					else
-					{
-						scan_test_set(null, rdp_seq_2_first, seq_stop);
+						scan_test_set(null, rdp_seq_29_first, seq_stop);
 					}
 					break; /* hi limit is 1! */
 				}
-				/* end of rdp_seq_2 */
-				if (scan_test(null, RDP_T_58 /* : */, null))
-				{ /* Start of rdp_seq_4 */
-					while (true)
-					{
-						if (rdp_tree_update)
-						{
-							rdp_add_child(null, rdp_tree);
-						}
-						scan_test(null, RDP_T_58 /* : */, seq_stop);
-						scan_();
-						if (rdp_tree_update)
-						{
-							rdp_add_child(null, rdp_tree);
-						}
-						scan_test(null, SCAN_P_ID, seq_stop);
-						ret_name = text_get_string(text_scan_data.id);
-						scan_();
-						break; /* hi limit is 1! */
-					}
-				} /* end of rdp_seq_4 */
-				else
-				{
-					/* default action processing for rdp_seq_4 */
-					if (rdp_tree_update)
-					{
-						RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
-						temp.data.id = 0;
-						temp.data.token = SCAN_P_ID;
-					}
-				}
-				if (scan_test_set(null, rdp_seq_9_first, null))
-				{ /* Start of rdp_seq_9 */
-					while (true)
-					{
-						if (scan_test(null, RDP_T_9495 /* ^_ */, null))
-						{
-							if (rdp_tree_update)
-							{
-								rdp_add_child(null, rdp_tree);
-							}
-							scan_test(null, RDP_T_9495 /* ^_ */, seq_stop);
-							scan_();
-							if (rdp_pass == 2)
-							{
-								promote_op = PROMOTE_DONT;
-							}
-						}
-						else if (scan_test(null, RDP_T_94 /* ^ */, null))
-						{
-							if (rdp_tree_update)
-							{
-								rdp_add_child(null, rdp_tree);
-							}
-							scan_test(null, RDP_T_94 /* ^ */, seq_stop);
-							scan_();
-							if (rdp_pass == 2)
-							{
-								promote_op = PROMOTE;
-							}
-						}
-						else if (scan_test(null, RDP_T_9494 /* ^^ */, null))
-						{
-							if (rdp_tree_update)
-							{
-								rdp_add_child(null, rdp_tree);
-							}
-							scan_test(null, RDP_T_9494 /* ^^ */, seq_stop);
-							scan_();
-							if (rdp_pass == 2)
-							{
-								promote_op = PROMOTE_AND_COPY;
-							}
-						}
-						else if (scan_test(null, RDP_T_949494 /* ^^^ */, null))
-						{
-							if (rdp_tree_update)
-							{
-								rdp_add_child(null, rdp_tree);
-							}
-							scan_test(null, RDP_T_949494 /* ^^ ^ */, seq_stop);
-							scan_();
-							if (rdp_pass == 2)
-							{
-								promote_op = PROMOTE_ABOVE;
-							}
-						}
-						else
-						{
-							scan_test_set(null, rdp_seq_9_first, seq_stop);
-						}
-						break; /* hi limit is 1! */
-					}
-				} /* end of rdp_seq_9 */
-				else
-				{
-					/* default action processing for rdp_seq_9 */
-					if (rdp_tree_update)
-					{
-						RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
-						temp.data.id = 0;
-						temp.data.token = SCAN_P_ID;
-					}
-				}
-			}
-			else if (scan_test_set(null, rdp_seq_28_first, null))
-			{
-				body = item_inl(rdp_add_child("item_inl", rdp_tree));
-				rdp_comment_only = false;
+				/* end of rdp_seq_29 */
 				if (rdp_pass == 2)
 				{
-					promote_op = body.promote;
-					default_action = null;
+					end.next = new RdpList();
+					end = end.next;
+					end.production = body;
+					end.actuals = body.actuals;
+					end.return_name = ret_name;
+					end.promote = promote_op;
+					end.promote_epsilon = promote_epsilon;
+					end.default_action = default_action;
+
 				}
-				if (scan_test(null, RDP_T_58 /* : */, null))
-				{ /* Start of rdp_seq_27 */
-					while (true)
-					{
-						if (rdp_tree_update)
-						{
-							rdp_add_child(null, rdp_tree);
-						}
-						scan_test(null, RDP_T_58 /* : */, seq_stop);
-						scan_();
-						if (scan_test(null, SCAN_P_ID, null))
-						{ /* Start of rdp_seq_12 */
-							while (true)
-							{
-								if (rdp_tree_update)
-								{
-									rdp_add_child(null, rdp_tree);
-								}
-								scan_test(null, SCAN_P_ID, seq_stop);
-								scan_();
-								if (rdp_pass == 2)
-								{
-									text_message(TEXT_ERROR_ECHO,
-											"Illegal grammar element: expressions may not retun a value");
-								}
-								break; /* hi limit is 1! */
-							}
-						} /* end of rdp_seq_12 */
-						else
-						{
-							/* default action processing for rdp_seq_12 */
-							if (rdp_tree_update)
-							{
-								RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
-								temp.data.id = 0;
-								temp.data.token = SCAN_P_ID;
-							}
-						}
-						if (scan_test_set(null, rdp_seq_25_first, null))
-						{ /* Start of rdp_seq_25 */
-							while (true)
-							{
-								if (scan_test(null, RDP_T_9142 /* [ * */, null))
-								{
-									default_action = code(rdp_add_child("code", rdp_tree));
-									if (scan_test_set(null, rdp_seq_17_first, null))
-									{ /* Start of rdp_seq_17 */
-										while (true)
-										{
-											if (scan_test(null, RDP_T_9495 /* ^ _ */, null))
-											{
-												if (rdp_tree_update)
-												{
-													rdp_add_child(null, rdp_tree);
-												}
-												scan_test(null, RDP_T_9495 /* ^ _ */, seq_stop);
-												scan_();
-												if (rdp_pass == 2)
-												{
-													promote_epsilon = PROMOTE_DONT;
-												}
-											}
-											else if (scan_test(null, RDP_T_94 /* ^ */, null))
-											{
-												if (rdp_tree_update)
-												{
-													rdp_add_child(null, rdp_tree);
-												}
-												scan_test(null, RDP_T_94 /* ^ */, seq_stop);
-												scan_();
-												if (rdp_pass == 2)
-												{
-													promote_epsilon = PROMOTE;
-												}
-											}
-											else if (scan_test(null, RDP_T_9494 /* ^ ^ */, null))
-											{
-												if (rdp_tree_update)
-												{
-													rdp_add_child(null, rdp_tree);
-												}
-												scan_test(null, RDP_T_9494 /* ^ ^ */, seq_stop);
-												scan_();
-												if (rdp_pass == 2)
-												{
-													promote_epsilon = PROMOTE_AND_COPY;
-												}
-											}
-											else if (scan_test(null, RDP_T_949494 /* ^ ^ ^ */, null))
-											{
-												if (rdp_tree_update)
-												{
-													rdp_add_child(null, rdp_tree);
-												}
-												scan_test(null, RDP_T_949494 /* ^ ^ ^ */, seq_stop);
-												scan_();
-												if (rdp_pass == 2)
-												{
-													promote_epsilon = PROMOTE_ABOVE;
-												}
-											}
-											else
-											{
-												scan_test_set(null, rdp_seq_17_first, seq_stop);
-											}
-											break; /* hi limit is 1 ! */
-										}
-									} /* end of rdp_seq_17 */
-									else
-									{
-										/* default action processing for rdp_seq_17 */
-										if (rdp_tree_update)
-										{
-											RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
-											temp.data.id = 0;
-											temp.data.token = SCAN_P_ID;
-										}
-									}
-								}
-								else if (scan_test_set(null, rdp_seq_24_first, null))
-								{
-									/* Start of rdp_seq_23 */
-									while (true)
-									{
-										scan_test_set(null, rdp_seq_23_first, seq_stop);
-										if (scan_test(null, RDP_T_9495 /* ^ _ */, null))
-										{
-											if (rdp_tree_update)
-											{
-												rdp_add_child(null, rdp_tree);
-											}
-											scan_test(null, RDP_T_9495 /* ^ _ */, seq_stop);
-											scan_();
-											if (rdp_pass == 2)
-											{
-												promote_epsilon = PROMOTE_DONT;
-											}
-										}
-										else if (scan_test(null, RDP_T_94 /* ^ */, null))
-										{
-											if (rdp_tree_update)
-											{
-												rdp_add_child(null, rdp_tree);
-											}
-											scan_test(null, RDP_T_94 /* ^ */, seq_stop);
-											scan_();
-											if (rdp_pass == 2)
-											{
-												promote_epsilon = PROMOTE;
-											}
-										}
-										else if (scan_test(null, RDP_T_9494 /* ^ ^ */, null))
-										{
-											if (rdp_tree_update)
-											{
-												rdp_add_child(null, rdp_tree);
-											}
-											scan_test(null, RDP_T_9494 /* ^ ^ */, seq_stop);
-											scan_();
-											if (rdp_pass == 2)
-											{
-												promote_epsilon = PROMOTE_AND_COPY;
-											}
-										}
-										else if (scan_test(null, RDP_T_949494 /* ^ ^ ^ */, null))
-										{
-											if (rdp_tree_update)
-											{
-												rdp_add_child(null, rdp_tree);
-											}
-											scan_test(null, RDP_T_949494 /* ^ ^ ^ */, seq_stop);
-											scan_();
-											if (rdp_pass == 2)
-											{
-												promote_epsilon = PROMOTE_ABOVE;
-											}
-										}
-										else
-										{
-											scan_test_set(null, rdp_seq_23_first, seq_stop);
-										}
-										break; /* hi limit is 1 ! */
-									}
-									/* end of rdp_seq_23 */
-								}
-								else
-								{
-									scan_test_set(null, rdp_seq_25_first, seq_stop);
-								}
-								break; /* hi limit is 1! */
-							}
-						} /* end of rdp_seq_25 */
-						else
-						{
-							/* default action processing for rdp_seq_25 */
-							if (rdp_tree_update)
-							{
-								RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
-								temp.data.id = 0;
-								temp.data.token = SCAN_P_ID;
-							}
-						}
-						break; /* hi limit is 1! */
-					}
-				} /* end of rdp_seq_27 */
-				else
+				if (!scan_test_set(null, rdp_seq_31_first, null))
 				{
-					/* default action processing for rdp_seq_27 */
-					if (rdp_tree_update)
-					{
-						RdpTreeNodeData temp = rdp_add_child(null, rdp_tree);
-						temp.data.id = 0;
-						temp.data.token = SCAN_P_ID;
-					}
+					break;
 				}
 			}
-			else
+			/* end of rdp_seq_31 */
+			if (rdp_pass == 2)
 			{
-				scan_test_set(null, rdp_seq_29_first, seq_stop);
+				result = result.next;
 			}
-			break; /* hi limit is 1! */
+			scan_test_set(null, seq_stop, seq_stop);
+			return result;
 		}
-		/* end of rdp_seq_29 */
-		if (rdp_pass == 2)
+
+		private static string String(RdpTreeNodeData rdp_tree)
 		{
-			end.next = new RdpList();
-			end = end.next;
-			end.production = body;
-			end.actuals = body.actuals;
-			end.return_name = ret_name;
-			end.promote = promote_op;
-			end.promote_epsilon = promote_epsilon;
-			end.default_action = default_action;
+			string result;
 
+			if (rdp_tree_update)
+			{
+				rdp_add_child(null, rdp_tree);
+			}
+			scan_test(null, RDP_T_34 /* " */, String_stop);
+			result = text_get_string(text_scan_data.id);
+			scan_();
+			scan_test_set(null, String_stop, String_stop);
+			return result;
 		}
-		if (!scan_test_set(null, rdp_seq_31_first, null))
+
+		private static string token(RdpTreeNodeData rdp_tree)
 		{
-			break;
+			if (rdp_tree_update)
+			{
+				rdp_add_child(null, rdp_tree);
+			}
+			scan_test(null, RDP_T_39 /* ' */, token_stop);
+			string result = text_get_string(text_scan_data.id);
+			scan_();
+			scan_test_set(null, token_stop, token_stop);
+			return result;
 		}
-	}
-	/* end of rdp_seq_31 */
-	if (rdp_pass == 2)
-	{
-		result = result.next;
-	}
-	scan_test_set(null, seq_stop, seq_stop);
-	return result;
-}
-
-private static string String(RdpTreeNodeData rdp_tree)
-{
-	string result;
-
-	if (rdp_tree_update)
-	{
-		rdp_add_child(null, rdp_tree);
-	}
-	scan_test(null, RDP_T_34 /* " */, String_stop);
-	result = text_get_string(text_scan_data.id);
-	scan_();
-	scan_test_set(null, String_stop, String_stop);
-	return result;
-}
-
-private static string token(RdpTreeNodeData rdp_tree)
-{
-	if (rdp_tree_update)
-	{
-		rdp_add_child(null, rdp_tree);
-	}
-	scan_test(null, RDP_T_39 /* ' */, token_stop);
-	string result = text_get_string(text_scan_data.id);
-	scan_();
-	scan_test_set(null, token_stop, token_stop);
-	return result;
-}
-#endif
 	}
 }

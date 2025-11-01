@@ -35,8 +35,7 @@
 			}
 		}
 
-#if false
-		GraphEdge insertEdgeAfterFinal(GraphNode destination_node, GraphNode source_node)
+		internal GraphEdge insertEdgeAfterFinal(GraphNode destination_node, GraphNode source_node)
 		{
 			GraphNode source_node_base = source_node;
 			GraphNode destination_node_base = destination_node;
@@ -77,6 +76,5 @@
 			destination = destination_node_base;
 			return this;
 		}
-#endif
 	}
 }

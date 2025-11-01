@@ -100,15 +100,15 @@ namespace Borium.RDP
 
 			return bad;
 		}
+#endif
 
 		internal static void rdp_check_eoln(string id)
 		{
-			if (id.equals("EOLN"))
+			if (id.Equals("EOLN"))
 			{
 				rdp_dir_newline_visible = 1; /* Grammar contains an explicit EOLN */
 			}
 		}
-#endif
 
 		internal static void rdp_check_token_valid(string id)
 		{

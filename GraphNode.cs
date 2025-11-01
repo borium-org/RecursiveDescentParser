@@ -7,8 +7,8 @@
 		/// </summary>
 		internal static int graph_next_node_count = 1;
 
-		GraphNode next_node;
-		GraphNode previous_node;
+		internal GraphNode next_node;
+		internal GraphNode previous_node;
 
 		internal void deleteNode()
 		{
@@ -33,8 +33,7 @@
 
 		internal abstract int getId();
 
-#if false
-		void insertNode(GraphNode node)
+		internal void insertNode(GraphNode node)
 		{
 			node.atom_number = graph_next_node_count++;
 			node.next_out_edge = null;
@@ -51,6 +50,5 @@
 				node.next_node.previous_node = node;
 			}
 		}
-#endif
 	}
 }

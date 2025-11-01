@@ -11,27 +11,27 @@ namespace Borium.RDP
 		{
 			int indent();
 		}
+#endif
 
 		internal static int set_cardinality(Set src)
 		{
 			return src == null ? 0 : src.cardinality();
 		}
 
-		internal static int set_print_element(int element, String[] element_names, boolean comments)
+		internal static int set_print_element(int element, string[] element_names, bool comments)
 		{
 			if (element_names == null)
 			{
-				return text_printf(Integer.toString(element));
+				return text_printf(Convert.ToString(element));
 			}
 			else
 			{
-				String elementString = element_names[element];
+				string elementString = element_names[element];
 				if (!comments)
-					elementString = elementString.split(" ")[0];
+					elementString = elementString.Split(' ')[0];
 				return text_printf(elementString);
 			}
 		}
-#endif
 
 		private uint[] data = new uint[10];
 
@@ -71,8 +71,7 @@ namespace Borium.RDP
 			}
 		}
 
-#if false
-		internal boolean includes(int element)
+		internal bool includes(int element)
 		{
 			grow(element);
 			int index = element / 32;
@@ -80,6 +79,7 @@ namespace Borium.RDP
 			return (data[index] & 1 << element) != 0;
 		}
 
+#if false
 		internal void intersect(Set src)
 		{
 			/* only iterate over shortest set */
@@ -94,13 +94,14 @@ namespace Borium.RDP
 				data[length++] = 0;
 			}
 		}
+#endif
 
-		internal void print(String[] element_names, int line_length)
+		internal void print(string[] element_names, int line_length)
 		{
 			int column = 0;
-			boolean not_first = false;
-			Integer[] elements = array();
-			for (int element : elements)
+			bool not_first = false;
+			int[] elements = array();
+			foreach (int element in elements)
 			{
 				if (not_first)
 				{
@@ -120,7 +121,8 @@ namespace Borium.RDP
 			}
 		}
 
-		internal void print(String[] element_names, int initialOffset, Indent indent, int line_length, boolean comments)
+#if false
+		internal void print(string[] element_names, int initialOffset, Indent indent, int line_length, boolean comments)
 		{
 			int column = initialOffset;
 			boolean not_first = false;
@@ -163,21 +165,22 @@ namespace Borium.RDP
 				data[i] |= src.data[i];
 			}
 		}
+#endif
 
-		private Integer[] array()
+		private int[] array()
 		{
-			ArrayList<Integer> elements = new ArrayList<>();
-			for (int word = 0; word < data.length; word++)
+			List<int> elements = new List<int>();
+			for (int word = 0; word < data.Length; word++)
 			{
 				for (int bit = 0; bit < 32; bit++)
 				{
 					if ((data[word] & 1 << bit) != 0)
 					{
-						elements.add(word * 32 + bit);
+						elements.Add(word * 32 + bit);
 					}
 				}
 			}
-			return elements.toArray(new Integer[0]);
+			return elements.ToArray();
 		}
 
 		private int cardinality()
@@ -185,17 +188,17 @@ namespace Borium.RDP
 			int[] bitCounts = new int[] { 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4 };
 
 			int cardinality = 0;
-			for (long bits : data)
+			foreach (uint bits in data)
 			{
+				uint b = bits;
 				for (int i = 0; i < 8; i++)
 				{
-					cardinality += bitCounts[(int)(bits & 0xF)];
-					bits >>= 4;
+					cardinality += bitCounts[(int)(b & 0xF)];
+					b >>= 4;
 				}
 			}
 			return cardinality;
 		}
-#endif
 
 		private void grow(int bits)
 		{

@@ -24,8 +24,7 @@ namespace Borium.RDP
 		string id;
 		int atom_number;
 
-#if false
-		public void insertNode(GraphNode node)
+		internal void insertNode(GraphNode node)
 		{
 			node.atom_number = graph_next_node_count++;
 			node.next_out_edge = null;
@@ -42,7 +41,6 @@ namespace Borium.RDP
 				node.next_node.previous_node = node;
 			}
 		}
-#endif
 
 		internal void insertGraph(string id)
 		{

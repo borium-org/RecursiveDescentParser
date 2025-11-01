@@ -12,9 +12,7 @@ namespace Borium.RDP
 			}
 		}
 
-#if false
-		int atom_number;
-#endif
+		internal int atom_number;
 		internal GraphEdge next_in_edge;
 		internal GraphEdge next_out_edge;
 

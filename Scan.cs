@@ -664,7 +664,7 @@ namespace Borium.RDP
 			scan_lexicalise_flag = true;
 		}
 
-		internal static void scan_load_keyword(String id1, String id2, int token, int extended)
+		internal static void scan_load_keyword(string id1, string id2, int token, int extended)
 		{
 			ScanData d = new ScanData();
 			d.id = text_insert_string(id1);
@@ -677,54 +677,52 @@ namespace Borium.RDP
 			symbol_insert_symbol(scan_table, d);
 		}
 
-#if false
-	internal static boolean scan_test(String production, int valid, Set stop)
-	{
-		if (valid != text_scan_data.token)
+		internal static bool scan_test(string production, int valid, Set stop)
 		{
-			if (stop != null)
+			if (valid != text_scan_data.token)
 			{
-				printScannedToken(production);
-				text_printf(" while expecting ");
-				set_print_element(valid, scan_token_names, true);
-				text_printf("\n");
-				skip(stop);
+				if (stop != null)
+				{
+					printScannedToken(production);
+					text_printf(" while expecting ");
+					set_print_element(valid, scan_token_names, true);
+					text_printf("\n");
+					skip(stop);
+				}
+				return false;
 			}
-			return false;
+			return true;
 		}
-		return true;
-	}
 
-	internal static boolean scan_test_set(String production, Set valid, Set stop)
-	{
-		if (!valid.includes(text_scan_data.token))
+		internal static bool scan_test_set(string production, Set valid, Set stop)
 		{
-			if (stop != null)
+			if (!valid.includes(text_scan_data.token))
 			{
-				printScannedToken(production);
-				text_printf(" while expecting " + (set_cardinality(valid) == 1 ? "" : "one of "));
-				valid.print(scan_token_names, 60);
-				text_printf("\n");
-				skip(stop);
+				if (stop != null)
+				{
+					printScannedToken(production);
+					text_printf(" while expecting " + (set_cardinality(valid) == 1 ? "" : "one of "));
+					valid.print(scan_token_names, 60);
+					text_printf("\n");
+					skip(stop);
+				}
+				return false;
 			}
-			return false;
+			return true;
 		}
-		return true;
-	}
 
-	private static void printScannedToken(String production)
-	{
-		if (production != null)
+		private static void printScannedToken(string production)
 		{
-			text_message(TEXT_ERROR_ECHO, "In rule \'" + production + "\', scanned ");
+			if (production != null)
+			{
+				text_message(TEXT_ERROR_ECHO, "In rule \'" + production + "\', scanned ");
+			}
+			else
+			{
+				text_message(TEXT_ERROR_ECHO, "Scanned ");
+			}
+			set_print_element(text_scan_data.token, scan_token_names, true);
 		}
-		else
-		{
-			text_message(TEXT_ERROR_ECHO, "Scanned ");
-		}
-		set_print_element(text_scan_data.token, scan_token_names, true);
-	}
-#endif
 
 		private static void scan_insert_comment_block(string pattern, int column, int sequence_number)
 		{
@@ -738,18 +736,16 @@ namespace Borium.RDP
 			last_comment_block = temp;
 		}
 
-#if false
 		private static void skip(Set stop)
-	{
-		while (!stop.includes(text_scan_data.token))
 		{
-			scan_();
+			while (!stop.includes(text_scan_data.token))
+			{
+				scan_();
+			}
+			if (scan_show_skips)
+			{
+				text_message(TEXT_ERROR_ECHO, "Skipping to...\n");
+			}
 		}
-		if (scan_show_skips)
-		{
-			text_message(TEXT_ERROR_ECHO, "Skipping to...\n");
-		}
-	}
-#endif
 	}
 }
