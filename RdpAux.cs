@@ -705,15 +705,15 @@ namespace Borium.RDP
 			rdp_base.sort();
 			// find the non-LL(1)-isms
 			rdp_bad_grammar(rdp_base);
-#if false
-		if (rdp_expanded.value())
-		{
-			if (rdp_c_path.value() != null)
+			if (rdp_expanded.value())
 			{
-				RdpPrintC print = new RdpPrintC();
-				print.rdp_dump_extended(rdp_base);
+				if (rdp_c_path.value() != null)
+				{
+					RdpPrintC print = new RdpPrintC();
+					print.rdp_dump_extended(rdp_base);
+				}
 			}
-		}
+#if false
 		if (text_total_errors() > 0)
 		{
 			if (force)

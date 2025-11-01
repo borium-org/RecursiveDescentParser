@@ -138,7 +138,7 @@ private static string RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compile
 		private static Pointer<string> rdp_outputfilename = new Pointer<string>("rdparser"); // output file name
 
 		// set if we want original C parser
-		static Pointer<string> rdp_c_path = new Pointer<string>();
+		internal static Pointer<string> rdp_c_path = new Pointer<string>();
 
 		// set if we want new Java parser
 		static Pointer<string> rdp_java_path = new Pointer<string>();

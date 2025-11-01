@@ -228,12 +228,14 @@ namespace Borium.RDP
 		{
 			return text_printf(text + "\n");
 		}
+#endif
 
 		protected void rdp_print_parser_production_name(RdpData n)
 		{
 			rdp_print_parser_production_name(n, true);
 		}
 
+#if false
 		protected void rdp_print_parser_production_name_no_comment(RdpData n)
 		{
 			rdp_print_parser_production_name(n, false);
@@ -250,8 +252,9 @@ namespace Borium.RDP
 				text_printf("" + ch);
 			}
 		}
+#endif
 
-		private void rdp_print_parser_production_name(RdpData n, boolean printComment)
+		private void rdp_print_parser_production_name(RdpData n, bool printComment)
 		{
 			switch (n.kind)
 			{
@@ -264,9 +267,9 @@ namespace Borium.RDP
 						String tokenName = text_get_string(n.token_enum);
 						if (!printComment)
 						{
-							int pos = tokenName.indexOf(' ');
+							int pos = tokenName.IndexOf(' ');
 							if (pos != -1)
-								tokenName = tokenName.substring(0, pos);
+								tokenName = tokenName.Substring(0, pos);
 						}
 						text_printf(tokenName);
 					}
@@ -278,14 +281,15 @@ namespace Borium.RDP
 					break;
 				default:
 					text_printf(text_get_string(n.id));
-					if (text_get_string(n.id).length() == 0)
+					if (text_get_string(n.id).Length == 0)
 					{
-						System.err.println("Empty string");
+						Console.WriteLine("Empty string");
 					}
 					break;
 			}
 		}
 
+#if false
 		private int text_iprintf(int extraIndent, string fmt)
 		{
 			int i = 0;
