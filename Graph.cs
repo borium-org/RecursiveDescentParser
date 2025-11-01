@@ -15,9 +15,8 @@ namespace Borium.RDP
 		/// </summary>
 		static Graph<NodeData, EdgeData> graph_list = new Graph<NodeData, EdgeData>();
 
-#if false
 		GraphNode root;
-#endif
+
 		Graph<NodeData, EdgeData> next_graph;
 		Graph<NodeData, EdgeData> previous_graph;
 		GraphNode next_node;
@@ -59,11 +58,9 @@ namespace Borium.RDP
 			this.id = id;
 		}
 
-#if false
-		void setRoot(GraphNode root)
+		internal void setRoot(GraphNode root)
 		{
 			this.root = root;
 		}
-#endif
 	}
 }

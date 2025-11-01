@@ -46,13 +46,14 @@ namespace Borium.RDP
 			return compareHashPrint.compare(key, p);
 		}
 
-#if false
-		/** return current scope */
-		SymbolScopeData getScope()
+		/// <summary>
+		/// Return current scope
+		/// </summary>
+		/// <returns></returns>
+		internal SymbolScopeData getScope()
 		{
 			return current;
 		}
-#endif
 
 		internal int hash(int prime, string key)
 		{

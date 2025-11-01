@@ -54,14 +54,15 @@ namespace Borium.RDP
 			}
 		}
 
-#if false
-		/** assign one set to another */
+		/// <summary>
+		/// Assign one set to another
+		/// </summary>
+		/// <param name="src"></param>
 		internal void assignSet(Set src)
 		{
 			clear();
 			unite(src);
 		}
-#endif
 
 		internal void clear()
 		{
@@ -79,22 +80,20 @@ namespace Borium.RDP
 			return (data[index] & 1 << element) != 0;
 		}
 
-#if false
 		internal void intersect(Set src)
 		{
 			/* only iterate over shortest set */
-			int length = length() < src.length() ? length() : src.length();
+			int length = this.length() < src.length() ? this.length() : src.length();
 			for (int i = 0; i < length; i++)
 			{
 				data[i] &= src.data[i];
 			}
 			/* Now clear rest of dst */
-			while (length < length())
+			while (length < this.length())
 			{
 				data[length++] = 0;
 			}
 		}
-#endif
 
 		internal void print(string[] element_names, int line_length)
 		{
@@ -156,16 +155,14 @@ namespace Borium.RDP
 			data[index] |= (uint)(1 << element);
 		}
 
-#if false
 		internal void unite(Set src)
 		{
 			grow(src.length());
-			for (int i = 0; i < data.length; i++)
+			for (int i = 0; i < data.Length; i++)
 			{
 				data[i] |= src.data[i];
 			}
 		}
-#endif
 
 		private int[] array()
 		{
@@ -218,11 +215,9 @@ namespace Borium.RDP
 			}
 		}
 
-#if false
 		private int length()
 		{
-			return data.length;
+			return data.Length;
 		}
-#endif
 	}
 }

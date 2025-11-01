@@ -111,13 +111,16 @@ namespace Borium.RDP
 			return text_get_string(id).CompareTo(text_get_string(other.id));
 		}
 
-#if false
-		/** Return next symbol in scope chain. Return NULL if at end */
+		/// <summary>
+		/// Return next symbol in scope chain. Return NULL if at end
+		/// </summary>
+		/// <returns></returns>
 		internal Symbol nextSymbolInScope()
 		{
 			return next_scope;
 		}
 
+#if false
 		internal void print()
 		{
 			text_printf(id == 0 ? "Null symbol" : text_get_string(id));

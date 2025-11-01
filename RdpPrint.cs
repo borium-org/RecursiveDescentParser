@@ -9,31 +9,30 @@ namespace Borium.RDP
 {
 	internal class RdpPrint
 	{
-#if false
 		static string[] rdp_enum_string;
-		static string[] rdp_token_string;
+		internal static string[] rdp_token_string;
 
-		public static void rdp_make_token_string(SymbolScopeData base)
+		internal static void rdp_make_token_string(SymbolScopeData scopeData)
 		{
-			RdpData p = (RdpData)base.nextSymbolInScope();
+			RdpData p = (RdpData)scopeData.nextSymbolInScope();
 
-			ArrayList<string> tokens = new ArrayList<>();
-			tokens.add(text_get_string(text_insert_string("IGNORE")));
-			tokens.add(text_get_string(text_insert_string("ID")));
-			tokens.add(text_get_string(text_insert_string("INTEGER")));
-			tokens.add(text_get_string(text_insert_string("REAL")));
-			tokens.add(text_get_string(text_insert_string("CHAR")));
-			tokens.add(text_get_string(text_insert_string("CHAR_ESC")));
-			tokens.add(text_get_string(text_insert_string("STRING")));
-			tokens.add(text_get_string(text_insert_string("STRING_ESC")));
-			tokens.add(text_get_string(text_insert_string("COMMENT")));
-			tokens.add(text_get_string(text_insert_string("COMMENT_VISIBLE")));
-			tokens.add(text_get_string(text_insert_string("COMMENT_NEST")));
-			tokens.add(text_get_string(text_insert_string("COMMENT_NEST_VISIBLE")));
-			tokens.add(text_get_string(text_insert_string("COMMENT_LINE")));
-			tokens.add(text_get_string(text_insert_string("COMMENT_LINE_VISIBLE")));
-			tokens.add(text_get_string(text_insert_string("EOF")));
-			tokens.add(text_get_string(text_insert_string("EOLN")));
+			List<string> tokens = new List<string>();
+			tokens.Add(text_get_string(text_insert_string("IGNORE")));
+			tokens.Add(text_get_string(text_insert_string("ID")));
+			tokens.Add(text_get_string(text_insert_string("INTEGER")));
+			tokens.Add(text_get_string(text_insert_string("REAL")));
+			tokens.Add(text_get_string(text_insert_string("CHAR")));
+			tokens.Add(text_get_string(text_insert_string("CHAR_ESC")));
+			tokens.Add(text_get_string(text_insert_string("STRING")));
+			tokens.Add(text_get_string(text_insert_string("STRING_ESC")));
+			tokens.Add(text_get_string(text_insert_string("COMMENT")));
+			tokens.Add(text_get_string(text_insert_string("COMMENT_VISIBLE")));
+			tokens.Add(text_get_string(text_insert_string("COMMENT_NEST")));
+			tokens.Add(text_get_string(text_insert_string("COMMENT_NEST_VISIBLE")));
+			tokens.Add(text_get_string(text_insert_string("COMMENT_LINE")));
+			tokens.Add(text_get_string(text_insert_string("COMMENT_LINE_VISIBLE")));
+			tokens.Add(text_get_string(text_insert_string("EOF")));
+			tokens.Add(text_get_string(text_insert_string("EOLN")));
 
 			while (p != null)
 			{
@@ -41,7 +40,7 @@ namespace Borium.RDP
 				{
 					p.token_string = text_insert_char('\''); /* insert open quote */
 					string str = text_get_string(p.id);
-					for (char c : str.toCharArray())
+					foreach (char c in str)
 					{
 						if (c == '\"' || c == '\\' || c == '\'')
 						{
@@ -50,41 +49,41 @@ namespace Borium.RDP
 						text_insert_char(c);
 					}
 					text_insert_string("\'"); /* insert close quote */
-					tokens.add(text_get_string(p.token_string));
+					tokens.Add(text_get_string(p.token_string));
 				}
 				p = (RdpData)p.nextSymbolInScope();
 			}
 
-			p = (RdpData)base.nextSymbolInScope();
+			p = (RdpData)scopeData.nextSymbolInScope();
 
-			ArrayList<string> enums = new ArrayList<>();
+			List<string> enums = new List<string>();
 			int p_ignore = text_insert_string("SCAN_P_IGNORE");
-			enums.add(text_get_string(p_ignore));
-			enums.add(text_get_string(text_insert_string("SCAN_P_ID")));
-			enums.add(text_get_string(text_insert_string("SCAN_P_INTEGER")));
-			enums.add(text_get_string(text_insert_string("SCAN_P_REAL")));
+			enums.Add(text_get_string(p_ignore));
+			enums.Add(text_get_string(text_insert_string("SCAN_P_ID")));
+			enums.Add(text_get_string(text_insert_string("SCAN_P_INTEGER")));
+			enums.Add(text_get_string(text_insert_string("SCAN_P_REAL")));
 			int p_char = text_insert_string("SCAN_P_CHAR");
-			enums.add(text_get_string(p_char));
+			enums.Add(text_get_string(p_char));
 			int p_char_esc = text_insert_string("SCAN_P_CHAR_ESC");
-			enums.add(text_get_string(p_char_esc));
+			enums.Add(text_get_string(p_char_esc));
 			int p_string = text_insert_string("SCAN_P_STRING");
-			enums.add(text_get_string(p_string));
+			enums.Add(text_get_string(p_string));
 			int p_string_esc = text_insert_string("SCAN_P_STRING_ESC");
-			enums.add(text_get_string(p_string_esc));
+			enums.Add(text_get_string(p_string_esc));
 			int p_comment = text_insert_string("SCAN_P_COMMENT");
-			enums.add(text_get_string(p_comment));
+			enums.Add(text_get_string(p_comment));
 			int p_comment_visible = text_insert_string("SCAN_P_COMMENT_VISIBLE");
-			enums.add(text_get_string(p_comment_visible));
+			enums.Add(text_get_string(p_comment_visible));
 			int p_comment_nest = text_insert_string("SCAN_P_COMMENT_NEST");
-			enums.add(text_get_string(p_comment_nest));
+			enums.Add(text_get_string(p_comment_nest));
 			int p_comment_nest_visible = text_insert_string("SCAN_P_COMMENT_NEST_VISIBLE");
-			enums.add(text_get_string(p_comment_nest_visible));
+			enums.Add(text_get_string(p_comment_nest_visible));
 			int p_comment_line = text_insert_string("SCAN_P_COMMENT_LINE");
-			enums.add(text_get_string(p_comment_line));
+			enums.Add(text_get_string(p_comment_line));
 			int p_comment_line_visible = text_insert_string("SCAN_P_COMMENT_LINE_VISIBLE");
-			enums.add(text_get_string(p_comment_line_visible));
-			enums.add(text_get_string(text_insert_string("SCAN_P_EOF")));
-			enums.add(text_get_string(text_insert_string("SCAN_P_EOLN")));
+			enums.Add(text_get_string(p_comment_line_visible));
+			enums.Add(text_get_string(text_insert_string("SCAN_P_EOF")));
+			enums.Add(text_get_string(text_insert_string("SCAN_P_EOLN")));
 
 			while (p != null)
 			{
@@ -99,7 +98,7 @@ namespace Borium.RDP
 					else
 					{
 						string str = text_get_string(p.id);
-						for (char c : str.toCharArray())
+						foreach (char c in str)
 						{
 							text_insert_integer(c);
 						}
@@ -118,7 +117,7 @@ namespace Borium.RDP
 						}
 						else
 						{
-							for (char c : str.toCharArray())
+							foreach (char c in str)
 							{
 								text_insert_char(c);
 							}
@@ -126,7 +125,7 @@ namespace Borium.RDP
 
 						text_insert_string(" */");
 					}
-					enums.add(text_get_string(p.token_enum));
+					enums.Add(text_get_string(p.token_enum));
 					if (p.kind == K_EXTENDED)
 					{
 						switch (p.extended_value)
@@ -170,10 +169,11 @@ namespace Borium.RDP
 				}
 				p = (RdpData)p.nextSymbolInScope();
 			}
-			rdp_token_string = tokens.toArray();
-			rdp_enum_string = enums.toArray();
+			rdp_token_string = tokens.ToArray();
+			rdp_enum_string = enums.ToArray();
 		}
 
+#if false
 		protected int rdp_indentation;
 
 		protected int indent()

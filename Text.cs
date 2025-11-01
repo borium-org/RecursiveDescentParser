@@ -436,17 +436,15 @@ namespace Borium.RDP
 			return start;
 		}
 
-#if false
-		internal static boolean text_is_valid_C_id(string s)
+		internal static bool text_is_valid_C_id(string s)
 		{
-			boolean temp = true;
-			for (char ch : s.toCharArray())
+			bool temp = true;
+			foreach (char ch in s)
 			{
 				temp = temp && (isalnum(ch) || ch == '_');
 			}
 			return temp;
 		}
-#endif
 
 		internal static int text_line_number()
 		{
@@ -529,7 +527,7 @@ namespace Borium.RDP
 			{
 				handle = s.Equals("-") ? Console.In : new StreamReader(s);
 			}
-			catch (FileNotFoundException e)
+			catch (FileNotFoundException)
 			{
 				handle = null;
 			}

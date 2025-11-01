@@ -146,7 +146,7 @@ private static string RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compile
 		static Pointer<string> rdp_java_prefix = new Pointer<string>();
 
 		private static Pointer<bool> rdp_symbol_echo = new Pointer<bool>(false); // symbol echo flag
-		static Pointer<bool> rdp_verbose = new Pointer<bool>(false); // verbosity flag
+		internal static Pointer<bool> rdp_verbose = new Pointer<bool>(false); // verbosity flag
 
 		private static int rdp_sourcefilenumber;
 
@@ -221,7 +221,7 @@ private static string RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compile
 		private static Set unit_first = new Set();
 		private static Set unit_stop = new Set();
 
-		static SymbolTable locals = null;
+		internal static SymbolTable locals = null;
 		internal static SymbolTable codes = null;
 		internal static SymbolTable tokens = null;
 		internal static SymbolTable rdp = null;
@@ -345,47 +345,44 @@ private static string RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compile
 				}
 			}
 
-#if false
-	rdp_sourcefilename = rdp_sourcefilenames[0]; // Reset filename to first file in the list
+			rdp_sourcefilename = rdp_sourcefilenames[0]; // Reset filename to first file in the list
 
-	rdp_tree.setRoot(rdp_tree_root);
-	if (rdp_vcg_filename.value() != null)
-	{
-		// FILE *rdp_vcg_file;
-		//
-		// if (*rdp_vcg_filename == '\0') /* No filename supplied */
-		// rdp_vcg_filename = "rdparser";
-		// rdp_vcg_file = fopen((rdp_vcg_filename = text_default_filetype(rdp_vcg_filename, "vcg")), "w");
-		//
-		// if (rdp_vcg_file == NULL)
-		// text_message(TEXT_FATAL, "unable to open VCG file '%s' for write\n", rdp_vcg_filename);
-		//
-		// if (rdp_verbose)
-		// text_message(TEXT_INFO, "Dumping derivation tree to VCG file '%s'\n", rdp_vcg_filename);
-		//
-		// text_redirect(rdp_vcg_file);
-		// graph_vcg(rdp_tree, NULL, scan_vcg_print_node, scan_vcg_print_edge);
-		// text_redirect(stdout);
-		// fclose(rdp_vcg_file);
-		throw new RuntimeException();
-	}
+			rdp_tree.setRoot(rdp_tree_root);
+			if (rdp_vcg_filename.value() != null)
+			{
+				// FILE *rdp_vcg_file;
+				//
+				// if (*rdp_vcg_filename == '\0') /* No filename supplied */
+				// rdp_vcg_filename = "rdparser";
+				// rdp_vcg_file = fopen((rdp_vcg_filename = text_default_filetype(rdp_vcg_filename, "vcg")), "w");
+				//
+				// if (rdp_vcg_file == NULL)
+				// text_message(TEXT_FATAL, "unable to open VCG file '%s' for write\n", rdp_vcg_filename);
+				//
+				// if (rdp_verbose)
+				// text_message(TEXT_INFO, "Dumping derivation tree to VCG file '%s'\n", rdp_vcg_filename);
+				//
+				// text_redirect(rdp_vcg_file);
+				// graph_vcg(rdp_tree, NULL, scan_vcg_print_node, scan_vcg_print_edge);
+				// text_redirect(stdout);
+				// fclose(rdp_vcg_file);
+				throw new NotImplementedException();
+			}
 
-	rdp_post_parse(rdp_outputfilename.value(), rdp_force.value());
-	// if (rdp_symbol_statistics)
-	// {
-	// symbol_print_all_table_statistics(11);
-	// symbol_print_all_table();
-	// }
+			rdp_post_parse(rdp_outputfilename.value(), rdp_force.value());
+			// if (rdp_symbol_statistics)
+			// {
+			// symbol_print_all_table_statistics(11);
+			// symbol_print_all_table();
+			// }
 
-	// text_print_total_errors();
-	if (rdp_verbose.value() || true)
-	{
-		long rdp_finish_time = System.currentTimeMillis();
-		System.out.println("Time: " + (double)(rdp_finish_time - rdp_start_time) / 1000);
-	}
-	// return rdp_error_return;
-	throw new RuntimeException();
-#endif
+			// text_print_total_errors();
+			if (rdp_verbose.value() || true)
+			{
+				long rdp_finish_time = CurrentTimeMillis();
+				Console.WriteLine("Time: " + (double)(rdp_finish_time - rdp_start_time) / 1000);
+			}
+			// return rdp_error_return;
 		}
 
 		protected static void unit(RdpTreeNodeData rdp_tree)

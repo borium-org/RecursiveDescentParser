@@ -100,12 +100,10 @@ namespace Borium.RDP
 			return "0123456789ABCDEFabcdef".IndexOf((char)ch) >= 0;
 		}
 
-#if false
 		internal static int strcmp(string str1, string str2)
 		{
-			return str1.compareTo(str2);
+			return str1.CompareTo(str2);
 		}
-#endif
 
 		internal static long strtol(string nptr, Pointer<string> endptr, int intBase)
 		{
