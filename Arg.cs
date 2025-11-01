@@ -50,7 +50,7 @@ namespace Borium.RDP
 			add_node(ARG_NUMERIC, key, description, null, unsignedvalue, null);
 		}
 
-		internal static String[] arg_process(String[] args)
+		internal static string[] arg_process(string[] args)
 		{
 			List<string> ret = new List<string>();
 			foreach (string arg in args)

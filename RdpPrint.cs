@@ -10,14 +10,14 @@ namespace Borium.RDP
 	internal class RdpPrint
 	{
 #if false
-		static String[] rdp_enum_string;
-		static String[] rdp_token_string;
+		static string[] rdp_enum_string;
+		static string[] rdp_token_string;
 
 		public static void rdp_make_token_string(SymbolScopeData base)
 		{
 			RdpData p = (RdpData)base.nextSymbolInScope();
 
-			ArrayList<String> tokens = new ArrayList<>();
+			ArrayList<string> tokens = new ArrayList<>();
 			tokens.add(text_get_string(text_insert_string("IGNORE")));
 			tokens.add(text_get_string(text_insert_string("ID")));
 			tokens.add(text_get_string(text_insert_string("INTEGER")));
@@ -40,7 +40,7 @@ namespace Borium.RDP
 				if (p.kind == K_TOKEN || p.kind == K_EXTENDED)
 				{
 					p.token_string = text_insert_char('\''); /* insert open quote */
-					String str = text_get_string(p.id);
+					string str = text_get_string(p.id);
 					for (char c : str.toCharArray())
 					{
 						if (c == '\"' || c == '\\' || c == '\'')
@@ -57,7 +57,7 @@ namespace Borium.RDP
 
 			p = (RdpData)base.nextSymbolInScope();
 
-			ArrayList<String> enums = new ArrayList<>();
+			ArrayList<string> enums = new ArrayList<>();
 			int p_ignore = text_insert_string("SCAN_P_IGNORE");
 			enums.add(text_get_string(p_ignore));
 			enums.add(text_get_string(text_insert_string("SCAN_P_ID")));
@@ -98,7 +98,7 @@ namespace Borium.RDP
 					}
 					else
 					{
-						String str = text_get_string(p.id);
+						string str = text_get_string(p.id);
 						for (char c : str.toCharArray())
 						{
 							text_insert_integer(c);
@@ -170,8 +170,8 @@ namespace Borium.RDP
 				}
 				p = (RdpData)p.nextSymbolInScope();
 			}
-			rdp_token_string = tokens.toArray(new String[0]);
-			rdp_enum_string = enums.toArray(new String[0]);
+			rdp_token_string = tokens.toArray();
+			rdp_enum_string = enums.toArray();
 		}
 
 		protected int rdp_indentation;
@@ -194,7 +194,7 @@ namespace Borium.RDP
 			return rdp_indentation * 2;
 		}
 
-		protected int iprint(String text)
+		protected int iprint(string text)
 		{
 			return text_iprintf(text);
 		}
@@ -204,17 +204,17 @@ namespace Borium.RDP
 			return text_printf("\n");
 		}
 
-		protected int iprintln(int extraIndent, String text)
+		protected int iprintln(int extraIndent, string text)
 		{
 			return text_iprintf(extraIndent, text + "\n");
 		}
 
-		protected int iprintln(String text)
+		protected int iprintln(string text)
 		{
 			return text_iprintf(text + "\n");
 		}
 
-		protected int print(String fmt)
+		protected int print(string fmt)
 		{
 			return text_printf(fmt);
 		}
@@ -224,7 +224,7 @@ namespace Borium.RDP
 			return text_printf("\n");
 		}
 
-		protected int println(String text)
+		protected int println(string text)
 		{
 			return text_printf(text + "\n");
 		}
@@ -239,7 +239,7 @@ namespace Borium.RDP
 			rdp_print_parser_production_name(n, false);
 		}
 
-		protected void rdp_print_parser_string(String string)
+		protected void rdp_print_parser_string(string string)
 		{
 			for (char ch : string.toCharArray())
 			{
@@ -286,7 +286,7 @@ namespace Borium.RDP
 			}
 		}
 
-		private int text_iprintf(int extraIndent, String fmt)
+		private int text_iprintf(int extraIndent, string fmt)
 		{
 			int i = 0;
 			// In some cases we just iprintf("\n") and it does not need to be
@@ -299,7 +299,7 @@ namespace Borium.RDP
 			return i; /* return number of characters printed */
 		}
 
-		private int text_iprintf(String fmt)
+		private int text_iprintf(string fmt)
 		{
 			int i = 0;
 			// In some cases we just iprintf("\n") and it does not need to be

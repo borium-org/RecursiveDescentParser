@@ -123,10 +123,10 @@ namespace Borium.RDP
 		const int RDP_TT_TOP = 98;
 
 #if false
-private static String __DATE__ = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
-private static String __TIME__ = new SimpleDateFormat("HH:mm:ss").format(new Date());
+private static string __DATE__ = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+private static string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(new Date());
 
-private static String RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compiled on " + __DATE__ + " at "
+private static string RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compiled on " + __DATE__ + " at "
 		+ __TIME__;
 #endif
 
@@ -150,7 +150,7 @@ private static String RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compile
 
 		private static int rdp_sourcefilenumber;
 
-		private static String[] rdp_tokens = { "IGNORE", "ID", "INTEGER", "REAL", "CHAR", "CHAR_ESC", "STRING",
+		private static string[] rdp_tokens = { "IGNORE", "ID", "INTEGER", "REAL", "CHAR", "CHAR_ESC", "STRING",
 			"STRING_ESC", "COMMENT", "COMMENT_VISIBLE", "COMMENT_NEST", "COMMENT_NEST_VISIBLE", "COMMENT_LINE",
 			"COMMENT_LINE_VISIBLE", "EOF", "EOLN", "'\"'", "'#'", "'\''", "'('", "'(*'", "')'", "'*'", "'.'", "':'",
 			"'::'", "'::='", "'<'", "'>'", "'@'", "'ALT_ID'", "'ANNOTATED_EPSILON_TREE'", "'ARG_BLANK'",
@@ -333,8 +333,8 @@ private static String RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compile
 						arg_help("unable to open source file");
 
 					text_get_char();
-#if false
 					scan_();
+#if false
 					// call parser at top level
 					unit(rdp_tree_root = rdp_add_node("unit", rdp_tree));
 #endif
@@ -428,9 +428,9 @@ private static String RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compile
 	scan_test_set(null, unit_stop, unit_stop);
 }
 
-private static String code(RdpTreeNodeData rdp_tree)
+private static string code(RdpTreeNodeData rdp_tree)
 {
-	String result;
+	string result;
 	{
 		if (rdp_tree_update)
 		{
@@ -446,20 +446,20 @@ private static String code(RdpTreeNodeData rdp_tree)
 
 private static void dir(RdpTreeNodeData rdp_tree)
 {
-	String filename;
-	String key;
-	String var = null;
-	String desc;
-	String name;
+	string filename;
+	string key;
+	string var = null;
+	string desc;
+	string name;
 	int size;
 	int prime;
-	String compare;
-	String hash;
-	String print;
-	String data_fields;
-	String s;
+	string compare;
+	string hash;
+	string print;
+	string data_fields;
+	string s;
 	int n;
-	String str;
+	string str;
 	{
 		if (scan_test(null, RDP_T_INCLUDE, null))
 		{
@@ -1485,8 +1485,8 @@ private static void dir(RdpTreeNodeData rdp_tree)
 private static RdpData item_com(RdpTreeNodeData rdp_tree)
 {
 	RdpData result = null;
-	String name;
-	String close;
+	string name;
+	string close;
 	{
 		if (scan_test(null, RDP_T_COMMENT, null))
 		{
@@ -1580,11 +1580,11 @@ private static RdpData item_com(RdpTreeNodeData rdp_tree)
 private static RdpData item_inl(RdpTreeNodeData rdp_tree)
 {
 	RdpData result = null;
-	String name;
+	string name;
 	int pass;
 	RdpList body;
 	int val;
-	String delimiter;
+	string delimiter;
 	{
 		int promote_op = PROMOTE_DEFAULT;
 		{ /* Start of rdp_item_inl_28 */
@@ -2050,12 +2050,12 @@ private static RdpData item_inl(RdpTreeNodeData rdp_tree)
 private static RdpData item_ret(RdpTreeNodeData rdp_tree)
 {
 	RdpData result = null;
-	String name;
+	string name;
 	int n;
 	double r;
-	String str;
-	String quote;
-	String close;
+	string str;
+	string quote;
+	string close;
 	if (scan_test(null, SCAN_P_ID, null))
 	{
 		if (rdp_tree_update)
@@ -2501,7 +2501,7 @@ private static RdpList prod(RdpTreeNodeData rdp_tree)
 	return result;
 }
 
-private static RdpTreeNodeData rdp_add_child(String id, RdpTreeNodeData rdp_tree)
+private static RdpTreeNodeData rdp_add_child(string id, RdpTreeNodeData rdp_tree)
 {
 	if (rdp_tree_update)
 	{
@@ -2521,7 +2521,7 @@ private static RdpTreeNodeData rdp_add_child(String id, RdpTreeNodeData rdp_tree
 	return null;
 }
 
-private static RdpTreeNodeData rdp_add_node(String id, Graph<RdpTreeNodeData, RdpTreeEdgeData> rdp_tree)
+private static RdpTreeNodeData rdp_add_node(string id, Graph<RdpTreeNodeData, RdpTreeEdgeData> rdp_tree)
 {
 	if (rdp_tree_update)
 	{
@@ -3129,8 +3129,8 @@ private static RdpList seq(RdpTreeNodeData rdp_tree)
 {
 	RdpList result = null;
 	RdpData body = null;
-	String ret_name = null;
-	String default_action = null;
+	string ret_name = null;
+	string default_action = null;
 	RdpList end = null;
 	int promote_op = 0;
 	int promote_epsilon = 0;
@@ -3537,9 +3537,9 @@ private static RdpList seq(RdpTreeNodeData rdp_tree)
 	return result;
 }
 
-private static String String(RdpTreeNodeData rdp_tree)
+private static string String(RdpTreeNodeData rdp_tree)
 {
-	String result;
+	string result;
 
 	if (rdp_tree_update)
 	{
@@ -3552,14 +3552,14 @@ private static String String(RdpTreeNodeData rdp_tree)
 	return result;
 }
 
-private static String token(RdpTreeNodeData rdp_tree)
+private static string token(RdpTreeNodeData rdp_tree)
 {
 	if (rdp_tree_update)
 	{
 		rdp_add_child(null, rdp_tree);
 	}
 	scan_test(null, RDP_T_39 /* ' */, token_stop);
-	String result = text_get_string(text_scan_data.id);
+	string result = text_get_string(text_scan_data.id);
 	scan_();
 	scan_test_set(null, token_stop, token_stop);
 	return result;

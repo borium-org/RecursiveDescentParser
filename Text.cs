@@ -162,17 +162,17 @@ namespace Borium.RDP
 		/// <summary>
 		/// Pointer to current source character
 		/// </summary>
-		static int text_current;
+		internal static int text_current;
 
 		/// <summary>
 		/// Text array for storing id's and strings
 		/// </summary>
-		static char[] text_bot = null;
+		internal static char[] text_bot = null;
 
 		/// <summary>
 		/// Top of text character
 		/// </summary>
-		static int text_top = 1;
+		internal static int text_top = 1;
 
 		/// <summary>
 		/// Size of text buffer
@@ -209,12 +209,10 @@ namespace Borium.RDP
 		/// </summary>
 		private static int symbol_first_char;
 
-#if false
 		internal static int text_column_number()
 		{
 			return first_char - text_current;
 		}
-#endif
 
 		internal static string text_default_filetype(string fname, string ftype)
 		{
@@ -236,9 +234,9 @@ namespace Borium.RDP
 		}
 
 #if false
-		internal static String text_extract_filename(String fname)
+		internal static string text_extract_filename(string fname)
 		{
-			String name = fname;
+			string name = fname;
 			// search backwards for '.' and terminate the string there
 			int temp = name.length();
 			while (--temp > 0)
@@ -292,7 +290,9 @@ namespace Borium.RDP
 			return fullname;
 		}
 
-		/** advance text_current, reading another line if necessary */
+		/// <summary>
+		/// Advance text_current, reading another line if necessary
+		/// </summary>
 		internal static void text_get_char()
 		{
 			if (text_current <= last_char)
@@ -384,7 +384,7 @@ namespace Borium.RDP
 		}
 
 #if false
-		internal static int text_insert_characters(String str)
+		internal static int text_insert_characters(string str)
 		{
 			int start = text_top;
 			for (char ch : str.toCharArray())
@@ -420,7 +420,7 @@ namespace Borium.RDP
 
 #if false
 		/** put an id_number into text buffer */
-		internal static int text_insert_substring(String prefix, String str, int n)
+		internal static int text_insert_substring(string prefix, string str, int n)
 		{
 			int start = text_top;
 
@@ -433,7 +433,7 @@ namespace Borium.RDP
 			return start;
 		}
 
-		internal static boolean text_is_valid_C_id(String s)
+		internal static boolean text_is_valid_C_id(string s)
 		{
 			boolean temp = true;
 			for (char ch : s.toCharArray())
@@ -442,14 +442,14 @@ namespace Borium.RDP
 			}
 			return temp;
 		}
+#endif
 
 		internal static int text_line_number()
 		{
 			return linenumber;
 		}
-#endif
 
-		internal static int text_message(TextMessageType type, String message)
+		internal static int text_message(TextMessageType type, string message)
 		{
 			if (message == null)
 			{
@@ -587,8 +587,8 @@ namespace Borium.RDP
 
 		internal static void text_print_time()
 		{
-			// String __DATE__ = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
-			// String __TIME__ = new SimpleDateFormat("HH:mm:ss").format(new Date());
+			// string __DATE__ = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+			// string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(new Date());
 			// text_printf(__DATE__ + " " + __TIME__);
 			text_printf("Sep 19 2015 11:45:00");
 		}
@@ -615,12 +615,12 @@ namespace Borium.RDP
 		{
 			messages = file;
 		}
+#endif
 
 		internal static int text_sequence_number()
 		{
 			return sequence_number;
 		}
-#endif
 
 		internal static int text_total_errors()
 		{
@@ -628,7 +628,7 @@ namespace Borium.RDP
 		}
 
 #if false
-		internal static String text_uppercase_string(String str)
+		internal static string text_uppercase_string(string str)
 		{
 			return str.toUpperCase();
 		}

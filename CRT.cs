@@ -24,7 +24,7 @@ namespace Borium.RDP
 		internal const int EOF = -1;
 
 #if false
-		internal static String capitalizeFirst(String text)
+		internal static string capitalizeFirst(string text)
 		{
 			return Character.toUpperCase(text.charAt(0)) + text.substring(1);
 		}
@@ -65,58 +65,56 @@ namespace Borium.RDP
 			return EOF;
 		}
 
-#if false
-		internal static boolean isalnum(int ch)
+		internal static bool isalnum(int ch)
 		{
 			return isalpha(ch) || isdigit(ch);
 		}
 
-		internal static boolean isalpha(int ch)
+		internal static bool isalpha(int ch)
 		{
-			return "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".indexOf(ch) >= 0;
+			return "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".IndexOf((char)ch) >= 0;
 		}
 
-		internal static boolean isdigit(int ch)
+		internal static bool isdigit(int ch)
 		{
-			return "0123456789".indexOf(ch) >= 0;
+			return "0123456789".IndexOf((char)ch) >= 0;
 		}
-#endif
 
 		internal static bool isgraph(char ch)
 		{
 			return ch > ' ';
 		}
 
-#if false
-		internal static boolean isprint(int ch)
+		internal static bool isprint(int ch)
 		{
 			return ch >= ' ';
 		}
 
-		internal static boolean isspace(int ch)
+		internal static bool isspace(int ch)
 		{
 			return ch <= ' ';
 		}
 
-		internal static boolean isxdigit(int ch)
+		internal static bool isxdigit(int ch)
 		{
-			return "0123456789ABCDEFabcdef".indexOf(ch) >= 0;
+			return "0123456789ABCDEFabcdef".IndexOf((char)ch) >= 0;
 		}
 
-		internal static int strcmp(String str1, String str2)
+#if false
+		internal static int strcmp(string str1, string str2)
 		{
 			return str1.compareTo(str2);
 		}
+#endif
 
-		internal static long strtol(String nptr, Pointer<String> endptr, int base)
+		internal static long strtol(string nptr, Pointer<string> endptr, int intBase)
 		{
 			if (endptr != null)
 			{
-				System.err.println("strtol: endptr is not implemented");
+				Console.WriteLine("strtol: endptr is not implemented");
 			}
-			long result = Long.parseLong(nptr, base);
+			long result = Convert.ToInt64(nptr, intBase);
 			return result;
 		}
-#endif
 	}
 }

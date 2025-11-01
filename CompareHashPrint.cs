@@ -14,8 +14,8 @@ namespace Borium.RDP
 #if false
 		internal int compare(Symbol left, Symbol right)
 		{
-			String l = text_get_string(left.id);
-			String r = text_get_string(right.id);
+			string l = text_get_string(left.id);
+			string r = text_get_string(right.id);
 			return l.CompareTo(r);
 		}
 #endif

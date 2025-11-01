@@ -17,12 +17,12 @@ namespace Borium.RDP
 	internal class RdpPrintC : RdpPrint
 	{
 #if false
-		public void printHeader(String headerfilename)
+		public void printHeader(string headerfilename)
 		{
 			PrintStream headerfile = null;
 			RdpTableList temp_table = rdp_dir_symbol_table;
 			RdpData temp = (RdpData)tokens.getScope().nextSymbolInScope();
-			String filenamebase = text_uppercase_string(text_extract_filename(rdp_sourcefilename));
+			string filenamebase = text_uppercase_string(text_extract_filename(rdp_sourcefilename));
 
 			if (rdp_verbose.value())
 			{
@@ -90,7 +90,7 @@ namespace Borium.RDP
 			text_printf("/* Symbol table support */\n");
 			while (temp_table != null)
 			{
-				String data_fields = temp_table.data_fields;
+				string data_fields = temp_table.data_fields;
 				text_printf("typedef struct " + temp_table.name + "_data_node\n{\n");
 				for (char ch : data_fields.toCharArray())
 				{
@@ -121,7 +121,7 @@ namespace Borium.RDP
 			headerfile.close();
 		}
 
-		public void printParser(String outputfilename, SymbolScopeData base)
+		public void printParser(string outputfilename, SymbolScopeData base)
 		{
 			if (rdp_verbose.value())
 			{
@@ -617,7 +617,7 @@ namespace Borium.RDP
 			}
 		}
 
-		private void rdp_print_locals(RdpData base, ArrayList<String> localsList)
+		private void rdp_print_locals(RdpData base, ArrayList<string> localsList)
 		{
 			if (!rdp_production_set.includes(base.kind))
 			{
@@ -740,8 +740,8 @@ namespace Borium.RDP
 			text_printf("#include \"" + p.str1 + "\"\n");
 		}
 
-		private void rdp_print_parser_item(RdpData prod, RdpData primary, String return_name, RdpParamList actuals,
-				int promote_epsilon, int promote, String default_action)
+		private void rdp_print_parser_item(RdpData prod, RdpData primary, string return_name, RdpParamList actuals,
+				int promote_epsilon, int promote, string default_action)
 		{
 			if (promote == PROMOTE_DEFAULT)
 			{
@@ -802,7 +802,7 @@ namespace Borium.RDP
 						{
 							text_printf("if (rdp_pass == " + prod.code_pass + ") { \\\n");
 						}
-						String temp = text_get_string(prod.id);
+						string temp = text_get_string(prod.id);
 						for (char ch : temp.toCharArray())
 						{
 							if (ch == '\n')
@@ -854,7 +854,7 @@ namespace Borium.RDP
 			}
 		}
 
-		private void rdp_print_parser_param_list(String first, RdpParamList params, int definition, int start_rule)
+		private void rdp_print_parser_param_list(string first, RdpParamList params, int definition, int start_rule)
 		{
 			text_printf("(");
 
@@ -1023,7 +1023,7 @@ namespace Borium.RDP
 		}
 
 		private void rdp_print_parser_subproduction(RdpData prod, RdpData primary, int promote_epsilon,
-				String default_action)
+				string default_action)
 		{
 			if (prod.lo == 0) /* this can be an optional body */
 			{
@@ -1208,7 +1208,7 @@ namespace Borium.RDP
 			}
 		}
 
-		private void rdp_print_parser_test(int first_name, Set first, String follow_name)
+		private void rdp_print_parser_test(int first_name, Set first, string follow_name)
 		{
 			text_printf("scan_test");
 

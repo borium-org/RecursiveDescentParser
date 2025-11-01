@@ -15,7 +15,7 @@ namespace Borium.RDP
 	internal class RdpGram
 	{
 #if false
-		private static final String[] RDP_RESERVED_WORDS = { "auto", "break", "case", "char", "const", "continue",
+		private static final string[] RDP_RESERVED_WORDS = { "auto", "break", "case", "char", "const", "continue",
 			"default", "do", "double", "else", "enum", "extern", "float", "for", "goto", "if", "int", "long",
 			"register", "return", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union",
 			"unsigned", "void", "volatile", "while", "operator", "printf" };
@@ -101,7 +101,7 @@ namespace Borium.RDP
 			return bad;
 		}
 
-		internal static void rdp_check_eoln(String id)
+		internal static void rdp_check_eoln(string id)
 		{
 			if (id.equals("EOLN"))
 			{
@@ -110,7 +110,7 @@ namespace Borium.RDP
 		}
 #endif
 
-		internal static void rdp_check_token_valid(String id)
+		internal static void rdp_check_token_valid(string id)
 		{
 			if (id == null)
 				return;
@@ -274,7 +274,7 @@ namespace Borium.RDP
 			return bad;
 		}
 
-		private static int rdp_check_identifier(String id)
+		private static int rdp_check_identifier(string id)
 		{
 			RdpData s = (RdpData)symbol_lookup_key(rdp, id, null);
 
@@ -350,7 +350,7 @@ namespace Borium.RDP
 		private static int rdp_check_reserved_words()
 		{
 			int bad = 0;
-			for (String reserved : RDP_RESERVED_WORDS)
+			for (string reserved : RDP_RESERVED_WORDS)
 			{
 				bad |= rdp_check_identifier(reserved);
 			}
