@@ -713,20 +713,22 @@ namespace Borium.RDP
 					print.rdp_dump_extended(rdp_base);
 				}
 			}
+			if (text_total_errors() > 0)
+			{
+				if (force)
+					text_message(TEXT_WARNING, "Grammar is not LL(1) but -F set: writing files\n");
+				else
+					text_message(TEXT_FATAL, "Run aborted without creating output files - rerun with -F to override\n");
+			}
+			if (rdp_c_path.value() != null)
+			{
+				RdpPrintC print = new RdpPrintC();
+				print.printHeader(text_force_filetype(outputfilename, "h"));
 #if false
-		if (text_total_errors() > 0)
-		{
-			if (force)
-				text_message(TEXT_WARNING, "Grammar is not LL(1) but -F set: writing files\n");
-			else
-				text_message(TEXT_FATAL, "Run aborted without creating output files - rerun with -F to override\n");
-		}
-		if (rdp_c_path.value() != null)
-		{
-			RdpPrintC print = new RdpPrintC();
-			print.printHeader(text_force_filetype(outputfilename, "h"));
-			print.printParser(text_force_filetype(outputfilename, "c"), rdp_base);
-		}
+				print.printParser(text_force_filetype(outputfilename, "c"), rdp_base);
+#endif
+			}
+#if false
 		// if (rdp_cpp_path.value() != null)
 		// {
 		// // TODO C++

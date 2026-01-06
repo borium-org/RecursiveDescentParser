@@ -102,7 +102,7 @@ namespace Borium.RDP
 
 		internal static int strcmp(string str1, string str2)
 		{
-			return str1.CompareTo(str2);
+			return string.Compare(str1, str2, StringComparison.Ordinal);
 		}
 
 		internal static long strtol(string nptr, Pointer<string> endptr, int intBase)

@@ -233,37 +233,35 @@ namespace Borium.RDP
 			echo = i;
 		}
 
-#if false
 		internal static string text_extract_filename(string fname)
 		{
 			string name = fname;
 			// search backwards for '.' and terminate the string there
-			int temp = name.length();
+			int temp = name.Length;
 			while (--temp > 0)
 			{
-				if (name.charAt(temp) == '.')
+				if (name[temp] == '.')
 				{
-					name = name.substring(0, temp);
+					name = name.Substring(0, temp);
 					break;
 				}
 			}
 			// we didn't find a dot, so start again at the end
-			if (temp != name.length())
+			if (temp != name.Length)
 			{
-				temp = fname.length();
+				temp = fname.Length;
 			}
 			// search backwards for '/' or '\' and start the string there
 			while (--temp > 0)
 			{
-				if (name.charAt(temp) == '/' || name.charAt(temp) == '\\')
+				if (name[temp] == '/' || name[temp] == '\\')
 				{
-					name = name.substring(temp + 1);
+					name = name.Substring(temp + 1);
 					break;
 				}
 			}
 			return name;
 		}
-#endif
 
 		/** add a new filetype. If ftype is NULL, return just filename */
 		internal static string text_force_filetype(string fname, string ftype)
@@ -586,6 +584,7 @@ namespace Borium.RDP
 						+ " bytes free\n");
 			}
 		}
+#endif
 
 		internal static void text_print_time()
 		{
@@ -594,7 +593,6 @@ namespace Borium.RDP
 			// text_printf(__DATE__ + " " + __TIME__);
 			text_printf("Sep 19 2015 11:45:00");
 		}
-#endif
 
 		internal static int text_printf(string str)
 		{
@@ -612,12 +610,10 @@ namespace Borium.RDP
 			return str == null ? 0 : str.Length;
 		}
 
-#if false
-		internal static void text_redirect(PrintStream file)
+		internal static void text_redirect(TextWriter file)
 		{
 			messages = file;
 		}
-#endif
 
 		internal static int text_sequence_number()
 		{
@@ -629,12 +625,10 @@ namespace Borium.RDP
 			return totalerrors;
 		}
 
-#if false
 		internal static string text_uppercase_string(string str)
 		{
-			return str.toUpperCase();
+			return str.ToUpper();
 		}
-#endif
 
 		private static void text_close()
 		{

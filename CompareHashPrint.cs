@@ -8,7 +8,7 @@ namespace Borium.RDP
 		internal int compare(string key, Symbol p)
 		{
 			string r = text_get_string(p.id);
-			return key.CompareTo(r);
+			return string.Compare(key, r, StringComparison.Ordinal);
 		}
 
 #if false
@@ -16,7 +16,7 @@ namespace Borium.RDP
 		{
 			string l = text_get_string(left.id);
 			string r = text_get_string(right.id);
-			return l.CompareTo(r);
+			return string.Compare(l, r, StringComparison.Ordinal);
 		}
 #endif
 

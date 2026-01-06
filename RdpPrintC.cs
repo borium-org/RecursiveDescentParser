@@ -10,16 +10,15 @@ using static Borium.RDP.RdpProgram;
 using static Borium.RDP.Set;
 using static Borium.RDP.Symbol;
 using static Borium.RDP.Text;
-//using static Borium.RDP.Text.TextMessageType;
+using static Borium.RDP.Text.TextMessageType;
 
 namespace Borium.RDP
 {
 	internal class RdpPrintC : RdpPrint
 	{
-#if false
 		internal void printHeader(string headerfilename)
 		{
-			PrintStream headerfile = null;
+			TextWriter headerfile = null;
 			RdpTableList temp_table = rdp_dir_symbol_table;
 			RdpData temp = (RdpData)tokens.getScope().nextSymbolInScope();
 			string filenamebase = text_uppercase_string(text_extract_filename(rdp_sourcefilename));
@@ -29,19 +28,18 @@ namespace Borium.RDP
 				text_message(TEXT_INFO, "Dumping header file to \'" + headerfilename + "\'\n");
 			}
 
-			if (headerfilename.charAt(0) == '-')
+			if (headerfilename[0] == '-')
 			{
-				headerfile = System.out;
+				headerfile = Console.Out;
 			}
 			else
 			{
 				try
 				{
-					headerfile = new PrintStream(headerfilename);
+					headerfile = new StreamWriter(headerfilename);
 				}
-				catch (FileNotFoundException e)
+				catch (FileNotFoundException)
 				{
-					e.printStackTrace();
 				}
 			}
 			text_redirect(headerfile);
@@ -59,7 +57,7 @@ namespace Borium.RDP
 			text_print_time();
 			text_printf(" and compiled on \" __DATE__ \" at \" __TIME__ \n");
 			/* print token enumeration */
-			boolean first = true;
+			bool first = true;
 			int count = 0;
 			text_printf("\n/* Token enumeration */\nenum\n{\nRDP_TT_BOTTOM = SCAN_P_TOP");
 			while (temp != null)
@@ -92,7 +90,7 @@ namespace Borium.RDP
 			{
 				string data_fields = temp_table.data_fields;
 				text_printf("typedef struct " + temp_table.name + "_data_node\n{\n");
-				for (char ch : data_fields.toCharArray())
+				foreach (char ch in data_fields)
 				{
 					if (ch != '\r')
 					{
@@ -113,14 +111,15 @@ namespace Borium.RDP
 				text_printf("*");
 			}
 			text_printf(" " + text_get_string(rdp_start_prod.id));
-			rdp_print_parser_param_list(null, rdp_start_prod.params, 1, 0);
+			rdp_print_parser_param_list(null, rdp_start_prod.parameters, 1, 0);
 			text_printf(";\n\n");
 			text_printf("\n\n#endif\n\n/* End of " + text_force_filetype(headerfilename, "h") + " */\n");
-			text_redirect(System.out);
-			if (headerfile != System.out)
-			headerfile.close();
+			text_redirect(Console.Out);
+			if (headerfile != Console.Out)
+				headerfile.Close();
 		}
 
+#if false
 		internal void printParser(string outputfilename, SymbolScopeData base)
 		{
 			if (rdp_verbose.value())

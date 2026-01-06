@@ -108,7 +108,7 @@ namespace Borium.RDP
 
 		public int CompareTo(Symbol other)
 		{
-			return text_get_string(id).CompareTo(text_get_string(other.id));
+			return string.Compare(text_get_string(id), text_get_string(other.id), StringComparison.Ordinal);
 		}
 
 		/// <summary>
@@ -120,12 +120,12 @@ namespace Borium.RDP
 			return next_scope;
 		}
 
-#if false
 		internal void print()
 		{
 			text_printf(id == 0 ? "Null symbol" : text_get_string(id));
 		}
 
+#if false
 		protected void unlinkSymbol()
 		{
 			Symbol s = this;
