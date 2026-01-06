@@ -125,8 +125,7 @@ namespace Borium.RDP
 			text_printf(id == 0 ? "Null symbol" : text_get_string(id));
 		}
 
-#if false
-		protected void unlinkSymbol()
+		internal void unlinkSymbol()
 		{
 			Symbol s = this;
 
@@ -136,6 +135,5 @@ namespace Borium.RDP
 				s.next_hash.last_hash.set(s.last_hash.value());
 			}
 		}
-#endif
 	}
 }

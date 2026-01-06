@@ -18,7 +18,7 @@ namespace Borium.RDP
 {
 	internal class RdpAux
 	{
-		private class LocalsData : Symbol
+		internal class LocalsData : Symbol
 		{
 		}
 
@@ -204,9 +204,7 @@ namespace Borium.RDP
 			/// </summary>
 			internal string close;
 
-#if false
-			ArrayList<string> locals = new ArrayList<>();
-#endif
+			internal List<string> locals = new List<string>();
 
 			internal void rdp_print_sub_item(bool expand)
 			{
@@ -724,9 +722,7 @@ namespace Borium.RDP
 			{
 				RdpPrintC print = new RdpPrintC();
 				print.printHeader(text_force_filetype(outputfilename, "h"));
-#if false
 				print.printParser(text_force_filetype(outputfilename, "c"), rdp_base);
-#endif
 			}
 #if false
 		// if (rdp_cpp_path.value() != null)

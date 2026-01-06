@@ -9,7 +9,7 @@ namespace Borium.RDP
 {
 	internal class RdpPrint
 	{
-		static string[] rdp_enum_string;
+		internal static string[] rdp_enum_string;
 		internal static string[] rdp_token_string;
 
 		internal static void rdp_make_token_string(SymbolScopeData scopeData)
@@ -173,7 +173,6 @@ namespace Borium.RDP
 			rdp_enum_string = enums.ToArray();
 		}
 
-#if false
 		protected int rdp_indentation;
 
 		protected int indent()
@@ -194,6 +193,7 @@ namespace Borium.RDP
 			return rdp_indentation * 2;
 		}
 
+#if false
 		protected int iprint(string text)
 		{
 			return text_iprintf(text);
@@ -240,10 +240,11 @@ namespace Borium.RDP
 		{
 			rdp_print_parser_production_name(n, false);
 		}
+#endif
 
-		protected void rdp_print_parser_string(string string)
+		protected void rdp_print_parser_string(string str)
 		{
-			for (char ch : string.toCharArray())
+			foreach (char ch in str)
 			{
 				if (ch == '\"' || ch == '\\' || ch == '\'')
 				{
@@ -252,7 +253,6 @@ namespace Borium.RDP
 				text_printf("" + ch);
 			}
 		}
-#endif
 
 		private void rdp_print_parser_production_name(RdpData n, bool printComment)
 		{

@@ -15,7 +15,6 @@ namespace Borium.RDP
 			id = other.id;
 		}
 
-#if false
 		internal void unlinkScope()
 		{
 			Symbol s = this;
@@ -26,7 +25,6 @@ namespace Borium.RDP
 				s = s.next_scope;
 			}
 		}
-#endif
 
 		/// <summary>
 		/// Sort a scope region. Don't change positions in the hash table: just move pointers in the scope chain

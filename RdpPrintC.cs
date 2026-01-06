@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-//using static Borium.RDP.Arg.ArgKind;
+using static Borium.RDP.Arg.ArgKind;
 using static Borium.RDP.CRT;
 using static Borium.RDP.RdpAux;
 using static Borium.RDP.RdpAux.RdpParamType;
@@ -119,27 +119,25 @@ namespace Borium.RDP
 				headerfile.Close();
 		}
 
-#if false
-		internal void printParser(string outputfilename, SymbolScopeData base)
+		internal void printParser(string outputfilename, SymbolScopeData scopeData)
 		{
 			if (rdp_verbose.value())
 			{
 				text_message(TEXT_INFO, "Dumping parser file to \'" + outputfilename + "\'\n");
 			}
-			PrintStream parserfile = null;
-			if (outputfilename.charAt(0) == '-')
+			TextWriter parserfile = null;
+			if (outputfilename[0] == '-')
 			{
-				parserfile = System.out;
+				parserfile = Console.Out;
 			}
 			else
 			{
 				try
 				{
-					parserfile = new PrintStream(outputfilename);
+					parserfile = new StreamWriter(outputfilename);
 				}
-				catch (FileNotFoundException e)
+				catch (FileNotFoundException)
 				{
-					e.printStackTrace();
 				}
 			}
 			text_redirect(parserfile);
@@ -154,7 +152,7 @@ namespace Borium.RDP
 			{
 				rdp_print_parser_include_line(rdp_dir_include);
 			}
-			if (outputfilename.charAt(0) != '-')
+			if (outputfilename[0] != '-')
 			{
 				text_printf("#include \"" + text_force_filetype(outputfilename, "h") + "\"\n");
 			}
@@ -243,7 +241,7 @@ namespace Borium.RDP
 
 			/* print set declaration */
 			text_printf("\n/* Set declarations */\n\n");
-			temp = (RdpData)base.nextSymbolInScope();
+			temp = (RdpData)scopeData.nextSymbolInScope();
 			while (temp != null)
 			{
 				if (rdp_production_set.includes(temp.kind) && temp.code_only == 0)
@@ -262,7 +260,7 @@ namespace Borium.RDP
 			}
 
 			text_printf("\n/* Initialise sets */\n\nstatic void rdp_set_initialise(void)\n{\n");
-			temp = (RdpData)base.nextSymbolInScope();
+			temp = (RdpData)scopeData.nextSymbolInScope();
 			while (temp != null)
 			{
 				if (rdp_production_set.includes(temp.kind) && temp.code_only == 0)
@@ -287,7 +285,7 @@ namespace Borium.RDP
 
 			/* print forward declarations */
 			text_printf("\n/* Parser forward declarations and macros */\n");
-			temp = (RdpData)base.nextSymbolInScope();
+			temp = (RdpData)scopeData.nextSymbolInScope();
 			while (temp != null)
 			{
 				if (temp.kind == K_PRIMARY && temp.call_count > 0)
@@ -297,9 +295,9 @@ namespace Borium.RDP
 					if (temp.code_only != 0)
 					{
 						text_printf("#define " + text_get_string(temp.id));
-						if (temp.params != null)
+						if (temp.parameters != null)
 					{
-							rdp_print_parser_param_list(null, temp.params, 0, 0);
+							rdp_print_parser_param_list(null, temp.parameters, 0, 0);
 						}
 						text_printf(" ");
 						rdp_print_parser_alternate(temp, temp);
@@ -319,7 +317,7 @@ namespace Borium.RDP
 						}
 						text_printf(" " + text_get_string(temp.id));
 
-						rdp_print_parser_param_list(null, temp.params, 1, 0);
+						rdp_print_parser_param_list(null, temp.parameters, 1, 0);
 
 						text_printf(";\n");
 					}
@@ -334,7 +332,7 @@ namespace Borium.RDP
 			}
 
 			/* print parser definitions */
-			rdp_print_parser_primaries(base);
+			rdp_print_parser_primaries(scopeData);
 
 			/* print main line routine */
 			text_printf("int main(int argc, char *argv[])\n" + "{\n"
@@ -358,9 +356,9 @@ namespace Borium.RDP
 
 			/* print help building code */
 			text_printf("  arg_message(\"" + rdp_dir_title + "\\n\" RDP_STAMP \"\\n\\n\"");
-			text_printf("\"Usage: " + outputfilename.substring(0, outputfilename.lastIndexOf('.')) + " [options] source");
+			text_printf("\"Usage: " + outputfilename.Substring(0, outputfilename.LastIndexOf('.')) + " [options] source");
 
-			if (rdp_dir_suffix.length() != 0)
+			if (rdp_dir_suffix.Length != 0)
 			{
 				text_printf("[." + rdp_dir_suffix + "]");
 			}
@@ -438,7 +436,7 @@ namespace Borium.RDP
 
 			text_printf("      " + text_get_string(rdp_start_prod.id));
 
-			rdp_print_parser_param_list(text_get_string(rdp_start_prod.id), rdp_start_prod.params, 0, 1);
+			rdp_print_parser_param_list(text_get_string(rdp_start_prod.id), rdp_start_prod.parameters, 0, 1);
 
 			text_printf(";            /* call parser at top level */\n" + "      if (text_total_errors() != 0)\n"
 					+ "        text_message(TEXT_FATAL, \"error%s detected in source file '" + "rdparser"
@@ -484,11 +482,10 @@ namespace Borium.RDP
 
 			text_printf("\n/* End of " + text_force_filetype(outputfilename, "c") + " */\n");
 
-			text_redirect(System.out);
-			if (parserfile != System.out)
-			parserfile.close();
+			text_redirect(Console.Out);
+			if (parserfile != Console.Out)
+			parserfile.Close();
 		}
-#endif
 
 		internal void rdp_dump_extended(SymbolScopeData scopeData)
 		{
@@ -617,14 +614,13 @@ namespace Borium.RDP
 			}
 		}
 
-#if false
-		private void rdp_print_locals(RdpData base, ArrayList<string> localsList)
+		private void rdp_print_locals(RdpData rdpData, List<string> localsList)
 		{
-			if (!rdp_production_set.includes(base.kind))
+			if (!rdp_production_set.includes(rdpData.kind))
 			{
 				return;
 			}
-			RdpList list = base.list;
+			RdpList list = rdpData.list;
 			while (list != null)
 			{
 				if (list.production.kind != K_PRIMARY)
@@ -635,13 +631,13 @@ namespace Borium.RDP
 				if (list.return_name != null)
 				{
 					// if (symbol_lookup_key(locals, list.return_name, null) == null)
-					if (!localsList.contains(list.return_name))
+					if (!localsList.Contains(list.return_name))
 					{
 						LocalsData local = new LocalsData();
 
 						local.id = text_insert_string(list.return_name);
 						symbol_insert_symbol(locals, local);
-						localsList.add(list.return_name);
+						localsList.Add(list.return_name);
 
 						text_printf("  " + list.production.return_type);
 						for (int temp_int = 0; temp_int < list.production.return_type_stars; temp_int++)
@@ -804,7 +800,7 @@ namespace Borium.RDP
 							text_printf("if (rdp_pass == " + prod.code_pass + ") { \\\n");
 						}
 						string temp = text_get_string(prod.id);
-						for (char ch : temp.toCharArray())
+						foreach (char ch in temp)
 						{
 							if (ch == '\n')
 							{
@@ -852,9 +848,9 @@ namespace Borium.RDP
 					break;
 				default:
 					text_message(TEXT_FATAL, "internal error - unexpected kind found\n");
+					break;
 			}
 		}
-#endif
 
 		private void rdp_print_parser_param_list(string first, RdpParamList parameters, int definition, int start_rule)
 		{
@@ -933,17 +929,16 @@ namespace Borium.RDP
 			}
 		}
 
-#if false
-		private void rdp_print_parser_primaries(SymbolScopeData base)
+		private void rdp_print_parser_primaries(SymbolScopeData scopeData)
 		{
-			RdpData temp = (RdpData)base.nextSymbolInScope();
+			RdpData temp = (RdpData)scopeData.nextSymbolInScope();
 
 			text_printf("\n/* Parser functions */\n");
 			while (temp != null)
 			{
 				if (temp.kind == K_PRIMARY && temp.call_count > 0 && temp.code_only == 0)
 				{
-					boolean is_void = temp.return_type.equals("void") && temp.return_type_stars == 0;
+					bool is_void = temp.return_type == "void" && temp.return_type_stars == 0;
 					SymbolScopeData local_scope = symbol_new_scope(locals, text_get_string(temp.id));
 
 					if (temp != rdp_start_prod)
@@ -959,7 +954,7 @@ namespace Borium.RDP
 					}
 					text_printf(" " + text_get_string(temp.id));
 
-					rdp_print_parser_param_list(null, temp.params, 1, 0);
+					rdp_print_parser_param_list(null, temp.parameters, 1, 0);
 
 					text_printf("\n{\n");
 
@@ -977,7 +972,7 @@ namespace Borium.RDP
 							text_printf("*");
 						}
 						text_printf(" result;\n");
-						temp.locals.add("result");
+						temp.locals.Add("result");
 					}
 
 					if (!rdp_parser_only.value())
@@ -1192,7 +1187,7 @@ namespace Borium.RDP
 				/* disabled by -p option */
 				if (!rdp_parser_only.value() && default_action != null)
 				{
-					for (char ch : default_action.toCharArray())
+					foreach (char ch in default_action)
 					{
 						if (ch == '\n')
 						{
@@ -1228,7 +1223,8 @@ namespace Borium.RDP
 					first.print(rdp_enum_string, 78);
 					break;
 				case 0:
-					System.err.println("Set " + first + " is empty");
+					Console.Error.WriteLine("Set " + first + " is empty");
+					break;
 			}
 
 			if (follow_name == null)
@@ -1240,6 +1236,5 @@ namespace Borium.RDP
 				text_printf(", &" + follow_name + "_stop)");
 			}
 		}
-#endif
 	}
 }
