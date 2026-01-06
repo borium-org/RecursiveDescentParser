@@ -141,9 +141,9 @@ private static string RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compile
 		internal static Pointer<string> rdp_c_path = new Pointer<string>();
 
 		// set if we want new Java parser
-		static Pointer<string> rdp_java_path = new Pointer<string>();
+		internal static Pointer<string> rdp_java_path = new Pointer<string>();
 		// prefix for the new Java parser
-		static Pointer<string> rdp_java_prefix = new Pointer<string>();
+		internal static Pointer<string> rdp_java_prefix = new Pointer<string>();
 
 		private static Pointer<bool> rdp_symbol_echo = new Pointer<bool>(false); // symbol echo flag
 		internal static Pointer<bool> rdp_verbose = new Pointer<bool>(false); // verbosity flag

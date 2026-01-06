@@ -23,12 +23,10 @@ namespace Borium.RDP
 
 		internal const int EOF = -1;
 
-#if false
 		internal static string capitalizeFirst(string text)
 		{
-			return Character.toUpperCase(text.charAt(0)) + text.substring(1);
+			return char.ToUpper(text[0]) + text.Substring(1);
 		}
-#endif
 
 		internal static void fclose(TextReader file)
 		{

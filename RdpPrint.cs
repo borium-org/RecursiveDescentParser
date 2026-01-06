@@ -175,7 +175,7 @@ namespace Borium.RDP
 
 		protected int rdp_indentation;
 
-		protected int indent()
+		protected virtual int indent()
 		{
 			for (int temp = 0; temp < rdp_indentation; temp++)
 			{
@@ -184,7 +184,7 @@ namespace Borium.RDP
 			return rdp_indentation * 2;
 		}
 
-		protected int indent(int extraIndent)
+		protected virtual int indent(int extraIndent)
 		{
 			for (int temp = 0; temp < rdp_indentation + extraIndent; temp++)
 			{
@@ -193,7 +193,6 @@ namespace Borium.RDP
 			return rdp_indentation * 2;
 		}
 
-#if false
 		protected int iprint(string text)
 		{
 			return text_iprintf(text);
@@ -228,19 +227,16 @@ namespace Borium.RDP
 		{
 			return text_printf(text + "\n");
 		}
-#endif
 
 		protected void rdp_print_parser_production_name(RdpData n)
 		{
 			rdp_print_parser_production_name(n, true);
 		}
 
-#if false
 		protected void rdp_print_parser_production_name_no_comment(RdpData n)
 		{
 			rdp_print_parser_production_name(n, false);
 		}
-#endif
 
 		protected void rdp_print_parser_string(string str)
 		{
@@ -289,13 +285,12 @@ namespace Borium.RDP
 			}
 		}
 
-#if false
 		private int text_iprintf(int extraIndent, string fmt)
 		{
 			int i = 0;
 			// In some cases we just iprintf("\n") and it does not need to be
 			// indented
-			if (!fmt.equals("\n"))
+			if (fmt != "\n")
 			{
 				i = indent(extraIndent);
 			}
@@ -308,13 +303,12 @@ namespace Borium.RDP
 			int i = 0;
 			// In some cases we just iprintf("\n") and it does not need to be
 			// indented
-			if (!fmt.equals("\n"))
+			if (fmt != "\n")
 			{
 				i = indent();
 			}
 			i += text_printf(fmt);
 			return i; /* return number of characters printed */
 		}
-#endif
 	}
 }

@@ -120,13 +120,14 @@ namespace Borium.RDP
 			}
 		}
 
-#if false
-		internal void print(string[] element_names, int initialOffset, Indent indent, int line_length, boolean comments)
+		public delegate int IndentFunction();
+
+		internal void print(string[] element_names, int initialOffset, IndentFunction indent, int line_length, bool comments)
 		{
 			int column = initialOffset;
-			boolean not_first = false;
-			Integer[] elements = array();
-			for (int element : elements)
+			bool not_first = false;
+			int[] elements = array();
+			foreach (int element in elements)
 			{
 				if (not_first)
 				{
@@ -140,12 +141,11 @@ namespace Borium.RDP
 				if (line_length != 0 && column >= line_length)
 				{
 					text_printf("\n");
-					column = indent.indent();
+					column = indent();
 				}
 				column += set_print_element(element, element_names, comments);
 			}
 		}
-#endif
 
 		internal void set(int element)
 		{

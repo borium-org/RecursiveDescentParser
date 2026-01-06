@@ -725,20 +725,21 @@ namespace Borium.RDP
 				print.printParser(text_force_filetype(outputfilename, "c"), rdp_base);
 			}
 #if false
-		// if (rdp_cpp_path.value() != null)
-		// {
-		// // TODO C++
-		// }
-		if (rdp_java_path.value() != null && rdp_java_prefix.value() != null)
-		{
-			RdpPrintJava print = new RdpPrintJava(rdp_java_path.value(), rdp_java_prefix.value());
-			print.print(rdp_base, rdp_parser_only.value());
-		}
-
-		if (rdp_verbose.value() || true)
-		{
-			text_print_statistics();
-		}
+			// if (rdp_cpp_path.value() != null)
+			// {
+			// // TODO C++
+			// }
+#endif
+			if (rdp_java_path.value() != null && rdp_java_prefix.value() != null)
+			{
+				RdpPrintJava print = new RdpPrintJava(rdp_java_path.value(), rdp_java_prefix.value());
+				print.print(rdp_base, rdp_parser_only.value());
+			}
+#if false
+			if (rdp_verbose.value() || true)
+			{
+				text_print_statistics();
+			}
 #endif
 		}
 
