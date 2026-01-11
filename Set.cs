@@ -219,5 +219,43 @@ namespace Borium.RDP
 		{
 			return data.Length;
 		}
+
+		internal void printIndented(string[] element_names, int column, int width, int indentLevel)
+		{
+			bool isFirst = true;
+			int[] elements = array();
+			foreach (int element in elements)
+			{
+				string elementString;
+				if (element_names == null)
+				{
+					elementString = Convert.ToString(element);
+				}
+				else
+				{
+					elementString = element_names[element];
+					elementString = elementString.Split(' ')[0];
+				}
+				if (isFirst)
+				{
+					isFirst = false;
+				}
+				else
+				{
+					column += text_printf(", ");
+				}
+				int endColumn = column + elementString.Length + 2;
+				if (width > 0 && endColumn >= width - 3)
+				{
+					text_printf("\n");
+					for (int i = 0; i < indentLevel + 2; i++)
+					{
+						text_printf("\t");
+					}
+					column = (indentLevel + 2) * 4;
+				}
+				column += text_printf(elementString);
+			}
+		}
 	}
 }

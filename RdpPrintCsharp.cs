@@ -22,21 +22,44 @@ namespace Borium.RDP
 
 		internal void print(SymbolScopeData rdp_base, bool parser_only)
 		{
-			printCompiler();
+			printCompilerSets(rdp_base);
 			printKeywords();
 		}
 
-		private void printCompiler()
+		private void printCompilerSets(SymbolScopeData scopeData)
 		{
-			TextWriter file = createFile("Compiler");
+			TextWriter file = createFile("CompilerSets");
 			text_redirect(file);
 			iprintln("namespace " + classPackage + ";");
 			iprintln("{");
 			rdp_indentation++;
-			iprintln("public class Compiler : CompilerBase");
+			iprintln("public partial class Compiler : CompilerBase");
 			iprintln("{");
 			rdp_indentation++;
-			iprintln();
+
+			RdpData temp = (RdpData)scopeData.nextSymbolInScope();
+			while (temp != null)
+			{
+				if (rdp_production_set.includes(temp.kind) && temp.code_only == 0)
+				{
+					if (temp.first_cardinality > 1)
+					{
+						int column = rdp_indentation * 3; // one less than actual indent per tab
+						column += iprint($"protected Set {text_get_string(temp.id)}_first = new Set(");
+						temp.first.printIndented(rdp_enum_string, column, 120, rdp_indentation);
+						println(");");
+					}
+					if (temp.kind == K_PRIMARY)
+					{
+						int column = rdp_indentation * 3; // one less than actual indent per tab
+						column += iprint($"protected Set {text_get_string(temp.id)}_stop = new Set(");
+						temp.follow.printIndented(rdp_enum_string, column, 120, rdp_indentation);
+						println(");");
+					}
+				}
+				temp = (RdpData)temp.nextSymbolInScope();
+			}
+
 			rdp_indentation--;
 			iprintln("}");
 			rdp_indentation--;
