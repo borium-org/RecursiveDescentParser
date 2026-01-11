@@ -735,6 +735,11 @@ namespace Borium.RDP
 				RdpPrintJava print = new RdpPrintJava(rdp_java_path.value(), rdp_java_prefix.value());
 				print.print(rdp_base, rdp_parser_only.value());
 			}
+			if (rdp_csharp_path.value() != null && rdp_csharp_package.value() != null)
+			{
+				RdpPrintCsharp print = new RdpPrintCsharp(rdp_csharp_path.value(), rdp_csharp_package.value());
+				print.print(rdp_base, rdp_parser_only.value());
+			}
 #if false
 			if (rdp_verbose.value() || true)
 			{

@@ -145,6 +145,11 @@ private static string RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compile
 		// prefix for the new Java parser
 		internal static Pointer<string> rdp_java_prefix = new Pointer<string>();
 
+		// set if we want new C# parser
+		internal static Pointer<string> rdp_csharp_path = new Pointer<string>();
+		// prefix for the new C# parser
+		internal static Pointer<string> rdp_csharp_package = new Pointer<string>();
+
 		private static Pointer<bool> rdp_symbol_echo = new Pointer<bool>(false); // symbol echo flag
 		internal static Pointer<bool> rdp_verbose = new Pointer<bool>(false); // verbosity flag
 
@@ -284,6 +289,8 @@ private static string RDP_STAMP = "Generated on Sep 19 2015 11:45:00 and compile
 			arg_string('C', "C parser path", rdp_c_path);
 			arg_string('J', "Java parser output file path", rdp_java_path);
 			arg_string('j', "Java parser fully qualified prefix", rdp_java_prefix);
+			arg_string('H', "C# parser output file path", rdp_csharp_path);
+			arg_string('h', "C# parser fully qualified package", rdp_csharp_package);
 
 			rdp_sourcefilenames = arg_process(args);
 
