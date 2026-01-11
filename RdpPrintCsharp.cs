@@ -113,6 +113,15 @@ namespace Borium.RDP
 							sanitized += ch;
 						}
 					}
+					if (sanitized == "\\\"")
+					{
+						sanitized = "<String>";
+					}
+					if (sanitized == "\'")
+					{
+						sanitized = "<Char>";
+					}
+
 					iprint($"\"{sanitized}\",\n");
 				}
 				temp = (RdpData)temp.nextSymbolInScope();
