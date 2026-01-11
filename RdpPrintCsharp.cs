@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 
+using static Borium.RDP.RdpAux;
+using static Borium.RDP.RdpProgram;
 using static Borium.RDP.Text;
 
 namespace Borium.RDP
@@ -20,6 +22,12 @@ namespace Borium.RDP
 
 		internal void print(SymbolScopeData rdp_base, bool parser_only)
 		{
+			printCompiler();
+			printKeywords();
+		}
+
+		private void printCompiler()
+		{
 			TextWriter file = createFile("Compiler");
 			text_redirect(file);
 			iprintln("namespace " + classPackage + ";");
@@ -28,13 +36,96 @@ namespace Borium.RDP
 			iprintln("public class Compiler : CompilerBase");
 			iprintln("{");
 			rdp_indentation++;
+			iprintln();
 			rdp_indentation--;
 			iprintln("}");
 			rdp_indentation--;
 			iprintln("}");
 			text_redirect(Console.Out);
 			file.Close();
-			throw new NotImplementedException();
+		}
+
+		private void printKeywords()
+		{
+			TextWriter file = createFile("Keywords");
+			text_redirect(file);
+			iprintln("namespace " + classPackage + ";");
+			iprintln("{");
+			rdp_indentation++;
+			iprintln("internal class Keywords");
+			iprintln("{");
+			rdp_indentation++;
+
+			int offset = 0;
+			iprintln($"internal const int SCAN_P_EOF = {offset++};");
+			iprintln($"internal const int SCAN_P_ID = {offset++};");
+			iprintln($"internal const int SCAN_P_ERROR = {offset++};");
+			iprintln($"internal const int SCAN_P_INTEGER = {offset++};");
+			iprintln($"internal const int SCAN_P_REAL = {offset++};");
+
+			RdpData temp = (RdpData)tokens.getScope().nextSymbolInScope();
+			while (temp != null)
+			{
+				if (temp.kind == K_TOKEN || temp.kind == K_EXTENDED)
+				{
+					iprint("internal const int ");
+					rdp_print_parser_production_name(temp);
+					println($" = {offset++};");
+				}
+				temp = (RdpData)temp.nextSymbolInScope();
+			}
+
+			iprintln();
+
+			iprintln("internal string[] tokenNames = {");
+			rdp_indentation++;
+
+			iprintln("\"<EOF>\",");
+			iprintln("\"<Ident\",");
+			iprintln("\"<Error>\",");
+			iprintln("\"<Integer>\",");
+			iprintln("\"<Real>\",");
+
+			temp = (RdpData)tokens.getScope().nextSymbolInScope();
+			while (temp != null)
+			{
+				if (temp.kind == K_TOKEN || temp.kind == K_EXTENDED)
+				{
+					string tokenName = text_get_string(temp.token_enum);
+					int pos = tokenName.IndexOf(' ');
+					if (pos != -1)
+					{
+						tokenName = tokenName.Substring(pos + 4, tokenName.Length - pos - 7);
+					}
+					else
+					{
+						tokenName = tokenName.Substring(6);
+					}
+					string sanitized = "";
+					foreach (char ch in tokenName)
+					{
+						if (ch == '\"')
+						{
+							sanitized += "\\\"";
+						}
+						else
+						{
+							sanitized += ch;
+						}
+					}
+					iprint($"\"{sanitized}\",\n");
+				}
+				temp = (RdpData)temp.nextSymbolInScope();
+			}
+
+			rdp_indentation--;
+			iprintln("};");
+			rdp_indentation--;
+			iprintln("}");
+			rdp_indentation--;
+			iprintln("}");
+			text_redirect(Console.Out);
+			file.Close();
 		}
 
 		protected override int indent()

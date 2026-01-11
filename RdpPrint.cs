@@ -260,7 +260,7 @@ namespace Borium.RDP
 				case K_EXTENDED:
 				case K_TOKEN:
 					{
-						String tokenName = text_get_string(n.token_enum);
+						string tokenName = text_get_string(n.token_enum);
 						if (!printComment)
 						{
 							int pos = tokenName.IndexOf(' ');
