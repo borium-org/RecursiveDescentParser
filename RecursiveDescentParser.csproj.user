@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <StartArguments>cotg.bnf -E -R -HCS -hBorium.Cotg</StartArguments>
+    <StartArguments>demo.bnf -E -R -CC -p -odemo</StartArguments>
     <StartWorkingDirectory>C:\Aare\Borium\VisualStudio\RecursiveDescentParser\example</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">

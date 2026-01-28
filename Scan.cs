@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Globalization;
 using static Borium.RDP.CRT;
 using static Borium.RDP.RdpProgram;
-using static Borium.RDP.Scan;
 using static Borium.RDP.Set;
 using static Borium.RDP.Symbol;
 using static Borium.RDP.Text;
