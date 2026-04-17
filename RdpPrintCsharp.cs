@@ -1,9 +1,13 @@
 ﻿using System;
 using System.IO;
 
+using static Borium.RDP.CRT;
 using static Borium.RDP.RdpAux;
+using static Borium.RDP.RdpAux.RdpParamType;
 using static Borium.RDP.RdpProgram;
+using static Borium.RDP.Set;
 using static Borium.RDP.Text;
+using static Borium.RDP.Text.TextMessageType;
 
 namespace Borium.RDP
 {
@@ -22,13 +26,13 @@ namespace Borium.RDP
 
 		internal void print(SymbolScopeData rdp_base, bool parser_only)
 		{
-			printCompilerSets(rdp_base);
 			printKeywords();
+			printCompiler(rdp_base);
 		}
 
-		private void printCompilerSets(SymbolScopeData scopeData)
+		private void printCompiler(SymbolScopeData scopeData)
 		{
-			TextWriter file = createFile("CompilerSets");
+			TextWriter file = createFile("Compiler");
 			text_redirect(file);
 			iprintln("namespace " + classPackage + ";");
 			iprintln("{");
@@ -37,6 +41,638 @@ namespace Borium.RDP
 			iprintln("{");
 			rdp_indentation++;
 
+			printCompilerSets(scopeData);
+
+			iprintln();
+
+			iprintln("public Compiler()");
+			iprintln("{");
+			rdp_indentation++;
+			iprintln("text_init(1000000, 50, 120, 4);");
+			iprintln("scan_init(true, false, false, false, Keywords.tokenNames);");
+			iprintln("rdp_load_keywords();");
+			iprintln();
+			iprintln("text_get_char();");
+			iprintln("scan_();");
+			rdp_indentation--;
+			iprintln("}");
+			iprintln();
+
+			printParserMethods(scopeData, true);
+			iprintln();
+			printParserMethods(scopeData, false);
+			iprintln();
+
+			printLoadKeywords();
+
+			rdp_indentation--;
+			iprintln("}");
+
+			iprintln();
+			printAstClasses(scopeData);
+
+			rdp_indentation--;
+			iprintln("}");
+			text_redirect(Console.Out);
+			file.Close();
+		}
+
+		private void printAstClasses(SymbolScopeData scopeData)
+		{
+			iprintln("internal partial class Ast");
+			iprintln("{");
+			rdp_indentation++;
+			rdp_indentation--;
+			iprintln("}");
+
+			for (RdpData temp = (RdpData)scopeData.nextSymbolInScope(); temp != null; temp = (RdpData)temp.nextSymbolInScope())
+			{
+				if (temp.kind == K_PRIMARY && temp.call_count > 0 && temp.code_only == 0)
+				{
+					iprintln();
+					iprint("internal partial class ");
+					string astType = "Ast" + capitalizeFirst(text_get_string(temp.id));
+					print(astType);
+					println(" : Ast");
+					iprintln("{");
+					iprintln("}");
+				}
+			}
+		}
+
+		private void printParserMethods(SymbolScopeData scopeData, bool start)
+		{
+			for (RdpData temp = (RdpData)scopeData.nextSymbolInScope(); temp != null; temp = (RdpData)temp.nextSymbolInScope())
+			{
+				if (temp.kind == K_PRIMARY && temp.call_count > 0 && temp.code_only == 0)
+				{
+					if (temp == rdp_start_prod && !start)
+						continue;
+					if (temp != rdp_start_prod && start)
+						continue;
+					bool is_void = temp.return_type == "void" && temp.return_type_stars == 0;
+					if (!is_void)
+						throw new Exception("Non-void " + text_get_string(temp.id));
+
+					iprint(temp == rdp_start_prod ? "public " : "protected ");
+					bool parserOnly = rdp_parser_only.value();
+					string astType = "Ast" + capitalizeFirst(text_get_string(temp.id));
+					print(parserOnly ? "void" : astType);
+					text_printf(" " + text_get_string(temp.id));
+
+					rdp_print_parser_param_list(null, temp.parameters, 1, 0);
+					println();
+					iprintln("{");
+					rdp_indentation++;
+
+					if (temp.ll1_violation != 0)
+					{
+						iprintln("// WARNING - an LL(1) violation was detected at this point in the grammar");
+					}
+
+					if (!parserOnly)
+					{
+						iprintln(astType + " ast = new " + astType + "();");
+						iprintln();
+					}
+
+					// In trace mode, add an entry message
+					if (rdp_trace.value())
+					{
+						iprintln("text_message(TEXT_INFO, \"Entered \'" + text_get_string(temp.id) + "\'\\n\");");
+						iprintln();
+					}
+
+					rdp_print_parser_alternate(temp, temp);
+
+					// add error handling on exit
+					iprintln("scan_test_set("
+							+ (rdp_error_production_name.value() ? "\"" + text_get_string(temp.id) + "\"" : "null") + ", "
+							+ text_get_string(temp.id) + "_stop, " + text_get_string(temp.id) + "_stop);");
+
+					iprintln();
+
+					// In trace mode, add an exit message
+					if (rdp_trace.value())
+					{
+						iprintln("text_message(TEXT_INFO, \"Exited \'" + text_get_string(temp.id) + "\'\\n\");");
+						iprintln();
+					}
+
+					if (!parserOnly)
+					{
+						iprintln("return ast;");
+					}
+
+					rdp_indentation--;
+					iprintln("}");
+					println();
+				}
+			}
+		}
+
+		private void rdp_print_parser_param_list(string first, RdpParamList parameters, int definition, int start_rule)
+		{
+			text_printf("(");
+
+			/* processing for tree parameter */
+			if (rdp_dir_tree != 0)
+			{
+				if (definition != 0)
+				{
+					text_printf("rdp_tree_node_data* rdp_tree");
+				}
+				else
+				{
+					if (first == null)
+					{
+						text_printf("rdp_tree");
+					}
+					else
+					{
+						text_printf((start_rule != 0 ? "rdp_tree_root = " : "") + "rdp_add_"
+								+ (start_rule != 0 ? "node" : "child") + "(\"" + first + "\", rdp_tree)");
+					}
+				}
+
+				if (parameters != null)
+				{
+					text_printf(", "); /* put in separator for rest of parameters */
+				}
+			}
+
+			if (parameters == null && definition != 0 && rdp_dir_tree == 0)
+			{
+				text_printf("");
+			}
+			else
+			{
+				rdp_print_parser_param_list_sub(parameters, 1, definition);
+			}
+
+			text_printf(")");
+		}
+
+		private void rdp_print_parser_param_list_sub(RdpParamList param, int last, int definition)
+		{
+			if (param != null)
+			{
+				rdp_print_parser_param_list_sub(param.next, 0, definition);
+				text_printf(definition != 0 ? param.type : "");
+
+				if (definition != 0)
+				{
+					for (int count = 0; count < param.stars; count++)
+					{
+						text_printf("*");
+					}
+				}
+
+				text_printf(definition != 0 ? " " : "");
+				switch (param.flavour)
+				{
+					case PARAM_INTEGER:
+						text_printf($"{param.n}");
+						break;
+					case PARAM_REAL:
+						text_printf($"{param.r}");
+						break;
+					case PARAM_STRING:
+						text_printf("\"" + param.id + "\"");
+						break;
+					case PARAM_ID:
+						text_printf(param.id);
+						break;
+				}
+				text_printf(last != 0 ? "" : ", ");
+			}
+		}
+
+		private void rdp_print_parser_alternate(RdpData production, RdpData primary)
+		{
+			RdpList list = production.list;
+			if (list.next == null)
+			{
+				rdp_print_parser_sequence(list.production, primary);
+			}
+			else
+			{
+				bool elsePrinted = false;
+				while (list != null)
+				{
+					if (list.production.kind != K_SEQUENCE)
+					{
+						text_message(TEXT_FATAL, "internal error - expecting alternate\n");
+					}
+					if (elsePrinted)
+						print(" if (");
+					else
+						iprint("if (");
+					rdp_print_parser_test(list.production.id, list.production.first, null);
+					println(")");
+					iprintln("{");
+					rdp_indentation++;
+
+					rdp_print_parser_sequence(list.production, primary);
+
+					rdp_indentation--;
+					iprintln("}");
+
+					if ((list = list.next) != null)
+					{
+						iprint("else");
+						elsePrinted = true;
+					}
+					else
+					/* tail test at end of alternates */
+					if (!(production.contains_null && production.lo != 0))
+					{
+						iprintln("else");
+						indent(1);
+						rdp_print_parser_test(production.id, production.first, text_get_string(primary.id));
+						println(";");
+					}
+				}
+			}
+		}
+
+		private void rdp_print_parser_sequence(RdpData production, RdpData primary)
+		{
+			RdpList list = production.list;
+
+			while (list != null)
+			{
+				rdp_print_parser_item(list.production, primary, list.return_name, list.actuals, list.promote_epsilon,
+						list.promote, list.default_action);
+				list = list.next;
+			}
+		}
+
+		private void rdp_print_parser_item(RdpData prod, RdpData primary, string return_name, RdpParamList actuals,
+				int promote_epsilon, int promote, string default_action)
+		{
+			if (promote == PROMOTE_DEFAULT)
+			{
+				promote = prod.promote_default;
+			}
+
+			if (!(prod.kind == K_CODE && prod.code_successor != 0))
+			{
+				indent(); /* Don't indent code sequence-internal or inline items */
+			}
+
+			switch (prod.kind)
+			{
+				case K_INTEGER:
+				case K_REAL:
+				case K_STRING:
+				case K_EXTENDED:
+				case K_TOKEN:
+					if (rdp_dir_tree != 0)
+					{
+						if (promote == PROMOTE_DONT)
+						{
+							/* add a tree node for this scanner item as child of current parent */
+							text_printf("if (rdp_tree_update) rdp_add_child(null, rdp_tree);\n");
+							indent();
+						}
+						else if (promote == PROMOTE_AND_COPY)
+						{
+							/* copy scanner data to current tree parent */
+							text_printf("if (rdp_tree_update) memcpy(rdp_tree, text_scan_data, sizeof(scan_data));\n");
+							indent();
+						}
+						else if (promote == PROMOTE_ABOVE)
+						{
+							/* add a tree node for this scanner item as parent of current parent */
+							text_printf("if (rdp_tree_update) rdp_add_parent(null, rdp_tree);\n");
+							indent();
+						}
+					}
+					text_printf("scan_test("
+							+ (rdp_error_production_name.value() ? "\"" + text_get_string(primary.id) + "\"" : "null") + ", ");
+					rdp_print_parser_production_name(prod);
+					text_printf(", " + text_get_string(primary.id) + "_stop);\n");
+					indent();
+					/* disable if -p option used */
+					if (return_name != null && !rdp_parser_only.value())
+					{
+						text_printf(return_name + " = text_scan_data."
+								+ (prod.kind == K_REAL ? "data.r" : prod.kind == K_INTEGER ? "data.i" : "id") + ";\n");
+						indent();
+					}
+					println("ast.Add(lastsym);");
+					iprintln("scan_();");
+					break;
+				case K_CODE:
+					if (!rdp_parser_only.value()) /* disabled by -p option */
+					{
+						if (prod.code_pass != 0)
+						{
+							text_printf("if (rdp_pass == " + prod.code_pass + ") { \\\n");
+						}
+						string temp = text_get_string(prod.id);
+						foreach (char ch in temp)
+						{
+							if (ch == '\n')
+							{
+								text_printf("\\\n");
+							}
+							else if (isprint(ch))
+							{
+								text_printf("" + ch);
+							}
+						}
+
+						if (prod.code_pass != 0)
+						{
+							text_printf(" \\\n}");
+						}
+
+						if (prod.kind == K_CODE && prod.code_terminator != 0)
+						{
+							text_printf("\n"); /* terminate semantic actions tidily */
+						}
+					}
+					break;
+				case K_PRIMARY:
+					if (rdp_dir_tree != 0 && promote == PROMOTE_AND_COPY)
+					{
+						text_printf("if(rdp_tree_update) {rdp_tree.id = \"" + text_get_string(prod.id)
+								+ "\"; rdp_tree.token = 0;}\n");
+					}
+					if (return_name != null && !rdp_parser_only.value())
+					{
+						text_printf(return_name + " = ");
+					}
+					else
+					{
+						text_printf("ast.Add(");
+					}
+					text_printf(text_get_string(prod.id));
+					if (prod.code_only == 0 && actuals == null)
+					{
+						rdp_print_parser_param_list(promote == PROMOTE_DONT ? text_get_string(prod.id) : null, actuals, 0, 0);
+					}
+					if (return_name != null && !rdp_parser_only.value())
+					{
+						text_printf("Shouldn't get here");
+					}
+					else
+					{
+						text_printf(")");
+					}
+					text_printf(";\n");
+					break;
+				case K_SEQUENCE:
+					text_message(TEXT_FATAL, "internal error - unexpected alternate in sequence\n");
+					break;
+				case K_LIST:
+					rdp_print_parser_subproduction(prod, primary, promote_epsilon, default_action);
+					break;
+				default:
+					text_message(TEXT_FATAL, "internal error - unexpected kind found\n");
+					break;
+			}
+		}
+
+		private void rdp_print_parser_subproduction(RdpData prod, RdpData primary, int promote_epsilon,
+				string default_action)
+		{
+			if (prod.lo == 0) /* this can be an optional body */
+			{
+				text_printf("if (");
+				rdp_print_parser_test(prod.id, prod.first, null);
+				text_printf(")\n");
+				indent();
+			}
+
+			println("{");
+			rdp_indentation++;
+			iprintln("// Start of " + text_get_string(prod.id));
+
+			if (prod.ll1_violation != 0)
+			{
+				iprintln("// FIXME - an LL(1) violation was detected at this point in the grammar");
+			}
+
+			/* We don't need to instantiate count if hi is infinity and lo is 0 or 1 */
+			if (!((prod.hi == 0 || prod.hi == 1) && (prod.lo == 1 || prod.lo == 0)))
+			{
+				indent();
+				text_printf("unsigned long rdp_count = 0;\n");
+			}
+
+			iprintln("while (true)");
+			iprintln("{");
+			rdp_indentation++;
+
+			/* Put in test that first element of body matches if iterator low count > 0 and prod isn't nullable */
+			if (prod.lo != 0 && !prod.contains_null)
+			{
+				indent();
+				rdp_print_parser_test(prod.id, prod.first, text_get_string(primary.id));
+				println(";");
+			}
+
+			rdp_print_parser_alternate(prod, primary);
+
+			if (!((prod.hi == 0 || prod.hi == 1) && (prod.lo == 1 || prod.lo == 0)))
+			{
+				iprintln("rdp_count++;");
+			}
+
+			if (prod.hi > 1) /* Don't bother testing rdp_count of hi is zero or infty */
+			{
+				iprintln("if (rdp_count == " + prod.hi + ")");
+				iprintln(1, "break;");
+			}
+
+			if (prod.supplementary_token != null)
+			{
+				iprintln("if (text_scan_data.token != " + text_get_string(prod.supplementary_token.token_enum) + ")");
+				iprintln(1, "break;");
+
+				if (rdp_dir_tree != 0)
+				{
+					if (prod.delimiter_promote == PROMOTE_DONT)
+					{
+						/* add a tree node for this scanner item */
+						text_printf("if (rdp_tree_update) rdp_add_child(null, rdp_tree);\n");
+						indent();
+					}
+					else if (prod.delimiter_promote == PROMOTE_AND_COPY)
+					{
+						/* copy scanner data to current tree parent */
+						text_printf("if (rdp_tree_update) memcpy(rdp_tree, text_scan_data, sizeof(scan_data));\n");
+						indent();
+					}
+				}
+
+				println("ast.Add(lastsym);");
+				iprintln("scan_();"); /* skip list token */
+			}
+			else if (prod.hi != 1)
+			{
+				iprint("if (!");
+				rdp_print_parser_test(prod.id, prod.first, null);
+				println(")");
+				iprintln(1, "break;");
+			}
+
+			if (prod.hi == 1)
+			{
+				iprintln("break; // hi limit is 1");
+			}
+
+			rdp_indentation--;
+			iprintln("}");
+
+			if (prod.lo > 1) /* test rdp_count on way out */
+			{
+				indent();
+				text_printf("if (rdp_count < " + prod.lo + ")");
+				text_printf("  text_message(TEXT_ERROR_ECHO, \"iteration count too low\\n\");\n");
+			}
+
+			iprintln("// End of " + text_get_string(prod.id));
+			rdp_indentation--;
+			iprintln("}");
+
+			if (prod.lo == 0 && (rdp_dir_tree != 0 || default_action != null))
+			{
+				iprintln("else");
+				indent();
+				iprintln("{");
+				rdp_indentation++;
+				indent();
+				text_printf("/* default action processing for " + text_get_string(prod.id) + "*/\n");
+				if (rdp_dir_tree != 0)
+				{
+					/* First do tree node handling */
+					if (promote_epsilon == PROMOTE_DONT)
+					{
+						/* add an epsilon tree node */
+						indent();
+						if (rdp_dir_annotated_epsilon_tree != 0)
+						{
+							text_printf(
+									"if (rdp_tree_update) {rdp_tree_node_data *temp = rdp_add_child(null, rdp_tree); temp->id = \"#: "
+											+ text_get_string(prod.id + 4) + "\"; temp.token = SCAN_P_ID;}\n");
+						}
+						else
+						{
+							text_printf(
+									"if (rdp_tree_update) {rdp_tree_node_data *temp = rdp_add_child(null, rdp_tree); temp->id = null; temp->token = SCAN_P_ID;}\n");
+						}
+					}
+					else if (promote_epsilon == PROMOTE_AND_COPY)
+					{
+						/* copy epsilon to current tree parent */
+						indent();
+						if (rdp_dir_annotated_epsilon_tree != 0)
+						{
+							text_printf("if (rdp_tree_update) {rdp_tree->id = \"#: " + text_get_string(prod.id + 4)
+									+ "\"; rdp_tree.token = SCAN_P_ID;}\n");
+						}
+						else
+						{
+							text_printf("if (rdp_tree_update) {rdp_tree->id = null; rdp_tree->token = SCAN_P_ID;}\n");
+						}
+					}
+				}
+
+				/* Now copy out default action */
+				/* disabled by -p option */
+				if (!rdp_parser_only.value() && default_action != null)
+				{
+					foreach (char ch in default_action)
+					{
+						if (ch == '\n')
+						{
+							text_printf(" \\\n");
+						}
+						else
+						{
+							text_printf("" + ch);
+						}
+					}
+					println(); /* terminate semantic actions tidily */
+				}
+				rdp_indentation--;
+				iprintln("}");
+			}
+		}
+
+		private void rdp_print_parser_test(int first_name, Set first, string follow_name)
+		{
+			text_printf("scan_test");
+
+			switch (set_cardinality(first))
+			{
+				default:
+					text_printf(
+							"_set(" + (rdp_error_production_name.value() ? "\"" + text_get_string(first_name) + "\"" : "null")
+									+ ", " + text_get_string(first_name) + "_first");
+					break;
+				case 1:
+					text_printf("(" + (rdp_error_production_name.value() ? "\"" + text_get_string(first_name) + "\"" : "null")
+							+ ", ");
+					first.print(rdp_enum_string, 120);
+					break;
+				case 0:
+					Console.Error.WriteLine("Set " + first + " is empty");
+					break;
+			}
+
+			if (follow_name == null)
+			{
+				text_printf(", null)");
+			}
+			else
+			{
+				text_printf(", " + follow_name + "_stop)");
+			}
+		}
+
+		private void printLoadKeywords()
+		{
+			iprintln("private void rdp_load_keywords()");
+			iprintln("{");
+			rdp_indentation++;
+
+			RdpData temp = (RdpData)tokens.getScope().nextSymbolInScope();
+			while (temp != null)
+			{
+				if (temp.kind == K_TOKEN || temp.kind == K_EXTENDED)
+				{
+					iprint("scan_load_keyword(\"");
+					rdp_print_parser_string(text_get_string(temp.id));
+					text_printf("\", ");
+
+					if (temp.close != null)
+					{
+						text_printf("\"");
+						rdp_print_parser_string(temp.close);
+						text_printf("\", ");
+					}
+					else
+					{
+						text_printf("NULL, ");
+					}
+					text_printf(text_get_string(temp.token_enum) + ", ");
+					text_printf(temp.extended_enum);
+					println(");");
+				}
+				temp = (RdpData)temp.nextSymbolInScope();
+			}
+
+			rdp_indentation--;
+			iprintln("}");
+		}
+
+		private void printCompilerSets(SymbolScopeData scopeData)
+		{
 			RdpData temp = (RdpData)scopeData.nextSymbolInScope();
 			while (temp != null)
 			{
@@ -45,27 +681,20 @@ namespace Borium.RDP
 					if (temp.first_cardinality > 1)
 					{
 						int column = rdp_indentation * 3; // one less than actual indent per tab
-						column += iprint($"protected Set {text_get_string(temp.id)}_first = new Set(");
+						column += iprint($"protected readonly Set {text_get_string(temp.id)}_first = new Set(");
 						temp.first.printIndented(rdp_enum_string, column, 120, rdp_indentation);
 						println(");");
 					}
 					if (temp.kind == K_PRIMARY)
 					{
 						int column = rdp_indentation * 3; // one less than actual indent per tab
-						column += iprint($"protected Set {text_get_string(temp.id)}_stop = new Set(");
+						column += iprint($"protected readonly Set {text_get_string(temp.id)}_stop = new Set(");
 						temp.follow.printIndented(rdp_enum_string, column, 120, rdp_indentation);
 						println(");");
 					}
 				}
 				temp = (RdpData)temp.nextSymbolInScope();
 			}
-
-			rdp_indentation--;
-			iprintln("}");
-			rdp_indentation--;
-			iprintln("}");
-			text_redirect(Console.Out);
-			file.Close();
 		}
 
 		private void printKeywords()

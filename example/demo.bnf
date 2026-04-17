@@ -1,0 +1,5 @@
+PARSER(CompilationUnit)
+
+CompilationUnit ::= PackageDeclaration .
+
+PackageDeclaration ::= 'package' ID ( '=' ID { '.' ID } | { '.' ID } ) ';' .
