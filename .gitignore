@@ -1,5 +1,8 @@
 .vs/
 bin/
 obj/
-example/
 oldies/
+example/demo.c
+example/demo.h
+example/rdp.bnf
+example/rdp1.bnf

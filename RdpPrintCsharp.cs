@@ -34,7 +34,15 @@ namespace Borium.RDP
 		{
 			TextWriter file = createFile("Compiler");
 			text_redirect(file);
-			iprintln("namespace " + classPackage + ";");
+			iprintln("using Borium.RDP;");
+			iprintln();
+			iprintln("using static Borium.Demo.Keywords;");
+			iprintln();
+			iprintln("using static Borium.RDP.Scanner;");
+			iprintln("using static Borium.RDP.Text;");
+			iprintln("using static Borium.RDP.Text.TextMessageType;");
+			iprintln();
+			iprintln("namespace " + classPackage);
 			iprintln("{");
 			rdp_indentation++;
 			iprintln("public partial class Compiler : CompilerBase");
@@ -50,6 +58,7 @@ namespace Borium.RDP
 			rdp_indentation++;
 			iprintln("text_init(1000000, 50, 120, 4);");
 			iprintln("scan_init(true, false, false, false, Keywords.tokenNames);");
+			iprintln("rdp_set_initialise();");
 			iprintln("rdp_load_keywords();");
 			iprintln();
 			iprintln("text_get_char();");
@@ -59,11 +68,11 @@ namespace Borium.RDP
 			iprintln();
 
 			printParserMethods(scopeData, true);
-			iprintln();
 			printParserMethods(scopeData, false);
-			iprintln();
 
 			printLoadKeywords();
+			iprintln();
+			printAssignSets(scopeData);
 
 			rdp_indentation--;
 			iprintln("}");
@@ -79,9 +88,18 @@ namespace Borium.RDP
 
 		private void printAstClasses(SymbolScopeData scopeData)
 		{
-			iprintln("internal partial class Ast");
+			iprintln("public partial class Ast");
 			iprintln("{");
 			rdp_indentation++;
+
+			iprintln("internal void Add(int lastsym)");
+			iprintln("{");
+			iprintln("}");
+			iprintln();
+			iprintln("internal void Add(Ast ast)");
+			iprintln("{");
+			iprintln("}");
+
 			rdp_indentation--;
 			iprintln("}");
 
@@ -90,7 +108,10 @@ namespace Borium.RDP
 				if (temp.kind == K_PRIMARY && temp.call_count > 0 && temp.code_only == 0)
 				{
 					iprintln();
-					iprint("internal partial class ");
+					if (temp == rdp_start_prod)
+						iprint("public partial class ");
+					else
+						iprint("internal partial class ");
 					string astType = "Ast" + capitalizeFirst(text_get_string(temp.id));
 					print(astType);
 					println(" : Ast");
@@ -114,11 +135,11 @@ namespace Borium.RDP
 					if (!is_void)
 						throw new Exception("Non-void " + text_get_string(temp.id));
 
-					iprint(temp == rdp_start_prod ? "public " : "protected ");
+					iprint(temp == rdp_start_prod ? "public " : "private ");
 					bool parserOnly = rdp_parser_only.value();
 					string astType = "Ast" + capitalizeFirst(text_get_string(temp.id));
 					print(parserOnly ? "void" : astType);
-					text_printf(" " + text_get_string(temp.id));
+					text_printf(" Rule" + text_get_string(temp.id));
 
 					rdp_print_parser_param_list(null, temp.parameters, 1, 0);
 					println();
@@ -409,7 +430,7 @@ namespace Borium.RDP
 					{
 						text_printf("ast.Add(");
 					}
-					text_printf(text_get_string(prod.id));
+					text_printf("Rule" + text_get_string(prod.id));
 					if (prod.code_only == 0 && actuals == null)
 					{
 						rdp_print_parser_param_list(promote == PROMOTE_DONT ? text_get_string(prod.id) : null, actuals, 0, 0);
@@ -658,7 +679,7 @@ namespace Borium.RDP
 					}
 					else
 					{
-						text_printf("NULL, ");
+						text_printf("null, ");
 					}
 					text_printf(text_get_string(temp.token_enum) + ", ");
 					text_printf(temp.extended_enum);
@@ -680,40 +701,64 @@ namespace Borium.RDP
 				{
 					if (temp.first_cardinality > 1)
 					{
-						int column = rdp_indentation * 3; // one less than actual indent per tab
-						column += iprint($"protected readonly Set {text_get_string(temp.id)}_first = new Set(");
-						temp.first.printIndented(rdp_enum_string, column, 120, rdp_indentation);
-						println(");");
+						iprintln($"private readonly Set {text_get_string(temp.id)}_first = new Set();");
 					}
 					if (temp.kind == K_PRIMARY)
 					{
-						int column = rdp_indentation * 3; // one less than actual indent per tab
-						column += iprint($"protected readonly Set {text_get_string(temp.id)}_stop = new Set(");
-						temp.follow.printIndented(rdp_enum_string, column, 120, rdp_indentation);
-						println(");");
+						iprintln($"private readonly Set {text_get_string(temp.id)}_stop = new Set();");
 					}
 				}
 				temp = (RdpData)temp.nextSymbolInScope();
 			}
 		}
 
+		private void printAssignSets(SymbolScopeData scopeData)
+		{
+			iprintln("private void rdp_set_initialise()");
+			iprintln("{");
+			rdp_indentation++;
+
+			RdpData temp = (RdpData)scopeData.nextSymbolInScope();
+			while (temp != null)
+			{
+				if (rdp_production_set.includes(temp.kind) && temp.code_only == 0)
+				{
+					if (temp.first_cardinality > 1)
+					{
+						int column = rdp_indentation * 3; // one less than actual indent per tab
+						column += iprint($"{text_get_string(temp.id)}_first.assignList(");
+						temp.follow.printIndented(rdp_enum_string, column, 120, rdp_indentation);
+						println(");");
+					}
+					if (temp.kind == K_PRIMARY)
+					{
+						int column = rdp_indentation * 3; // one less than actual indent per tab
+						column += iprint($"{text_get_string(temp.id)}_stop.assignList(");
+						temp.follow.printIndented(rdp_enum_string, column, 120, rdp_indentation);
+						println(");");
+					}
+				}
+				temp = (RdpData)temp.nextSymbolInScope();
+			}
+
+			rdp_indentation--;
+			iprintln("}");
+		}
+
 		private void printKeywords()
 		{
 			TextWriter file = createFile("Keywords");
 			text_redirect(file);
-			iprintln("namespace " + classPackage + ";");
+			iprintln("namespace " + classPackage);
 			iprintln("{");
 			rdp_indentation++;
 			iprintln("internal class Keywords");
 			iprintln("{");
 			rdp_indentation++;
 
-			int offset = 0;
-			iprintln($"internal const int SCAN_P_EOF = {offset++};");
-			iprintln($"internal const int SCAN_P_ID = {offset++};");
-			iprintln($"internal const int SCAN_P_ERROR = {offset++};");
-			iprintln($"internal const int SCAN_P_INTEGER = {offset++};");
-			iprintln($"internal const int SCAN_P_REAL = {offset++};");
+			int offset = 16;
+			iprintln("internal const int RDP_TT_BOTTOM = 16/* SCAN_P_TOP */;");
+			iprintln();
 
 			RdpData temp = (RdpData)tokens.getScope().nextSymbolInScope();
 			while (temp != null)
@@ -728,8 +773,10 @@ namespace Borium.RDP
 			}
 
 			iprintln();
+			iprintln($"internal const int RDP_TT_TOP = {offset};");
+			iprintln();
 
-			iprintln("internal string[] tokenNames = {");
+			iprintln("internal static string[] tokenNames = {");
 			rdp_indentation++;
 
 			iprintln("\"<EOF>\",");
