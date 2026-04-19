@@ -43,8 +43,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Borium\RDP\CompareHashPrint.cs" />
+    <Compile Include="Borium\RDP\CRT.cs" />
+    <Compile Include="Borium\RDP\Pointer.cs" />
+    <Compile Include="Borium\RDP\Symbol.cs" />
+    <Compile Include="Borium\RDP\SymbolScopeData.cs" />
+    <Compile Include="Borium\RDP\SymbolTable.cs" />
+    <Compile Include="Borium\RDP\Text.cs" />
+    <Compile Include="Compiler.cs" />
+    <Compile Include="CompilerBase.cs" />
+    <Compile Include="Keywords.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Borium\RDP\Scanner.cs" />
+    <Compile Include="Borium\RDP\Set.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
