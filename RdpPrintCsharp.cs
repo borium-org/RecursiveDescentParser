@@ -36,6 +36,8 @@ namespace Borium.RDP
 			text_redirect(file);
 			iprintln("using Borium.RDP;");
 			iprintln();
+			iprintln("using System;");
+			iprintln();
 			iprintln("using static Borium.Demo.Keywords;");
 			iprintln();
 			iprintln("using static Borium.RDP.Scanner;");
@@ -53,14 +55,17 @@ namespace Borium.RDP
 
 			iprintln();
 
-			iprintln("public Compiler()");
+			iprintln("public Compiler(string fileName)");
 			iprintln("{");
 			rdp_indentation++;
+			iprintln("rdp_sourcefilename = fileName;");
 			iprintln("text_init(1000000, 50, 120, 4);");
 			iprintln("scan_init(true, false, false, false, Keywords.tokenNames);");
 			iprintln("rdp_set_initialise();");
 			iprintln("rdp_load_keywords();");
 			iprintln();
+			iprintln("if (text_open(rdp_sourcefilename) == null)");
+			iprintln("\tthrow new Exception(\"unable to open source file\");");
 			iprintln("text_get_char();");
 			iprintln("scan_();");
 			rdp_indentation--;
@@ -77,7 +82,6 @@ namespace Borium.RDP
 			rdp_indentation--;
 			iprintln("}");
 
-			iprintln();
 			printAstClasses(scopeData);
 
 			rdp_indentation--;
@@ -88,21 +92,6 @@ namespace Borium.RDP
 
 		private void printAstClasses(SymbolScopeData scopeData)
 		{
-			iprintln("public partial class Ast");
-			iprintln("{");
-			rdp_indentation++;
-
-			iprintln("internal void Add(int lastsym)");
-			iprintln("{");
-			iprintln("}");
-			iprintln();
-			iprintln("internal void Add(Ast ast)");
-			iprintln("{");
-			iprintln("}");
-
-			rdp_indentation--;
-			iprintln("}");
-
 			for (RdpData temp = (RdpData)scopeData.nextSymbolInScope(); temp != null; temp = (RdpData)temp.nextSymbolInScope())
 			{
 				if (temp.kind == K_PRIMARY && temp.call_count > 0 && temp.code_only == 0)
@@ -779,11 +768,22 @@ namespace Borium.RDP
 			iprintln("internal static string[] tokenNames = {");
 			rdp_indentation++;
 
-			iprintln("\"<EOF>\",");
-			iprintln("\"<Ident\",");
-			iprintln("\"<Error>\",");
+			iprintln("\"<Ignore>\",");
+			iprintln("\"<Identifier>\",");
 			iprintln("\"<Integer>\",");
 			iprintln("\"<Real>\",");
+			iprintln("\"<Char>\",");
+			iprintln("\"<Char_Esc>\",");
+			iprintln("\"<String>\",");
+			iprintln("\"<String_Esc>\",");
+			iprintln("\"<Comment>\",");
+			iprintln("\"<CommentVisible>\",");
+			iprintln("\"<CommentNest>\",");
+			iprintln("\"<CommentNestVisible>\",");
+			iprintln("\"<CommentLine>\",");
+			iprintln("\"<CommentLineVisible>\",");
+			iprintln("\"<EOF>\",");
+			iprintln("\"<EOLN>\",");
 
 			temp = (RdpData)tokens.getScope().nextSymbolInScope();
 			while (temp != null)

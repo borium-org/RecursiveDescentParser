@@ -1,4 +1,5 @@
 using Borium.RDP;
+
 using System;
 
 using static Borium.Demo.Keywords;
@@ -24,7 +25,7 @@ namespace Borium.Demo
 			rdp_load_keywords();
 
 			if (text_open(rdp_sourcefilename) == null)
-				throw new Exception("unable to open source file"); 
+				throw new Exception("unable to open source file");
 			text_get_char();
 			scan_();
 		}
