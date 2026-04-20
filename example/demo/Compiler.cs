@@ -1,4 +1,5 @@
 using Borium.RDP;
+using System;
 
 using static Borium.Demo.Keywords;
 
@@ -14,13 +15,16 @@ namespace Borium.Demo
 		private readonly Set PackageDeclaration_stop = new Set();
 		private readonly Set rdp_PackageDeclaration_6_first = new Set();
 
-		public Compiler()
+		public Compiler(string fileName)
 		{
+			rdp_sourcefilename = fileName;
 			text_init(1000000, 50, 120, 4);
 			scan_init(true, false, false, false, Keywords.tokenNames);
 			rdp_set_initialise();
 			rdp_load_keywords();
 
+			if (text_open(rdp_sourcefilename) == null)
+				throw new Exception("unable to open source file"); 
 			text_get_char();
 			scan_();
 		}
@@ -126,17 +130,6 @@ namespace Borium.Demo
 			CompilationUnit_stop.assignList(SCAN_P_EOF);
 			PackageDeclaration_stop.assignList(SCAN_P_EOF);
 			rdp_PackageDeclaration_6_first.assignList(SCAN_P_EOF, RDP_T_59);
-		}
-	}
-
-	public partial class Ast
-	{
-		internal void Add(int lastsym)
-		{
-		}
-
-		internal void Add(Ast ast)
-		{
 		}
 	}
 

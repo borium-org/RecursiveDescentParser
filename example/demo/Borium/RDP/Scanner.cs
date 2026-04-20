@@ -61,8 +61,8 @@ namespace Borium.RDP
 		private static SymbolTable scan_table;
 
 		private static bool scan_lexicalise_flag = false;
-		private static int last_line_number = 0;
-		private static int last_column = 0;
+		internal static int last_line_number = 0;
+		internal static int last_column = 0;
 		private static bool retain_comments = false;
 		private static int scan_sequence_running_number = 0;
 

@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Borium.RDP;
 
-namespace Demo
+namespace Borium.Demo
 {
 	internal class Program
 	{
 		static void Main(string[] args)
 		{
+			Compiler compiler = new Compiler("demo.icp");
+			Ast ast = compiler.RuleCompilationUnit();
 		}
 	}
 }

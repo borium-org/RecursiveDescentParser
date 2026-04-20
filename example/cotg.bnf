@@ -1,0 +1,145 @@
+PARSER(Deobfuscator)
+
+Deobfuscator ::= { VarDeclaration | AssignmentExpression | ';' } .
+
+VarDeclaration ::= 'var' ID [ '=' VarInitializer ] { ',' ID [ '=' VarInitializer ] } ';' .
+
+VarInitializer ::= '=' '{' ( CompoundInitializer )@',' '}' | Expression . 
+
+FunctionDeclaration ::= 'function' ID '(' [ ID { ',' ID } ] ')' Block { PrimaryOptions } [ ';' ] .
+
+CompoundInitializer ::= ( String | ID ) ':' Expression .
+
+Expression ::= ConditionalExpression |
+		'{' [ Expression [ ':' Expression ] { ',' Expression [ ':' Expression ] } ] '}' .
+
+AssignmentOp ::= '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '>>>=' | '&=' | '^=' | '|=' .
+
+AssignmentExpression ::= BoolOrExpression { AssignmentOp Expression } .
+
+ConditionalExpression ::= BoolOrExpression [ '?' Expression ':' Expression ] .
+
+BoolOrOp ::= '||' .
+
+BoolOrExpression ::= BoolAndExpression { BoolOrOp ( '{' '}' | BoolAndExpression ) } .
+
+BoolAndOp ::= '&&' .
+
+BoolAndExpression ::= BitOrExpression { BoolAndOp BitOrExpression } .
+
+BitOrOp ::= '|' .
+
+BitOrExpression ::= BitXorExpression { BitOrOp BitXorExpression } .
+
+BitXorOp ::= '^' .
+
+BitXorExpression ::= BitAndExpression { BitXorOp BitAndExpression } .
+
+BitAndOp ::= '&' .
+
+BitAndExpression ::= EqualsExpression { BitAndOp EqualsExpression } .
+
+EqualsOp ::= '==' | '!=' | '===' | '!==' .
+
+EqualsExpression ::= CompareExpression { EqualsOp CompareExpression } .
+
+CompareOp ::= '<' | '<=' | '>' | '>=' | 'instanceof' | 'in' .
+
+CompareExpression ::= ShiftExpression { CompareOp ShiftExpression } .
+
+ShiftOp ::= '<<' | '>>' | '>>>' .
+
+ShiftExpression ::= AddExpression { ShiftOp AddExpression } .
+
+AddOp ::= '+' | '-' .
+
+AddExpression ::= MultiplyExpression { AddOp MultiplyExpression }.
+
+MultiplyOp ::= '*' | '/' | '%' .
+
+MultiplyExpression ::= UnaryExpression { MultiplyOp UnaryExpression }.
+
+UnaryExpression ::= PrimaryExpression |
+				'+' PrimaryExpression |
+				'-' PrimaryExpression |
+				'~' PrimaryExpression |
+				'!' UnaryExpression |
+				'typeof' PrimaryExpression |
+				'new' PrimaryExpression |
+				'delete' PrimaryExpression |
+				'++' PrimaryExpression |
+				'--' PrimaryExpression .
+
+PrimaryExpression ::= '(' [ Expression { ',' Expression } ] [ AssignmentOp Expression { ',' AssignmentExpression } ] ')' { PrimaryOptions } |
+		Primary { PrimaryOptions } .
+
+Primary ::= ( Function | Identifier | INTEGER | REAL | String | 'this' | '[' [ Expression { ',' Expression } ] ']' ) [ '++' | '--' ] .
+
+Function ::= 'function' [ ID ] '(' [ Identifier { ',' Identifier } ] ')' Block .
+
+Identifier ::= ( ID | '$' ) { '$' | ID } .
+
+PrimaryOptions ::= ( '[' Expression { ',' Expression } ']' |
+					'(' [ Expression { ',' Expression } { AssignmentOp Expression { ',' AssignmentExpression } } ] ')' |
+					DotExpression ) { ( '++' | '--' ) } .
+
+DotExpression ::= '.' Identifier [ '(' ( '{' [ CompoundInitializer { ',' CompoundInitializer } ] '}' | [ ConditionalExpression { ',' ConditionalExpression } ] ) ')' ] .
+
+Block ::= '{' { Statement } '}' .
+
+Statement ::=	VarStatement |
+				IfStatement |
+				ElseStatement |
+				ReturnStatement |
+				ForStatement |
+				AssignmentStatement |
+				SwitchStatement |
+				DefaultStatement |
+				CaseStatement |
+				BreakStatement |
+				ThrowStatement |
+				EmptyStatement |
+				TryStatement |
+				WhileStatement |
+				DoStatement .
+
+BlockOrStatement ::= Block | Statement .
+
+ThrowStatement ::= 'throw' [ Expression ] ';' .
+
+EmptyStatement ::= ';' .
+
+TryStatement ::= 'try' Block 'catch' '(' [ Identifier ] ')' Block [ 'finally' Block ] .
+
+WhileStatement ::= 'while' '(' AssignmentExpression ')' BlockOrStatement .
+
+DoStatement ::= 'do' Block 'while' '(' Expression ')' ';' .
+
+SwitchStatement ::= 'switch' '(' Expression ')' Block .
+
+CaseStatement ::= 'case' Expression ':' { Statement } .
+
+DefaultStatement ::= 'default' ':' { Statement } .
+
+BreakStatement ::= 'break' ';' .
+
+AssignmentStatement ::= BoolOrExpression { ( AssignmentOp Expression | '{' '}' ) } { ',' AssignmentStatement } .
+
+ForStatement ::= 'for' '(' ForParameters ')' BlockOrStatement .
+
+ForParameters ::= ';' [ Expression] ';' [ Expression ] | ForVarDeclaration .
+
+ForVarDeclaration ::= [ 'var' ] ID ForVarDeclaration2 .
+
+ForVarDeclaration2 ::= '=' Expression  { ',' ID '=' Expression } ';' [ Expression ] ';' [ AssignmentExpression ] |
+						'in' Expression .
+
+VarStatement ::= 'var' Identifier { '=' Expression } { ',' Identifier { '=' Expression } } ';' .
+
+IfStatement ::= 'if' '(' AssignmentExpression { ',' AssignmentExpression } ')' BlockOrStatement .
+
+ElseStatement ::= 'else' BlockOrStatement .
+
+ReturnStatement ::= 'return' [ Expression [ AssignmentOp Expression ]  { ',' AssignmentExpression } ] ';' .
+
+String ::= STRING_ESC('"' '\\') | CHAR_ESC('\'' '\\') .

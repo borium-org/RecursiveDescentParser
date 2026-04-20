@@ -1,0 +1,16 @@
+compilationUnit ::= [ packageDeclaration ] imports [ entities ] .
+
+packageDeclaration ::= 'package' qualifiedIdentifier ';' .
+
+imports ::= { 'import' [ 'static' ] qualifiedIdentifier ';' } .
+
+entities ::= expression .
+
+expression ::= < string | character > .
+
+qualifiedIdentifier ::= ( ID ) @ '.' .
+
+character ::= STRING_ESC('\'' '\\') .
+string ::= STRING_ESC('"' '\\') .
+comment ::= COMMENT('/*' '*/') .
+commentLine ::= COMMENT_LINE('//') .
