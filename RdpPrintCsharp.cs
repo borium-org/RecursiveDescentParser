@@ -716,7 +716,7 @@ namespace Borium.RDP
 					{
 						int column = rdp_indentation * 3; // one less than actual indent per tab
 						column += iprint($"{text_get_string(temp.id)}_first.assignList(");
-						temp.follow.printIndented(rdp_enum_string, column, 120, rdp_indentation);
+						temp.first.printIndented(rdp_enum_string, column, 120, rdp_indentation);
 						println(");");
 					}
 					if (temp.kind == K_PRIMARY)

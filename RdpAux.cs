@@ -785,7 +785,7 @@ namespace Borium.RDP
 		private static void rdp_add_continuations(SymbolScopeData scopeData)
 		{
 			RdpData temp = (RdpData)scopeData.nextSymbolInScope();
-			string last_token = " "; /* remember most recent token name */
+			int last_token = 0; /* remember most recent token name */
 			bool tokens_added = false;
 			if (rdp_verbose.value())
 			{
@@ -795,26 +795,38 @@ namespace Borium.RDP
 			{
 				if (temp.kind == K_TOKEN || temp.kind == K_EXTENDED)
 				{
-					string lo = last_token;
-					string hi = text_get_string(temp.id);
+					int lo = last_token;
+					int hi = temp.id;
 					if (!text_is_valid_C_id(hi)) /* ignore identifiers */
 					{
-						if (hi.StartsWith(lo))
+						while (text_bot[lo] == text_bot[hi] && text_bot[hi]!=0)
 						{
-							for (int length = lo.Length + 1; length < hi.Length; length++)
-							{
-								string continuation_name = hi.Substring(0, length);
-								text_insert_string(continuation_name);
-								if (rdp_verbose.value())
-								{
-									text_message(TEXT_INFO, "Adding continuation token \'" + continuation_name + "\'\n");
-								}
-								tokens_added = true;
-								rdp_find(continuation_name, K_TOKEN, RDP_ANY);
-							}
+							lo ++;
+							hi ++;
+						}
+						// RDP: we can't have two identical tokens, so at worst this will move to a null
+						hi ++;
+						while (text_bot[hi] != 0)     /* add a continuation */
+						{
+							/* insert the sub-string */
+							int c = temp.id;
+							int continuation_name = text_top;  /* remember start position */
+
+							while (c != hi)
+								text_insert_char(text_bot[c++]);  /* copy identifier */
+							text_insert_char('\0');  /* add a terminating null */
+
+							if (rdp_verbose.value())
+								text_message(TEXT_INFO, $"Adding continuation token \'{text_get_string(continuation_name)}\'\n");
+
+							tokens_added = true;
+
+							rdp_find(continuation_name, K_TOKEN, RDP_ANY);
+
+							hi++;
 						}
 					}
-					last_token = text_get_string(temp.id);
+					last_token = temp.id;
 				}
 				temp = (RdpData)temp.nextSymbolInScope();
 			}

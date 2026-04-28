@@ -1,5 +1,24 @@
 PARSER(CompilationUnit)
 
-CompilationUnit ::= PackageDeclaration .
+CompilationUnit ::= [ PackageDeclaration ] { Import } { Entity } .
 
-PackageDeclaration ::= 'package' ID ( '=' ID { '.' ID } | { '.' ID } ) ';' .
+PackageDeclaration ::= 'package' QualifiedIdentifier ';' .
+
+QualifiedIdentifier ::= ID { '.' ID } .
+
+Import ::= 'import' [ 'static' ] ID [ '=' ID ] { '.' ID } ';' .
+
+Entity ::= [ AccessModifier ] ( Class | Enum | Typedef ) .
+
+AccessModifier ::= 'public' | 'internal' | 'protected' | 'private' .
+
+Class ::= 'class' ID [ ':' QualifiedIdentifier { ',' QualifiedIdentifier } ] '{' '}' .
+
+Enum ::= 'enum' ID '{' '}' .
+
+Typedef ::= 'typedef' ID '=' ID ';' .
+
+Character ::= STRING_ESC('\'' '\\') .
+String ::= STRING_ESC('"' '\\') .
+CommentNest ::= COMMENT_VISIBLE('/*' '*/') .
+CommentLine ::= COMMENT_LINE('//') .

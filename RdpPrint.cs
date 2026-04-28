@@ -91,7 +91,7 @@ namespace Borium.RDP
 				{
 					p.token_enum = text_insert_characters("RDP_T_");
 
-					if (text_is_valid_C_id(text_get_string(p.id)))
+					if (text_is_valid_C_id(p.id))
 					{
 						text_insert_string(text_get_string(p.id));
 					}

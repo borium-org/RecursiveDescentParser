@@ -434,12 +434,12 @@ namespace Borium.RDP
 			return start;
 		}
 
-		internal static bool text_is_valid_C_id(string s)
+		internal static bool text_is_valid_C_id(int s)
 		{
-			bool temp = true;
-			foreach (char ch in s)
+			bool temp = isalpha(text_bot[s]) || text_bot[s] == '_';
+			while (text_bot[++s] != '\0')
 			{
-				temp = temp && (isalnum(ch) || ch == '_');
+				temp = temp && (isalnum(text_bot[s]) || text_bot[s] == '_');
 			}
 			return temp;
 		}
