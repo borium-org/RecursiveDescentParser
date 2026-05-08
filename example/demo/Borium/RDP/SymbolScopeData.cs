@@ -5,6 +5,10 @@ namespace Borium.RDP
 {
 	internal class SymbolScopeData : Symbol
 	{
+		internal SymbolScopeData(Text text) : base(text)
+		{
+		}
+
 		internal void assign(SymbolScopeData other)
 		{
 			next_hash = other.next_hash;

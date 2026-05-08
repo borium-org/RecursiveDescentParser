@@ -2,7 +2,6 @@
 using static Borium.RDP.CRT;
 using static Borium.RDP.Set;
 using static Borium.RDP.Symbol;
-using static Borium.RDP.Text;
 using static Borium.RDP.Text.TextMessageType;
 
 namespace Borium.RDP
@@ -20,6 +19,49 @@ namespace Borium.RDP
 			internal int i;
 			internal double r;
 			internal object p;
+
+			internal ScanData(Text text) : base(text)
+			{
+			}
+
+			internal void memcpy(ScanData from)
+			{
+				next_hash = from.next_hash;
+				last_hash.set(from.last_hash.value());
+				next_scope = from.next_scope;
+				scope = from.scope;
+				hash = from.hash;
+				id = from.id;
+				token = from.token;
+				extended = from.extended;
+				comment_block = from.comment_block;
+				sourcefilename = from.sourcefilename;
+				line_number = from.line_number;
+				u = from.u;
+				i = from.i;
+				r = from.r;
+				p = from.p;
+			}
+
+			internal void memset()
+			{
+				next_hash = null;
+				last_hash.set(null);
+				next_scope = null;
+				scope = null;
+				hash = 0;
+				id = 0;
+				token = 0;
+				extended = 0;
+				comment_block = null;
+				sourcefilename = null;
+				line_number = 0;
+				u = 0;
+				i = 0;
+				r = 0;
+				p = null;
+			}
+
 		}
 
 		internal class ScanCommentBlock
@@ -49,66 +91,63 @@ namespace Borium.RDP
 		internal const int SCAN_P_EOLN = 15;
 		internal const int SCAN_P_TOP = 16;
 
-		private static bool scan_case_insensitive = false;
-		private static bool scan_show_skips = false;
-		private static bool scan_newline_visible = false;
-		private static bool scan_symbol_echo = false;
-		private static string[] scan_token_names = null;
-		private static ScanCommentBlock scan_comment_list = null;
-		private static ScanCommentBlock scan_comment_list_end = null;
-		private static ScanCommentBlock last_comment_block;
+		private bool scan_case_insensitive = false;
+		private bool scan_show_skips = false;
+		private bool scan_newline_visible = false;
+		private bool scan_symbol_echo = false;
+		private string[] scan_token_names = null;
+		private ScanCommentBlock scan_comment_list = null;
+		private ScanCommentBlock scan_comment_list_end = null;
+		private ScanCommentBlock last_comment_block;
 
-		private static SymbolTable scan_table;
+		private SymbolTable scan_table;
 
-		private static bool scan_lexicalise_flag = false;
-		internal static int last_line_number = 0;
-		internal static int last_column = 0;
-		private static bool retain_comments = false;
-		private static int scan_sequence_running_number = 0;
+		private bool scan_lexicalise_flag = false;
+		internal int last_line_number = 0;
+		internal int last_column = 0;
+		private bool retain_comments = false;
+		private int scan_sequence_running_number = 0;
 
-		internal static string rdp_sourcefilename = "unassigned"; // current source file name
+		internal string rdp_sourcefilename = "unassigned"; // current source file name
 
-		internal static int lastsym { get { return text_scan_data.token; } }
+		private Text text;
 
-		internal static void memcpy(ScanData to, ScanData from)
+		private ScanData text_scan_data
 		{
-			to.next_hash = from.next_hash;
-			to.last_hash.set(from.last_hash.value());
-			to.next_scope = from.next_scope;
-			to.scope = from.scope;
-			to.hash = from.hash;
-			to.id = from.id;
-			to.token = from.token;
-			to.extended = from.extended;
-			to.comment_block = from.comment_block;
-			to.sourcefilename = from.sourcefilename;
-			to.line_number = from.line_number;
-			to.u = from.u;
-			to.i = from.i;
-			to.r = from.r;
-			to.p = from.p;
+			get { return text.text_scan_data; }
+			set { text.text_scan_data = value; }
 		}
 
-		internal static void memset(ScanData to)
+		private int text_top
 		{
-			to.next_hash = null;
-			to.last_hash.set(null);
-			to.next_scope = null;
-			to.scope = null;
-			to.hash = 0;
-			to.id = 0;
-			to.token = 0;
-			to.extended = 0;
-			to.comment_block = null;
-			to.sourcefilename = null;
-			to.line_number = 0;
-			to.u = 0;
-			to.i = 0;
-			to.r = 0;
-			to.p = null;
+			get { return text.text_top; }
+			set { text.text_top = value; }
 		}
 
-		internal static void scan_()
+		private int text_char
+		{
+			get { return text.text_char; }
+			set { text.text_char = value; }
+		}
+
+		private char[] text_bot
+		{
+			get { return text.text_bot; }
+			set { text.text_bot = value; }
+		}
+
+		private int text_current
+		{
+			get { return text.text_current; }
+			set { text.text_current = value; }
+		}
+
+		internal Scanner(Text text)
+		{
+			this.text = text;
+		}
+
+		internal void scan_()
 		{
 			int start;
 			ScanData s;
@@ -119,23 +158,23 @@ namespace Borium.RDP
 			do
 			{
 				start = text_top;
-				memset(text_scan_data);
+				text_scan_data.memset();
 				// Don't do extendeds for non scanner table items
 				text_scan_data.extended = SCAN_P_IGNORE;
 				while (text_char != EOF && !(scan_newline_visible && text_char == '\n') && isspace(text_char))
 				{
 					if (scan_lexicalise_flag && text_char == '\n')
 					{
-						text_printf("\n");
+						text.text_printf("\n");
 					}
-					text_get_char();
+					text.text_get_char();
 				}
 				// Non zero means a token was restored at EOF
 				if (text_scan_data.token != 0)
 					break;
 
-				last_column = text_column_number();
-				last_line_number = text_line_number();
+				last_column = text.text_column_number();
+				last_line_number = text.text_line_number();
 				if (isalpha(text_char) || text_char == '_')
 				{
 					/* read an identifier into text buffer */
@@ -145,21 +184,21 @@ namespace Borium.RDP
 					{
 						text_char -= 'A' - 'a';
 					}
-					text_insert_char((char)text_char);
-					text_get_char();
+					text.text_insert_char((char)text_char);
+					text.text_get_char();
 					while (isalnum(text_char) || text_char == '_')
 					{
 						if (scan_case_insensitive && text_char >= 'A' && text_char <= 'Z')
 						{
 							text_char -= 'A' - 'a';
 						}
-						text_insert_char((char)text_char);
-						text_get_char();
+						text.text_insert_char((char)text_char);
+						text.text_get_char();
 					}
-					text_insert_char('\0');
-					if ((s = (ScanData)symbol_lookup_key(scan_table, text_get_string(text_scan_data.id), null)) != null)
+					text.text_insert_char('\0');
+					if ((s = (ScanData)scan_table.symbol_lookup_key(text.text_get_string(text_scan_data.id), null)) != null)
 					{
-						memcpy(text_scan_data, s);
+						text_scan_data.memcpy(s);
 						text_top = start;
 					}
 					else
@@ -178,13 +217,13 @@ namespace Borium.RDP
 					// Check for hexadecimal introducer
 					if (text_char == '0')
 					{
-						text_insert_char((char)text_char);
-						text_get_char();
+						text.text_insert_char((char)text_char);
+						text.text_get_char();
 						if (text_char == 'x' || text_char == 'X')
 						{
 							hex = true;
-							text_insert_char((char)text_char);
-							text_get_char();
+							text.text_insert_char((char)text_char);
+							text.text_get_char();
 						}
 					}
 					// Now collect decimal or hex digits
@@ -193,9 +232,9 @@ namespace Borium.RDP
 						// suppress underscores
 						if (text_char != '_')
 						{
-							text_insert_char((char)text_char);
+							text.text_insert_char((char)text_char);
 						}
-						text_get_char();
+						text.text_get_char();
 					}
 					// check for decimal part and exponent
 					if (!hex)
@@ -206,22 +245,22 @@ namespace Borium.RDP
 							text_scan_data.token = SCAN_P_REAL;
 							do
 							{
-								text_insert_char((char)text_char);
-								text_get_char();
+								text.text_insert_char((char)text_char);
+								text.text_get_char();
 							} while (isdigit(text_char));
 						}
 						// get exponent
 						if (text_char == 'E' || text_char == 'e')
 						{
 							text_scan_data.token = SCAN_P_REAL;
-							text_insert_char((char)text_char);
-							text_get_char();
+							text.text_insert_char((char)text_char);
+							text.text_get_char();
 							if (text_char == '+' || text_char == '-' || isdigit(text_char))
 							{
 								do
 								{
-									text_insert_char((char)text_char);
-									text_get_char();
+									text.text_insert_char((char)text_char);
+									text.text_get_char();
 								} while (isdigit(text_char));
 							}
 						}
@@ -229,17 +268,17 @@ namespace Borium.RDP
 					// Now absorb any letters that are attached to the number
 					while (isalpha(text_char))
 					{
-						text_insert_char((char)text_char);
-						text_get_char();
+						text.text_insert_char((char)text_char);
+						text.text_get_char();
 					}
-					text_insert_char('\0');
+					text.text_insert_char('\0');
 					if (text_scan_data.token == SCAN_P_INTEGER)
 					{
-						text_scan_data.i = Convert.ToInt32(text_get_string(text_scan_data.id));
+						text_scan_data.i = Convert.ToInt32(text.text_get_string(text_scan_data.id));
 					}
 					else
 					{
-						text_scan_data.r = Convert.ToDouble(text_get_string(text_scan_data.id));
+						text_scan_data.r = Convert.ToDouble(text.text_get_string(text_scan_data.id));
 					}
 				} /* end of number collection */
 				else
@@ -248,7 +287,7 @@ namespace Borium.RDP
 					if (text_char == EOF)
 					{
 						text_scan_data.token = SCAN_P_EOF;
-						text_scan_data.id = text_insert_string("EOF");
+						text_scan_data.id = text.text_insert_string("EOF");
 						text_top = start; /* scrub from text buffer */
 						if (retain_comments)
 						{
@@ -259,8 +298,8 @@ namespace Borium.RDP
 					{
 						text_top = start; /* scrub from text buffer */
 						text_scan_data.token = SCAN_P_EOLN;
-						text_scan_data.id = text_insert_string("EOLN");
-						text_get_char();
+						text_scan_data.id = text.text_insert_string("EOLN");
+						text.text_get_char();
 					}
 					else
 					{
@@ -270,27 +309,27 @@ namespace Borium.RDP
 						for (; ; )
 						{
 							last_sym = this_sym;
-							text_insert_char((char)text_char);
+							text.text_insert_char((char)text_char);
 							text_bot[text_top] = '\0';
-							this_sym = (ScanData)symbol_lookup_key(scan_table, text_get_string(start), null);
+							this_sym = (ScanData)scan_table.symbol_lookup_key(text.text_get_string(start), null);
 							if (this_sym == null)
 								break;
 
-							text_get_char(); // collect longest match
+							text.text_get_char(); // collect longest match
 						}
 						// single character means mismatch
 						if (text_top == start + 1)
 						{
 							char ch = text_bot[text_top - 1];
-							text_message(TEXT_ERROR_ECHO, $"Unexpected character 0x{ch:X} \'"
+							text.text_message(TEXT_ERROR_ECHO, $"Unexpected character 0x{ch:X} \'"
 									+ (isprint(ch) ? ch : ' ') + "\' in source file\n");
 							text_top = start; /* scrub from text buffer */
 							text_scan_data.token = SCAN_P_IGNORE;
-							text_get_char();
+							text.text_get_char();
 						}
 						else
 						{
-							memcpy(text_scan_data, last_sym);
+							text_scan_data.memcpy(last_sym);
 						}
 						text_top = start; /* discard token from text buffer */
 					}
@@ -310,9 +349,9 @@ namespace Borium.RDP
 				switch (text_scan_data.extended)
 				{
 					case SCAN_P_CHAR:
-						text_insert_char((char)text_char);
-						text_insert_char('\0');
-						text_get_char();
+						text.text_insert_char((char)text_char);
+						text.text_insert_char('\0');
+						text.text_get_char();
 						text_scan_data.id = start;
 						break;
 					case SCAN_P_CHAR_ESC:
@@ -320,45 +359,45 @@ namespace Borium.RDP
 						{
 							// translate all C escapes. Anything else returns escaped
 							// character
-							text_get_char(); /* skip escape character */
+							text.text_get_char(); /* skip escape character */
 							switch (text_char)
 							{
 								case 'n':
-									text_insert_char('\n');
-									text_get_char();
+									text.text_insert_char('\n');
+									text.text_get_char();
 									break;
 								case 't':
-									text_insert_char('\t');
-									text_get_char();
+									text.text_insert_char('\t');
+									text.text_get_char();
 									break;
 								case 'b':
-									text_insert_char('\b');
-									text_get_char();
+									text.text_insert_char('\b');
+									text.text_get_char();
 									break;
 								case 'r':
-									text_insert_char('\r');
-									text_get_char();
+									text.text_insert_char('\r');
+									text.text_get_char();
 									break;
 								case 'f':
-									text_insert_char('\f');
-									text_get_char();
+									text.text_insert_char('\f');
+									text.text_get_char();
 									break;
 								case 'x':
 								case 'X': /* hexadecimal */
 									start = text_top;
 									do
 									{
-										text_get_char();
-										text_insert_char((char)text_char);
+										text.text_get_char();
+										text.text_insert_char((char)text_char);
 									} while (isxdigit(text_char));
 									text_top = 0;
-									long temp = strtol(text_get_string(start), null, 16);
+									long temp = strtol(text.text_get_string(start), null, 16);
 									text_top = start; /* scrub from buffer */
 									if (temp > 255)
 									{
-										text_message(TEXT_WARNING_ECHO, "Hex escape sequence overflows eight bits: wrapping\n");
+										text.text_message(TEXT_WARNING_ECHO, "Hex escape sequence overflows eight bits: wrapping\n");
 									}
-									text_insert_char((char)(temp % 255));
+									text.text_insert_char((char)(temp % 255));
 									break;
 								case '0':
 								case '1':
@@ -371,29 +410,29 @@ namespace Borium.RDP
 									start = text_top;
 									do
 									{
-										text_insert_char((char)text_char);
-										text_get_char();
+										text.text_insert_char((char)text_char);
+										text.text_get_char();
 									} while (text_char >= '0' && text_char <= '7');
 									text_top = 0; /* change last character to a null */
-									temp = strtol(text_get_string(start), null, 8);
+									temp = strtol(text.text_get_string(start), null, 8);
 									text_top = start; /* scrub from buffer */
 									if (temp > 255)
-										text_message(TEXT_WARNING_ECHO, "Octal escape sequence overflows eight bits: wrapping\n");
-									text_insert_char((char)(temp % 255));
+										text.text_message(TEXT_WARNING_ECHO, "Octal escape sequence overflows eight bits: wrapping\n");
+									text.text_insert_char((char)(temp % 255));
 									break;
 								default: /* any other quoted character returns itself */
-									text_insert_char((char)text_char);
-									text_get_char();
+									text.text_insert_char((char)text_char);
+									text.text_get_char();
 									break;
 							}
 						}
 						else
 						{
-							text_insert_char((char)text_char);
-							text_insert_char('\0');
-							text_get_char();
+							text.text_insert_char((char)text_char);
+							text.text_insert_char('\0');
+							text.text_get_char();
 						}
-						text_insert_char('\0');
+						text.text_insert_char('\0');
 						text_scan_data.id = start;
 						break;
 					case SCAN_P_STRING:
@@ -404,22 +443,22 @@ namespace Borium.RDP
 							{
 								if (text_char == '\n' || text_char == EOF)
 								{
-									text_message(TEXT_ERROR_ECHO, "Unterminated string\n");
+									text.text_message(TEXT_ERROR_ECHO, "Unterminated string\n");
 									break;
 								}
-								text_insert_char((char)text_char);
-								text_get_char();
+								text.text_insert_char((char)text_char);
+								text.text_get_char();
 							}
-							text_get_char(); // get character after close
+							text.text_get_char(); // get character after close
 							loop = false;
 							if (text_char == text_bot[text_scan_data.id])
 							{
-								text_insert_char((char)text_char);
-								text_get_char();
+								text.text_insert_char((char)text_char);
+								text.text_get_char();
 								loop = true;
 							}
 						} while (loop);
-						text_insert_char('\0');
+						text.text_insert_char('\0');
 						text_scan_data.id = start;
 						break;
 					case SCAN_P_STRING_ESC:
@@ -427,49 +466,49 @@ namespace Borium.RDP
 						{
 							if (text_char == '\n' || text_char == EOF)
 							{
-								text_message(TEXT_ERROR_ECHO, "Unterminated string\n");
+								text.text_message(TEXT_ERROR_ECHO, "Unterminated string\n");
 								break;
 							}
 							else if (text_char == text_bot[close]) // found escape
 																   // character
 							{
-								text_get_char(); /* skip escape character */
+								text.text_get_char(); /* skip escape character */
 								switch (text_char)
 								{
 									case 'n':
-										text_insert_char('\n');
-										text_get_char();
+										text.text_insert_char('\n');
+										text.text_get_char();
 										break;
 									case 't':
-										text_insert_char('\t');
-										text_get_char();
+										text.text_insert_char('\t');
+										text.text_get_char();
 										break;
 									case 'b':
-										text_insert_char('\b');
-										text_get_char();
+										text.text_insert_char('\b');
+										text.text_get_char();
 										break;
 									case 'r':
-										text_insert_char('\r');
-										text_get_char();
+										text.text_insert_char('\r');
+										text.text_get_char();
 										break;
 									case 'f':
-										text_insert_char('\f');
-										text_get_char();
+										text.text_insert_char('\f');
+										text.text_get_char();
 										break;
 									case 'x':
 									case 'X': /* hexadecimal */
 										start = text_top;
 										do
 										{
-											text_get_char();
-											text_insert_char((char)text_char);
+											text.text_get_char();
+											text.text_insert_char((char)text_char);
 										} while (isxdigit(text_char));
 										text_top = 0; // change last character to a null
-										long temp = strtol(text_get_string(start), null, 16);
+										long temp = strtol(text.text_get_string(start), null, 16);
 										text_top = start; /* scrub from buffer */
 										if (temp > 255)
-											text_message(TEXT_WARNING_ECHO, "Hex escape sequence overflows eight bits: wrapping\n");
-										text_insert_char((char)(temp % 255));
+											text.text_message(TEXT_WARNING_ECHO, "Hex escape sequence overflows eight bits: wrapping\n");
+										text.text_insert_char((char)(temp % 255));
 										break;
 									case '0':
 									case '1':
@@ -482,34 +521,34 @@ namespace Borium.RDP
 										start = text_top;
 										do
 										{
-											text_insert_char((char)text_char);
-											text_get_char();
+											text.text_insert_char((char)text_char);
+											text.text_get_char();
 										} while (text_char >= '0' && text_char <= '7');
 										text_top = 0; // change last character to a null
-										temp = strtol(text_get_string(start), null, 8);
+										temp = strtol(text.text_get_string(start), null, 8);
 										text_top = start; /* scrub from buffer */
 										if (temp > 255)
 										{
-											text_message(TEXT_WARNING_ECHO,
+											text.text_message(TEXT_WARNING_ECHO,
 													"Octal escape sequence overflows eight bits: wrapping\n");
 										}
-										text_insert_char((char)(temp % 255));
+										text.text_insert_char((char)(temp % 255));
 										break;
 									default:
-										text_insert_char((char)text_char);
-										text_get_char();
+										text.text_insert_char((char)text_char);
+										text.text_get_char();
 										break;
 								}
 							}
 							else
 							{
 								/* ordinary character */
-								text_insert_char((char)text_char);
-								text_get_char();
+								text.text_insert_char((char)text_char);
+								text.text_get_char();
 							}
 						}
-						text_get_char(); /* skip close character */
-						text_insert_char('\0'); /* terminate string */
+						text.text_get_char(); /* skip close character */
+						text.text_insert_char('\0'); /* terminate string */
 						text_scan_data.id = start; /* make current id string body */
 						break;
 
@@ -517,17 +556,17 @@ namespace Borium.RDP
 					case SCAN_P_COMMENT_LINE_VISIBLE:
 						while (text_char != '\n' && text_char != EOF)
 						{
-							text_insert_char((char)text_char);
-							text_get_char();
+							text.text_insert_char((char)text_char);
+							text.text_get_char();
 						}
-						text_insert_char('\0'); /* terminate with a null */
+						text.text_insert_char('\0'); /* terminate with a null */
 						text_scan_data.id = start; /* make current id comment body */
 						if (text_scan_data.extended == SCAN_P_COMMENT_LINE)
 						{
 							text_scan_data.token = SCAN_P_IGNORE;
 							if (retain_comments)
 							{
-								scan_insert_comment_block(text_get_string(start), last_column, scan_sequence_running_number);
+								scan_insert_comment_block(text.text_get_string(start), last_column, scan_sequence_running_number);
 							}
 							else
 							{
@@ -547,13 +586,13 @@ namespace Borium.RDP
 						do
 						{
 							if (text_char == EOF)
-								text_message(TEXT_FATAL_ECHO, "Comment terminated by end of file\n");
+								text.text_message(TEXT_FATAL_ECHO, "Comment terminated by end of file\n");
 
 							if (last != '\n')
-								text_insert_char((char)text_char);
+								text.text_insert_char((char)text_char);
 
 							last = text_char;
-							text_get_char();
+							text.text_get_char();
 							// single close or double close
 							if (text_bot[close + 1] == 0 && text_bot[close] == text_bot[text_top - 1]
 									|| text_bot[close + 1] == text_bot[text_top - 1]
@@ -582,7 +621,7 @@ namespace Borium.RDP
 							text_scan_data.token = SCAN_P_IGNORE;
 							if (retain_comments)
 							{
-								scan_insert_comment_block(text_get_string(start), last_column, scan_sequence_running_number);
+								scan_insert_comment_block(text.text_get_string(start), last_column, scan_sequence_running_number);
 							}
 							else
 							{
@@ -595,15 +634,15 @@ namespace Borium.RDP
 				}
 			} while (text_scan_data.token == SCAN_P_IGNORE);
 			text_scan_data.comment_block = last_comment_block;
-			if (scan_sequence_running_number != text_sequence_number())
-				scan_insert_comment_block(null, 0, text_sequence_number());
-			scan_sequence_running_number = text_sequence_number();
+			if (scan_sequence_running_number != text.text_sequence_number())
+				scan_insert_comment_block(null, 0, text.text_sequence_number());
+			scan_sequence_running_number = text.text_sequence_number();
 			text_scan_data.sourcefilename = rdp_sourcefilename;
-			text_scan_data.line_number = text_line_number();
+			text_scan_data.line_number = text.text_line_number();
 			if (scan_symbol_echo)
 			{
 				Console.WriteLine("Scan symbol echo");
-				text_message(TEXT_INFO, "Scanned ");
+				text.text_message(TEXT_INFO, "Scanned ");
 				// TODO set_print_element(text_scan_data.token, scan_token_names);
 				// text_printf(" id \'%s\', sequence number %lu\n",
 				// text_scan_data.id,
@@ -617,7 +656,7 @@ namespace Borium.RDP
 				// text_printf("\n****** %u tokens\n", scan_token_count - 1);
 				// else if (strcmp(text_scan_data.id, "EOLN") == 0)
 				{
-					text_printf("\n");
+					text.text_printf("\n");
 					// scan_token_count --;
 				}
 				// else if (text_scan_data.token == SCAN_P_ID)
@@ -644,7 +683,7 @@ namespace Borium.RDP
 			}
 		}
 
-		internal static void scan_init(bool case_insensitive, bool newline_visible, bool show_skips,
+		internal void scan_init(bool case_insensitive, bool newline_visible, bool show_skips,
 				bool symbol_echo, string[] token_names)
 		{
 			scan_case_insensitive = case_insensitive;
@@ -655,39 +694,39 @@ namespace Borium.RDP
 
 			scan_comment_list = new ScanCommentBlock();
 			scan_comment_list_end = scan_comment_list;
-			text_scan_data = new ScanData();
-			scan_table = symbol_new_table("scan table", 101, 31, new CompareHashPrint());
+			text_scan_data = new ScanData(text);
+			scan_table = new SymbolTable(text, "scan table", 101, 31, new CompareHashPrint());
 			scan_insert_comment_block("", 0, 0);
 		}
 
-		internal static void scan_lexicalise()
+		internal void scan_lexicalise()
 		{
 			scan_lexicalise_flag = true;
 		}
 
-		internal static void scan_load_keyword(string id1, string id2, int token, int extended)
+		internal void scan_load_keyword(string id1, string id2, int token, int extended)
 		{
-			ScanData d = new ScanData();
-			d.id = text_insert_string(id1);
+			ScanData d = new ScanData(text);
+			d.id = text.text_insert_string(id1);
 			if (id2 != null)
 			{
-				text_insert_string(id2);
+				text.text_insert_string(id2);
 			}
 			d.token = token;
 			d.extended = extended;
-			symbol_insert_symbol(scan_table, d);
+			scan_table.symbol_insert_symbol(d);
 		}
 
-		internal static bool scan_test(string production, int valid, Set stop)
+		internal bool scan_test(string production, int valid, Set stop)
 		{
 			if (valid != text_scan_data.token)
 			{
 				if (stop != null)
 				{
 					printScannedToken(production);
-					text_printf(" while expecting ");
-					set_print_element(valid, scan_token_names, true);
-					text_printf("\n");
+					text.text_printf(" while expecting ");
+					set_print_element(text, valid, scan_token_names, true);
+					text.text_printf("\n");
 					skip(stop);
 				}
 				return false;
@@ -695,16 +734,16 @@ namespace Borium.RDP
 			return true;
 		}
 
-		internal static bool scan_test_set(string production, Set valid, Set stop)
+		internal bool scan_test_set(string production, Set valid, Set stop)
 		{
 			if (!valid.includes(text_scan_data.token))
 			{
 				if (stop != null)
 				{
 					printScannedToken(production);
-					text_printf(" while expecting " + (set_cardinality(valid) == 1 ? "" : "one of "));
-					valid.print(scan_token_names, 60);
-					text_printf("\n");
+					text.text_printf(" while expecting " + (set_cardinality(valid) == 1 ? "" : "one of "));
+					valid.print(text, scan_token_names, 60);
+					text.text_printf("\n");
 					skip(stop);
 				}
 				return false;
@@ -712,20 +751,20 @@ namespace Borium.RDP
 			return true;
 		}
 
-		private static void printScannedToken(string production)
+		private void printScannedToken(string production)
 		{
 			if (production != null)
 			{
-				text_message(TEXT_ERROR_ECHO, "In rule \'" + production + "\', scanned ");
+				text.text_message(TEXT_ERROR_ECHO, "In rule \'" + production + "\', scanned ");
 			}
 			else
 			{
-				text_message(TEXT_ERROR_ECHO, "Scanned ");
+				text.text_message(TEXT_ERROR_ECHO, "Scanned ");
 			}
-			set_print_element(text_scan_data.token, scan_token_names, true);
+			set_print_element(text, text_scan_data.token, scan_token_names, true);
 		}
 
-		private static void scan_insert_comment_block(string pattern, int column, int sequence_number)
+		private void scan_insert_comment_block(string pattern, int column, int sequence_number)
 		{
 			ScanCommentBlock temp = new ScanCommentBlock();
 			scan_comment_list_end.comment = pattern;
@@ -737,7 +776,7 @@ namespace Borium.RDP
 			last_comment_block = temp;
 		}
 
-		private static void skip(Set stop)
+		private void skip(Set stop)
 		{
 			while (!stop.includes(text_scan_data.token))
 			{
@@ -745,7 +784,7 @@ namespace Borium.RDP
 			}
 			if (scan_show_skips)
 			{
-				text_message(TEXT_ERROR_ECHO, "Skipping to...\n");
+				text.text_message(TEXT_ERROR_ECHO, "Skipping to...\n");
 			}
 		}
 	}

@@ -8,11 +8,22 @@ QualifiedIdentifier ::= ID { '.' ID } .
 
 Import ::= 'import' [ 'static' ] ID [ '=' ID ] { '.' ID } ';' .
 
-Entity ::= [ AccessModifier ] ( Class | Enum | Typedef ) .
+Entity ::= [ AccessModifier ] ( Class | Interface | Annotation | Enum | Typedef ) .
 
 AccessModifier ::= 'public' | 'internal' | 'protected' | 'private' .
 
-Class ::= 'class' ID [ ':' QualifiedIdentifier { ',' QualifiedIdentifier } ] '{' '}' .
+Class ::= 'class' ID [ ':' QualifiedIdentifier { ',' QualifiedIdentifier } ]
+	 '{' { MethodOrFieldDeclaration } '}' .
+
+Interface ::= 'interface' ID '{' { InterfaceMethodDeclaration } '}' .
+
+MethodOrFieldDeclaration ::= { AccessModifier } ID ID ( '(' [ Parameters ] ')' '{' '}' | ';' ) .
+
+InterfaceMethodDeclaration ::= { AccessModifier } ID ID '(' [ Parameters ] ')' ';' .
+
+Parameters ::= ID ID { ',' ID ID } .
+
+Annotation ::= '@' 'interface' ID '{' '}' .
 
 Enum ::= 'enum' ID '{' '}' .
 

@@ -41,9 +41,81 @@ namespace Borium.RDP
 		/// </summary>
 		internal SymbolTable next;
 
-		internal int compare(string key, Symbol p)
+		private Text text;
+
+		private static SymbolTable symbol_tables = null;
+
+		internal SymbolTable(Text text, string name, int symbol_hashsize, int symbol_hashprime,
+		CompareHashPrint compareHashPrint)
 		{
-			return compareHashPrint.compare(key, p);
+			this.text = text;
+			SymbolScopeData scope = new SymbolScopeData(text);
+			scope.id = text.text_insert_string("Global");
+			this.name = name;
+			hash_size = symbol_hashsize;
+			hash_prime = symbol_hashprime;
+			this.compareHashPrint = compareHashPrint;
+			table = new Symbol[symbol_hashsize];
+			current = scopes = scope;
+
+			// now hook into list of tables
+			next = symbol_tables;
+			symbol_tables = this;
+		}
+
+		internal Symbol symbol_insert_symbol(Symbol symbol)
+		{
+			Symbol s = symbol;
+
+			s.hash = hash(hash_prime, text.text_get_string(symbol.id));
+			int hash_index = s.hash % hash_size;
+
+			s.next_hash = table[hash_index];
+			table[hash_index] = s;
+
+			s.last_hash.set(table[hash_index]);
+
+			// if this wasn't the start of a new list ...
+			if (s.next_hash != null)
+			{
+				// ...point old list next back at s
+				s.next_hash.last_hash.set(s.next_hash);
+			}
+
+			// now insert in scope list
+			s.next_scope = current.next_scope;
+			current.next_scope = s;
+
+			// set up pointer to scope block
+			s.scope = current;
+
+			return symbol;
+		}
+
+		/// <summary>
+		/// Lookup a symbol by id. Return null if it is not found
+		/// </summary>
+		/// <param name="table"></param>
+		/// <param name="key"></param>
+		/// <param name="scope"></param>
+		/// <returns></returns>
+		internal Symbol symbol_lookup_key(string key, SymbolScopeData scope)
+		{
+			int hashValue = hash(hash_prime, key);
+			Symbol p = table[hashValue % hash_size];
+
+			// look for symbol with same hash and a true compare
+			while (!(p == null || compare(text, key, p) == 0 && !(p.scope != scope && scope != null)))
+			{
+				p = p.next_hash;
+			}
+
+			return p;
+		}
+
+		internal int compare(Text text, string key, Symbol p)
+		{
+			return compareHashPrint.compare(text, key, p);
 		}
 
 		/// <summary>

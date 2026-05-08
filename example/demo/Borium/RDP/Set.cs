@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using static Borium.RDP.Text;
 
 namespace Borium.RDP
 {
-	internal class Set
+	public class Set
 	{
 #if false
 		internal interface Indent
@@ -18,18 +17,18 @@ namespace Borium.RDP
 			return src == null ? 0 : src.cardinality();
 		}
 
-		internal static int set_print_element(int element, string[] element_names, bool comments)
+		internal static int set_print_element(Text text, int element, string[] element_names, bool comments)
 		{
 			if (element_names == null)
 			{
-				return text_printf(Convert.ToString(element));
+				return text.text_printf(Convert.ToString(element));
 			}
 			else
 			{
 				string elementString = element_names[element];
 				if (!comments)
 					elementString = elementString.Split(' ')[0];
-				return text_printf(elementString);
+				return text.text_printf(elementString);
 			}
 		}
 
@@ -95,7 +94,7 @@ namespace Borium.RDP
 			}
 		}
 
-		internal void print(string[] element_names, int line_length)
+		internal void print(Text text, string[] element_names, int line_length)
 		{
 			int column = 0;
 			bool not_first = false;
@@ -104,7 +103,7 @@ namespace Borium.RDP
 			{
 				if (not_first)
 				{
-					column += text_printf(", ");
+					column += text.text_printf(", ");
 				}
 				else
 				{
@@ -113,16 +112,16 @@ namespace Borium.RDP
 
 				if (line_length != 0 && column >= line_length)
 				{
-					text_printf("\n");
+					text.text_printf("\n");
 					column = 0;
 				}
-				column += set_print_element(element, element_names, true);
+				column += set_print_element(text, element, element_names, true);
 			}
 		}
 
 		public delegate int IndentFunction();
 
-		internal void print(string[] element_names, int initialOffset, IndentFunction indent, int line_length, bool comments)
+		internal void print(Text text, string[] element_names, int initialOffset, IndentFunction indent, int line_length, bool comments)
 		{
 			int column = initialOffset;
 			bool not_first = false;
@@ -131,7 +130,7 @@ namespace Borium.RDP
 			{
 				if (not_first)
 				{
-					column += text_printf(", ");
+					column += text.text_printf(", ");
 				}
 				else
 				{
@@ -140,10 +139,10 @@ namespace Borium.RDP
 
 				if (line_length != 0 && column >= line_length)
 				{
-					text_printf("\n");
+					text.text_printf("\n");
 					column = indent();
 				}
-				column += set_print_element(element, element_names, comments);
+				column += set_print_element(text, element, element_names, comments);
 			}
 		}
 
@@ -220,7 +219,7 @@ namespace Borium.RDP
 			return data.Length;
 		}
 
-		internal void printIndented(string[] element_names, int column, int width, int indentLevel)
+		internal void printIndented(Text text, string[] element_names, int column, int width, int indentLevel)
 		{
 			bool isFirst = true;
 			int[] elements = array();
@@ -242,19 +241,19 @@ namespace Borium.RDP
 				}
 				else
 				{
-					column += text_printf(", ");
+					column += text.text_printf(", ");
 				}
 				int endColumn = column + elementString.Length + 2;
 				if (width > 0 && endColumn >= width - 3)
 				{
-					text_printf("\n");
+					text.text_printf("\n");
 					for (int i = 0; i < indentLevel + 2; i++)
 					{
-						text_printf("\t");
+						text.text_printf("\t");
 					}
 					column = (indentLevel + 2) * 4;
 				}
-				column += text_printf(elementString);
+				column += text.text_printf(elementString);
 			}
 		}
 	}

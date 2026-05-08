@@ -1,13 +1,12 @@
 ﻿using System;
-using static Borium.RDP.Text;
 
 namespace Borium.RDP
 {
 	internal class CompareHashPrint
 	{
-		internal int compare(string key, Symbol p)
+		internal int compare(Text text, string key, Symbol p)
 		{
-			string r = text_get_string(p.id);
+			string r = text.text_get_string(p.id);
 			return string.Compare(key, r, StringComparison.Ordinal);
 		}
 

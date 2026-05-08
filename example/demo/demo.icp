@@ -1,1 +1,22 @@
-package asdf = a.b.c;
+package asdf.a.b.c;
+
+import a = b;
+import static x = a.b.c;
+
+typedef a = b;
+
+class c1
+{
+}
+
+interface i1
+{
+}
+
+@interface a1
+{
+}
+
+enum e1
+{
+}

@@ -11,16 +11,16 @@ namespace Borium.RDP
 
 		private readonly List<Ast> astList = new List<Ast>();
 
-		internal Ast()
+		internal Ast(Scanner scanner)
 		{
-			fileName = Scanner.rdp_sourcefilename;
-			line = Scanner.last_line_number;
-			column = Scanner.last_column;
+			fileName = scanner.rdp_sourcefilename;
+			line = scanner.last_line_number;
+			column = scanner.last_column;
 		}
 
-		internal void Add(int token)
+		internal void Add(Scanner scanner, int token)
 		{
-			Ast astSymbol = new Ast
+			Ast astSymbol = new Ast(scanner)
 			{
 				token = token
 			};

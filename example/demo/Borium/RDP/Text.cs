@@ -6,9 +6,9 @@ using static Borium.RDP.Text.TextMessageType;
 
 namespace Borium.RDP
 {
-	internal class Text
+	public class Text
 	{
-		internal enum TextMessageType
+		public enum TextMessageType
 		{
 			TEXT_INFO, TEXT_WARNING, TEXT_ERROR, TEXT_FATAL, TEXT_INFO_ECHO, TEXT_WARNING_ECHO, TEXT_ERROR_ECHO,
 			TEXT_FATAL_ECHO
@@ -59,7 +59,7 @@ namespace Borium.RDP
 			/// <summary>
 			/// Copy of pointer to the last thing read by the scanner
 			/// </summary>
-			internal ScanData text_scan_data = new ScanData();
+			internal ScanData text_scan_data;
 
 			/// <summary>
 			/// copy of first character of this symbol
@@ -75,6 +75,11 @@ namespace Borium.RDP
 			/// Previous file descriptor
 			/// </summary>
 			internal SourceList previous;
+
+			internal SourceList(Text text)
+			{
+				text_scan_data = new ScanData(text);
+			}
 		}
 
 		/// <summary>
@@ -87,211 +92,137 @@ namespace Borium.RDP
 		/// <summary>
 		/// Total number of errors this run
 		/// </summary>
-		private static int totalerrors = 0;
+		private int totalerrors = 0;
 
 		/// <summary>
 		/// Total number of warnings this run
 		/// </summary>
-		private static int totalwarnings = 0;
+		private int totalwarnings = 0;
 
 		/// <summary>
 		/// Total errors for this file
 		/// </summary>
-		private static int errors = 0;
+		private int errors = 0;
 
 		/// <summary>
 		/// Crash if error count exceeds this value
 		/// </summary>
-		private static int maxerrors = 25;
+		private int maxerrors = 25;
 
 		/// <summary>
 		/// Total warnings for this file
 		/// </summary>
-		private static int warnings = 0;
+		private int warnings = 0;
 
 		/// <summary>
 		/// Crash if warning count exceeds this value
 		/// </summary>
-		private static int maxwarnings = 100;
+		private int maxwarnings = 100;
 
 		/// <summary>
 		/// Filename
 		/// </summary>
-		private static string name = null;
+		private string name = null;
 
 		/// <summary>
 		/// Current line in this file
 		/// </summary>
-		private static int linenumber = 0;
+		private int linenumber = 0;
 
 		/// <summary>
 		/// Cumulative line_number
 		/// </summary>
-		private static int sequence_number = 0;
+		private int sequence_number = 0;
 
 		/// <summary>
 		/// TEXT_MESSAGES
 		/// </summary>
-		private static TextWriter messages = Console.Out;
+		private TextWriter messages = Console.Out;
 
 		/// <summary>
 		/// Array of error positions
 		/// </summary>
-		private static int[] echo_pos = new int[MAX_ECHO];
+		private int[] echo_pos = new int[MAX_ECHO];
 
 		/// <summary>
 		/// current error number this line
 		/// </summary>
-		private static int echo_num = -1;
+		private int echo_num = -1;
 
 		/// <summary>
 		/// Current text character
 		/// </summary>
-		internal static int text_char = ' ';
+		internal int text_char = ' ';
 
 		/// <summary>
 		/// First character of current source line
 		/// </summary>
-		private static int first_char;
+		private int first_char;
 
 		/// <summary>
 		/// Last character of current source line
 		/// </summary>
-		private static int last_char;
+		private int last_char;
 
 		/// <summary>
 		/// Pointer to current source character
 		/// </summary>
-		internal static int text_current;
+		internal int text_current;
 
 		/// <summary>
 		/// Text array for storing id's and strings
 		/// </summary>
-		internal static char[] text_bot = null;
+		internal char[] text_bot = null;
 
 		/// <summary>
 		/// Top of text character
 		/// </summary>
-		internal static int text_top = 1;
+		internal int text_top = 1;
 
 		/// <summary>
 		/// Size of text buffer
 		/// </summary>
-		private static int maxtext;
+		private int maxtext;
 
 		/// <summary>
 		/// Tab expansion width
 		/// </summary>
-		private static int tabwidth;
+		private int tabwidth;
 
 		/// <summary>
 		/// Pointer to the last thing read by the scanner
 		/// </summary>
-		internal static ScanData text_scan_data;
+		internal ScanData text_scan_data;
 
 		/// <summary>
 		/// Enable line echoing
 		/// </summary>
-		private static bool echo;
+		private readonly bool echo = false;
 
 		/// <summary>
 		/// Current file handle
 		/// </summary>
-		private static TextReader file;
+		private TextReader file;
 
 		/// <summary>
 		/// Head of file descriptor list
 		/// </summary>
-		private static SourceList source_descriptor_list;
+		private SourceList source_descriptor_list;
 
 		/// <summary>
 		/// First character in this symbol
 		/// </summary>
-		private static int symbol_first_char;
+		private int symbol_first_char;
 
-		internal static int text_column_number()
+		internal int text_column_number()
 		{
 			return first_char - text_current;
-		}
-
-		internal static string text_default_filetype(string fname, string ftype)
-		{
-			if (ftype.Length == 0)
-			{
-				return fname;
-			}
-			string fullname = fname;
-			if (fullname.IndexOf('.') == -1)
-			{
-				fullname += "." + ftype;
-			}
-			return fullname;
-		}
-
-		internal static void text_echo(bool i)
-		{
-			echo = i;
-		}
-
-		internal static string text_extract_filename(string fname)
-		{
-			string name = fname;
-			// search backwards for '.' and terminate the string there
-			int temp = name.Length;
-			while (--temp > 0)
-			{
-				if (name[temp] == '.')
-				{
-					name = name.Substring(0, temp);
-					break;
-				}
-			}
-			// we didn't find a dot, so start again at the end
-			if (temp != name.Length)
-			{
-				temp = fname.Length;
-			}
-			// search backwards for '/' or '\' and start the string there
-			while (--temp > 0)
-			{
-				if (name[temp] == '/' || name[temp] == '\\')
-				{
-					name = name.Substring(temp + 1);
-					break;
-				}
-			}
-			return name;
-		}
-
-		/** add a new filetype. If ftype is NULL, return just filename */
-		internal static string text_force_filetype(string fname, string ftype)
-		{
-			// work backwards from end of filename looking for a dot, or a directory separator
-			int length = fname.Length - 1;
-			while (fname[length] != '.' && fname[length] != '/' && fname[length] != '\\' && length > 0)
-			{
-				length--;
-			}
-			if (fname[length] != '.')
-			{
-				length = fname.Length;
-			}
-			string fullname = null;
-			if (ftype == null)
-			{
-				fullname = fname;
-			}
-			else
-			{
-				fullname = fname.Substring(0, length) + "." + ftype;
-			}
-			return fullname;
 		}
 
 		/// <summary>
 		/// Advance text_current, reading another line if necessary
 		/// </summary>
-		internal static void text_get_char()
+		internal void text_get_char()
 		{
 			if (text_current <= last_char)
 			{
@@ -345,7 +276,7 @@ namespace Borium.RDP
 			text_char = text_bot[--text_current];
 		}
 
-		internal static string text_get_string(int start)
+		internal string text_get_string(int start)
 		{
 			string s = "";
 			while (text_bot[start] != 0)
@@ -355,7 +286,7 @@ namespace Borium.RDP
 			return s;
 		}
 
-		internal static void text_init(int max_text, int max_errors, int max_warnings, int tab_width)
+		internal void text_init(int max_text, int max_errors, int max_warnings, int tab_width)
 		{
 			tabwidth = tab_width;
 			maxtext = max_text;
@@ -367,7 +298,7 @@ namespace Borium.RDP
 			text_current = last_char = first_char = maxtext;
 		}
 
-		internal static int text_insert_char(char c)
+		internal int text_insert_char(char c)
 		{
 			int start = text_top;
 			if (text_top >= last_char)
@@ -381,7 +312,7 @@ namespace Borium.RDP
 			return start;
 		}
 
-		internal static int text_insert_characters(string str)
+		internal int text_insert_characters(string str)
 		{
 			int start = text_top;
 			foreach (char ch in str)
@@ -391,7 +322,7 @@ namespace Borium.RDP
 			return start;
 		}
 
-		internal static int text_insert_integer(int n)
+		internal int text_insert_integer(int n)
 		{
 			int start = text_top;
 			if (n > 9)
@@ -403,7 +334,7 @@ namespace Borium.RDP
 			return start;
 		}
 
-		internal static int text_insert_string(string str)
+		internal int text_insert_string(string str)
 		{
 			int start = text_top;
 			foreach (char ch in str)
@@ -421,7 +352,7 @@ namespace Borium.RDP
 		/// <param name="str"></param>
 		/// <param name="n"></param>
 		/// <returns></returns>
-		internal static int text_insert_substring(string prefix, string str, int n)
+		internal int text_insert_substring(string prefix, string str, int n)
 		{
 			int start = text_top;
 
@@ -444,12 +375,12 @@ namespace Borium.RDP
 			return temp;
 		}
 
-		internal static int text_line_number()
+		internal int text_line_number()
 		{
 			return linenumber;
 		}
 
-		internal static int text_message(TextMessageType type, string message)
+		internal int text_message(TextMessageType type, string message)
 		{
 			if (message == null)
 			{
@@ -518,12 +449,12 @@ namespace Borium.RDP
 			return message.Length + 1;
 		}
 
-		internal static TextReader text_open(string s)
+		internal TextReader text_open(string fileName, TextReader textReader)
 		{
 			TextReader handle = null;
 			try
 			{
-				handle = s.Equals("-") ? Console.In : new StreamReader(s);
+				handle = textReader;
 			}
 			catch (FileNotFoundException)
 			{
@@ -534,7 +465,7 @@ namespace Borium.RDP
 			{
 				if (old != null) // save current file context
 				{
-					SourceList temp = new SourceList();
+					SourceList temp = new SourceList(this);
 					// load descriptor block
 					temp.errors = errors;
 					temp.file = file;
@@ -544,7 +475,7 @@ namespace Borium.RDP
 					temp.name = name;
 					temp.text_char = text_char;
 					temp.text_current = text_current;
-					memcpy(temp.text_scan_data, text_scan_data);
+					temp.text_scan_data.memcpy(text_scan_data);
 					temp.symbol_first_char = symbol_first_char;
 					temp.warnings = warnings;
 					// link descriptor block into head of list
@@ -555,7 +486,7 @@ namespace Borium.RDP
 				errors = 0;
 				file = handle;
 				linenumber = 0;
-				name = s;
+				name = fileName;
 				warnings = 0;
 				if (echo)
 				{
@@ -567,26 +498,7 @@ namespace Borium.RDP
 			return handle;
 		}
 
-#if false
-		internal static void text_print_statistics()
-		{
-			long symbolcount = text_top,
-
-					linecount = -last_char + maxtext;
-
-			if (text_bot == null)
-			{
-				text_message(TEXT_INFO, "Text buffer uninitialised\n");
-			}
-			else
-			{
-				text_message(TEXT_INFO, "Text buffer size " + maxtext + " bytes with " + (maxtext - symbolcount - linecount)
-						+ " bytes free\n");
-			}
-		}
-#endif
-
-		internal static void text_print_time()
+		internal void text_print_time()
 		{
 			// string __DATE__ = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 			// string __TIME__ = new SimpleDateFormat("HH:mm:ss").format(new Date());
@@ -594,7 +506,7 @@ namespace Borium.RDP
 			text_printf("Sep 19 2015 11:45:00");
 		}
 
-		internal static int text_printf(string str)
+		internal int text_printf(string str)
 		{
 			if (str != null)
 			{
@@ -610,17 +522,17 @@ namespace Borium.RDP
 			return str == null ? 0 : str.Length;
 		}
 
-		internal static void text_redirect(TextWriter file)
+		internal void text_redirect(TextWriter file)
 		{
 			messages = file;
 		}
 
-		internal static int text_sequence_number()
+		internal int text_sequence_number()
 		{
 			return sequence_number;
 		}
 
-		internal static int text_total_errors()
+		internal int text_total_errors()
 		{
 			return totalerrors;
 		}
@@ -630,7 +542,7 @@ namespace Borium.RDP
 			return str.ToUpper();
 		}
 
-		private static void text_close()
+		private void text_close()
 		{
 			if (file == null)
 				return;
@@ -651,7 +563,7 @@ namespace Borium.RDP
 				name = temp.name;
 				text_char = temp.text_char;
 				text_current = temp.text_current;
-				memcpy(text_scan_data, temp.text_scan_data);
+				text_scan_data.memcpy(temp.text_scan_data);
 				symbol_first_char = temp.symbol_first_char;
 				warnings = temp.warnings;
 				if (echo)
@@ -662,7 +574,7 @@ namespace Borium.RDP
 			}
 		}
 
-		private static void text_echo_line()
+		private void text_echo_line()
 		{
 			text_echo_line_number();
 			// current input line is stored in reverse order at top of text buffer:
@@ -693,11 +605,11 @@ namespace Borium.RDP
 			echo_num = -1;
 		}
 
-		private static void text_echo_line_number()
+		private void text_echo_line_number()
 		{
 			if (linenumber != 0)
 			{
-				string s = $"{linenumber:N6}: ";
+				string s = $"{linenumber,6}: ";
 				messages.Write(s);
 			}
 			else
